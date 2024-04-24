@@ -1,0 +1,7 @@
+res://node_3d.tscn
+res://levelLightMap0.exr
+res://levelLightMap0.lmbake
+res://bsPlayer.tscn
+res://bsPlayer.cs
+res://bs_player_hud.tscn
+res://scripts/bsPlayer.cs

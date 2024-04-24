@@ -1,0 +1,14 @@
+Control
+TextureRect
+VBoxContainer
+Sprite2D
+Container
+HBoxContainer
+Marker3D
+Camera3D
+LightmapGI
+QodotMap
+MeshInstance3D
+DirectionalLight3D
+WorldEnvironment
+Sprite3D

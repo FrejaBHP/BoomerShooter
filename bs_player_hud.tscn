@@ -1,0 +1,64 @@
+[gd_scene load_steps=3 format=3 uid="uid://bnriohryyqrx"]
+
+[ext_resource type="Texture2D" uid="uid://co5w2gr6jpfkq" path="res://hud/healthammo.png" id="1_g6vyp"]
+[ext_resource type="Texture2D" uid="uid://fu84lp336c8c" path="res://hud/armouritem.png" id="2_mhfq2"]
+
+[node name="bsPlayerHUD" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Bottom" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HealthAmmoPivot" type="Control" parent="Bottom"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+grow_vertical = 0
+scale = Vector2(4, 4)
+
+[node name="HealthAmmoTexture" type="TextureRect" parent="Bottom/HealthAmmoPivot"]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -26.0
+offset_right = 68.0
+grow_vertical = 0
+texture = ExtResource("1_g6vyp")
+
+[node name="ArmourItemPivot" type="Control" parent="Bottom"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 0
+grow_vertical = 0
+scale = Vector2(4, 4)
+
+[node name="ArmourItemTexture" type="TextureRect" parent="Bottom/ArmourItemPivot"]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -72.0
+offset_top = -26.0
+grow_horizontal = 0
+grow_vertical = 0
+texture = ExtResource("2_mhfq2")

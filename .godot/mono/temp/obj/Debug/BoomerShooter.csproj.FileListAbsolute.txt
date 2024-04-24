@@ -1,0 +1,17 @@
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\BoomerShooter.deps.json
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\BoomerShooter.runtimeconfig.json
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\BoomerShooter.dll
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\BoomerShooter.pdb
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\GodotSharp.dll
+F:\GitHub\BoomerShooter\.godot\mono\temp\bin\Debug\GodotSharpEditor.dll
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.csproj.AssemblyReference.cache
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.GeneratedMSBuildEditorConfig.editorconfig
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.AssemblyInfoInputs.cache
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.AssemblyInfo.cs
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.csproj.CoreCompileInputs.cache
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.csproj.CopyComplete
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.dll
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\refint\BoomerShooter.dll
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.pdb
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\BoomerShooter.genruntimeconfig.cache
+F:\GitHub\BoomerShooter\.godot\mono\temp\obj\Debug\ref\BoomerShooter.dll

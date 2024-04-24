@@ -1,0 +1,46 @@
+[gd_scene load_steps=7 format=3 uid="uid://b2lsyt0chmfdm"]
+
+[ext_resource type="Script" path="res://scripts/bsPlayer.cs" id="1_kcng8"]
+[ext_resource type="Texture2D" uid="uid://crcoqoduv71gt" path="res://textures/p3870.png" id="1_qb6e2"]
+[ext_resource type="PackedScene" uid="uid://bnriohryyqrx" path="res://bs_player_hud.tscn" id="2_c2kf4"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gd063"]
+radius = 0.3
+height = 1.2
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_gc6o0"]
+transparency = 1
+shading_mode = 0
+albedo_texture = ExtResource("1_qb6e2")
+texture_filter = 0
+billboard_mode = 2
+
+[sub_resource type="PlaneMesh" id="PlaneMesh_axqr4"]
+material = SubResource("StandardMaterial3D_gc6o0")
+size = Vector2(0.55, 1.17)
+orientation = 2
+
+[node name="Player" type="CharacterBody3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.681296, 0.6, -5.93294)
+script = ExtResource("1_kcng8")
+
+[node name="bsPlayerHUD" parent="." instance=ExtResource("2_c2kf4")]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_gd063")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+billboard = 2
+texture_filter = 0
+texture = ExtResource("1_qb6e2")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+visible = false
+mesh = SubResource("PlaneMesh_axqr4")
+
+[node name="PlayerCamera" type="Camera3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.15, 0)
+rotation_edit_mode = 1
+current = true
+fov = 90.0
+far = 1000.0
