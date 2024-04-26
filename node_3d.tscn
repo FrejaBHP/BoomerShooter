@@ -1,6 +1,7 @@
-[gd_scene load_steps=55 format=3 uid="uid://qxl2w2cthfnd"]
+[gd_scene load_steps=56 format=3 uid="uid://qxl2w2cthfnd"]
 
 [ext_resource type="Script" path="res://addons/qodot/src/nodes/qodot_map.gd" id="1_7jly2"]
+[ext_resource type="Script" path="res://scripts/Game.cs" id="1_72s3f"]
 [ext_resource type="Resource" uid="uid://c36hv0o6g0udo" path="res://addons/qodot/game_definitions/fgd/qodot_fgd.tres" id="2_1vsm7"]
 [ext_resource type="Texture2D" uid="uid://24grhhgqiuol" path="res://textures/b361.png" id="3_x6b2t"]
 [ext_resource type="Texture2D" uid="uid://d26r561bpm0k7" path="res://textures/b421.png" id="4_n3cob"]
@@ -250,7 +251,8 @@ points = PackedVector3Array(-5, 5, 0, -5, 2.25, 0, -2, 2.25, 0, -2, 5, 0, -5, 5,
 
 [sub_resource type="Environment" id="Environment_6h28a"]
 
-[node name="Node3D" type="Node3D"]
+[node name="Game" type="Node3D"]
+script = ExtResource("1_72s3f")
 
 [node name="QodotMap" type="Node3D" parent="."]
 script = ExtResource("1_7jly2")

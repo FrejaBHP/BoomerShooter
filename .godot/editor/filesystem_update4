@@ -5,3 +5,5 @@ res://bsPlayer.tscn
 res://bsPlayer.cs
 res://bs_player_hud.tscn
 res://scripts/bsPlayer.cs
+res://bs_player_weapon.tscn
+res://scripts/Game.cs

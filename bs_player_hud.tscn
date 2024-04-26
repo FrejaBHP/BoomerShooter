@@ -26,7 +26,7 @@ anchors_preset = 2
 anchor_top = 1.0
 anchor_bottom = 1.0
 grow_vertical = 0
-scale = Vector2(4, 4)
+scale = Vector2(3.5, 3.5)
 
 [node name="HealthAmmoTexture" type="TextureRect" parent="Bottom/HealthAmmoPivot"]
 texture_filter = 1
@@ -48,7 +48,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 0
 grow_vertical = 0
-scale = Vector2(4, 4)
+scale = Vector2(3.5, 3.5)
 
 [node name="ArmourItemTexture" type="TextureRect" parent="Bottom/ArmourItemPivot"]
 layout_mode = 1

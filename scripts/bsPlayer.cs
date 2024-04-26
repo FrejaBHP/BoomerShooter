@@ -9,6 +9,13 @@ public partial class bsPlayer : CharacterBody3D {
 	private float cameraRotaY = 0f;
 
 	private Camera3D playerCamera;
+
+	private int[] playerAmmo = new int[(int)Ammotype.NoOfTypes];
+	private Weapon[] weaponInventory = new Weapon[1];
+	private Weapon activeWeapon;
+	private TextureRect activeWeaponSprite;
+
+
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
 
@@ -16,8 +23,17 @@ public partial class bsPlayer : CharacterBody3D {
 
     public override void _Ready() {
 		playerCamera = GetNode<Camera3D>("PlayerCamera");
+		activeWeaponSprite = GetNode<TextureRect>("bsPlayerWeapon/BottomAnchor/BottomPivot/WeaponSprite");
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		mouseCaptured = true;
+
+		TestGiveWeapon();
+	}
+
+	private async void TestGiveWeapon() {
+		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
+		weaponInventory[0] = new W_Pitchfork(this);
+		activeWeapon = weaponInventory[0];
 	}
 
 	public override void _Input(InputEvent @event) {
@@ -37,8 +53,27 @@ public partial class bsPlayer : CharacterBody3D {
     }
 
     public override void _PhysicsProcess(double delta) {
-		ProcessCamera(delta);
+		if (mouseCaptured) {
+			ProcessCamera(delta);
+		}
 		ProcessMovement(delta);
+
+		if (activeWeapon.WeaponState == WeaponState.ReadyState) {
+			if (Input.IsActionPressed("leftclick") && (playerAmmo[(int)activeWeapon.AmmoType] > activeWeapon.AmmoReqPri || activeWeapon.AmmoType == Ammotype.A_None)) {
+				activeWeapon.EnterAtkState();
+			}
+			else if (Input.IsActionPressed("rightclick") && (playerAmmo[(int)activeWeapon.AmmoType] > activeWeapon.AmmoReqSec || activeWeapon.AmmoType == Ammotype.A_None)) {
+				activeWeapon.EnterAltState();
+			}
+			else {
+				WeaponReady();
+			}
+		}
+		activeWeapon.WStateMachine.Process();
+	}
+
+	public static void WeaponReady() {
+
 	}
 
 	private void ProcessCamera(double deltaTime) {
@@ -81,5 +116,9 @@ public partial class bsPlayer : CharacterBody3D {
 
 		Velocity = velocity;
 		MoveAndSlide();
+	}
+
+	public void SetActiveWeaponSprite(Texture2D sprite) {
+		activeWeaponSprite.Texture = sprite;
 	}
 }

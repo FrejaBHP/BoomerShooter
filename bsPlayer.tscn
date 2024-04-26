@@ -1,8 +1,9 @@
-[gd_scene load_steps=7 format=3 uid="uid://b2lsyt0chmfdm"]
+[gd_scene load_steps=8 format=3 uid="uid://b2lsyt0chmfdm"]
 
 [ext_resource type="Script" path="res://scripts/bsPlayer.cs" id="1_kcng8"]
 [ext_resource type="Texture2D" uid="uid://crcoqoduv71gt" path="res://textures/p3870.png" id="1_qb6e2"]
 [ext_resource type="PackedScene" uid="uid://bnriohryyqrx" path="res://bs_player_hud.tscn" id="2_c2kf4"]
+[ext_resource type="PackedScene" uid="uid://dlp6xgwcsnere" path="res://bs_player_weapon.tscn" id="3_u78mm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gd063"]
 radius = 0.3
@@ -25,6 +26,8 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.681296, 0.6, -5.93294)
 script = ExtResource("1_kcng8")
 
 [node name="bsPlayerHUD" parent="." instance=ExtResource("2_c2kf4")]
+
+[node name="bsPlayerWeapon" parent="." instance=ExtResource("3_u78mm")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_gd063")
