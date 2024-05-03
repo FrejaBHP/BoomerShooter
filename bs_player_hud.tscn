@@ -1,7 +1,112 @@
-[gd_scene load_steps=3 format=3 uid="uid://bnriohryyqrx"]
+[gd_scene load_steps=15 format=3 uid="uid://bnriohryyqrx"]
 
 [ext_resource type="Texture2D" uid="uid://co5w2gr6jpfkq" path="res://hud/healthammo.png" id="1_g6vyp"]
+[ext_resource type="Texture2D" uid="uid://dq113emh4xesy" path="res://textures/weapons/crosshair.png" id="1_p8bi6"]
+[ext_resource type="Script" path="res://scripts/PlayerHUD.cs" id="1_v7imo"]
 [ext_resource type="Texture2D" uid="uid://fu84lp336c8c" path="res://hud/armouritem.png" id="2_mhfq2"]
+[ext_resource type="Script" path="res://addons/texture_fonts/Classes/TextureFontSettings.gd" id="2_vtg6f"]
+[ext_resource type="FontFile" uid="uid://pdym16uelm38" path="res://hud/ammoFont.tres" id="3_8xguy"]
+[ext_resource type="Script" path="res://addons/texture_fonts/Classes/TextureFont.gd" id="3_kcxug"]
+[ext_resource type="Script" path="res://addons/texture_fonts/Classes/TextureFontMapping.gd" id="4_ir8qs"]
+[ext_resource type="Texture2D" uid="uid://cfovrtrns157p" path="res://textures/font/HealthNumbers.png" id="6_ndnhi"]
+
+[sub_resource type="Resource" id="Resource_qv3ty"]
+script = ExtResource("2_vtg6f")
+char_settings = {}
+kerning_pairs = Array[Dictionary]([])
+gap = 1
+alignment = Vector2(0, 0)
+monospace = true
+descent = 0.0
+ascent = 0.0
+preview_color = Color(0.12549, 0.141176, 0.192157, 1)
+preview_chars = ""
+
+[sub_resource type="Resource" id="Resource_2s6rb"]
+script = ExtResource("4_ir8qs")
+source_texture = ExtResource("6_ndnhi")
+rect_size = Vector2(8, 11)
+rect_gap = Vector2(0, 0)
+texture_offset = Vector2(0, 0)
+chars = "0123456789"
+
+[sub_resource type="FontFile" id="FontFile_wj4lb"]
+fixed_size = 12
+fixed_size_scale_mode = 2
+cache/0/12/0/ascent = 0.0
+cache/0/12/0/descent = 0.0
+cache/0/12/0/underline_position = 0.0
+cache/0/12/0/underline_thickness = 0.0
+cache/0/12/0/scale = 1.0
+cache/0/12/0/glyphs/48/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/48/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/48/size = Vector2(8, 11)
+cache/0/12/0/glyphs/48/uv_rect = Rect2(0, 0, 8, 11)
+cache/0/12/0/glyphs/48/texture_idx = 0
+cache/0/12/0/glyphs/49/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/49/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/49/size = Vector2(8, 11)
+cache/0/12/0/glyphs/49/uv_rect = Rect2(8, 0, 8, 11)
+cache/0/12/0/glyphs/49/texture_idx = 0
+cache/0/12/0/glyphs/50/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/50/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/50/size = Vector2(8, 11)
+cache/0/12/0/glyphs/50/uv_rect = Rect2(16, 0, 8, 11)
+cache/0/12/0/glyphs/50/texture_idx = 0
+cache/0/12/0/glyphs/51/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/51/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/51/size = Vector2(8, 11)
+cache/0/12/0/glyphs/51/uv_rect = Rect2(24, 0, 8, 11)
+cache/0/12/0/glyphs/51/texture_idx = 0
+cache/0/12/0/glyphs/52/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/52/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/52/size = Vector2(8, 11)
+cache/0/12/0/glyphs/52/uv_rect = Rect2(32, 0, 8, 11)
+cache/0/12/0/glyphs/52/texture_idx = 0
+cache/0/12/0/glyphs/53/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/53/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/53/size = Vector2(8, 11)
+cache/0/12/0/glyphs/53/uv_rect = Rect2(40, 0, 8, 11)
+cache/0/12/0/glyphs/53/texture_idx = 0
+cache/0/12/0/glyphs/54/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/54/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/54/size = Vector2(8, 11)
+cache/0/12/0/glyphs/54/uv_rect = Rect2(48, 0, 8, 11)
+cache/0/12/0/glyphs/54/texture_idx = 0
+cache/0/12/0/glyphs/55/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/55/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/55/size = Vector2(8, 11)
+cache/0/12/0/glyphs/55/uv_rect = Rect2(56, 0, 8, 11)
+cache/0/12/0/glyphs/55/texture_idx = 0
+cache/0/12/0/glyphs/56/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/56/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/56/size = Vector2(8, 11)
+cache/0/12/0/glyphs/56/uv_rect = Rect2(64, 0, 8, 11)
+cache/0/12/0/glyphs/56/texture_idx = 0
+cache/0/12/0/glyphs/57/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/57/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/57/size = Vector2(8, 11)
+cache/0/12/0/glyphs/57/uv_rect = Rect2(72, 0, 8, 11)
+cache/0/12/0/glyphs/57/texture_idx = 0
+cache/0/12/0/glyphs/32/advance = Vector2(9, 0)
+cache/0/12/0/glyphs/32/offset = Vector2(0, 0)
+cache/0/12/0/glyphs/32/size = Vector2(0, 0)
+cache/0/12/0/glyphs/32/uv_rect = Rect2(0, 0, 0, 0)
+cache/0/12/0/glyphs/32/texture_idx = 0
+cache/0/12/0/kerning_overrides/12/0 = Vector2(0, 0)
+script = ExtResource("3_kcxug")
+texture_mappings = Array[ExtResource("4_ir8qs")]([SubResource("Resource_2s6rb")])
+font_settings = SubResource("Resource_qv3ty")
+
+[sub_resource type="LabelSettings" id="LabelSettings_6gfit"]
+line_spacing = 0.0
+font = SubResource("FontFile_wj4lb")
+font_size = 12
+
+[sub_resource type="LabelSettings" id="LabelSettings_n6m80"]
+line_spacing = 0.0
+font = ExtResource("3_8xguy")
+font_size = 12
 
 [node name="bsPlayerHUD" type="Control"]
 layout_mode = 3
@@ -10,6 +115,29 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_v7imo")
+
+[node name="Crosshair" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -3.5
+offset_top = -3.5
+offset_right = 3.5
+offset_bottom = 3.5
+grow_horizontal = 2
+grow_vertical = 2
+scale = Vector2(3, 3)
+pivot_offset = Vector2(3.5, 3.5)
+texture = ExtResource("1_p8bi6")
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 40.0
+offset_bottom = 23.0
 
 [node name="Bottom" type="Control" parent="."]
 layout_mode = 1
@@ -38,6 +166,32 @@ offset_top = -26.0
 offset_right = 68.0
 grow_vertical = 0
 texture = ExtResource("1_g6vyp")
+
+[node name="HealthLabel" type="Label" parent="Bottom/HealthAmmoPivot/HealthAmmoTexture"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 4.0
+offset_top = -22.0
+offset_right = 31.0
+offset_bottom = -11.0
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_6gfit")
+horizontal_alignment = 2
+
+[node name="AmmoLabel" type="Label" parent="Bottom/HealthAmmoPivot/HealthAmmoTexture"]
+layout_mode = 1
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_left = 38.0
+offset_top = -22.0
+offset_right = 65.0
+offset_bottom = -11.0
+grow_vertical = 0
+label_settings = SubResource("LabelSettings_n6m80")
+horizontal_alignment = 2
 
 [node name="ArmourItemPivot" type="Control" parent="Bottom"]
 layout_mode = 1

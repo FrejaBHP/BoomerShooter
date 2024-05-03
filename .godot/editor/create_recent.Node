@@ -1,5 +1,10 @@
-Control
+Label
+RichTextLabel
+Node3D
+RemoteTransform2D
 TextureRect
+RayCast3D
+Control
 VBoxContainer
 Sprite2D
 Container
@@ -7,8 +12,3 @@ HBoxContainer
 Marker3D
 Camera3D
 LightmapGI
-QodotMap
-MeshInstance3D
-DirectionalLight3D
-WorldEnvironment
-Sprite3D

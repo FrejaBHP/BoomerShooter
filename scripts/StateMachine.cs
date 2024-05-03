@@ -1,3 +1,5 @@
+using System;
+using System.Reflection;
 using Godot;
 
 public interface IState {
@@ -30,22 +32,24 @@ public abstract class State : IState {
     protected Texture2D Texture { get; private set; }
     protected int WState { get; private set; }
     protected State NextState { get; private set; }
+    protected Action Action { get; private set; } = null;
 
-    protected int frameCounter { get; private set;}
+    protected int FrameCounter { get; private set; }
 
     public virtual void Enter() {
-        frameCounter = 0;
+        FrameCounter = 0;
         if (WState != -1) {
             Weapon.SetWeaponState(WState);
         }
         Weapon.Player.SetActiveWeaponSprite(Texture);
+        Action?.Invoke();
     }
 
     public virtual void Execute() {
         if (Length > 0) {
-            frameCounter++;
-            if (frameCounter >= Length && NextState != null) {
-                Weapon.WStateMachine.SetState(NextState);
+            FrameCounter++;
+            if (FrameCounter >= Length && NextState != null) {
+                Weapon.WStateMachine?.SetState(NextState);
             }
         }
     }
@@ -54,11 +58,12 @@ public abstract class State : IState {
 
     }
 
-    public virtual void ConfigureState(int frames, Weapon weapon, Texture2D texture, int wState, State? next) {
+    public virtual void ConfigureState(int frames, Weapon weapon, Texture2D texture, Action? action, int wState, State? next) {
         Length = frames;
         Weapon = weapon;
         Texture = texture;
+        Action = action;
         WState = wState;
-        NextState = next ?? null;
+        NextState = next;
     }
 }

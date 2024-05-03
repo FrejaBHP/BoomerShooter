@@ -1,9 +1,43 @@
 using Godot;
+
+public class SpriteOffset {
+    public float Left { get; private set; }
+    public float Right { get; private set; }
+    public float Top { get; private set; }
+    public float Bottom { get; private set; }
+
+    public SpriteOffset(float left, float right, float top, float bottom) {
+        Left = left;
+        Right = right;
+        Top = top;
+        Bottom = bottom;
+    }
+}
+
 public static class WeaponSprites {
-    public static Texture2D[] S_W_PF = new Texture2D[3];
+    public static Texture2D[] Spr_Wep_PF = new Texture2D[3];
+    public static Texture2D[] Spr_Wep_SG = new Texture2D[5];
+    public static Texture2D[] XSpr_Wep_SG = new Texture2D[2];
+    public static SpriteOffset[] Spr_Wep_Offset = new SpriteOffset[(int)WeaponType.NoOfWeapons];
+    
     public static void IndexWeaponSprites() {
-        S_W_PF[0] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf.png");
-        S_W_PF[1] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf_atk0.png");
-        S_W_PF[2] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf_atk1.png");
+        Spr_Wep_PF[0] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf.png");
+        Spr_Wep_PF[1] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf_atk0.png");
+        Spr_Wep_PF[2] = GD.Load<Texture2D>("res://textures/weapons/pitchfork/w_pf_atk1.png");
+
+        Spr_Wep_SG[0] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg.png");
+        Spr_Wep_SG[1] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg_rl0.png");
+        Spr_Wep_SG[2] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg_rl1.png");
+        Spr_Wep_SG[3] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg_rl2.png");
+        Spr_Wep_SG[4] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg_rl3.png");
+
+        XSpr_Wep_SG[0] = GD.Load<Texture2D>("res://textures/weapons/shotgun/xw_sg_rl0.png");
+        XSpr_Wep_SG[1] = GD.Load<Texture2D>("res://textures/weapons/shotgun/xw_sg_rl1.png");
+    }
+
+    public static void IndexWeaponOffsets() {
+        // Left, Right, Top, Bottom
+        Spr_Wep_Offset[0] = new(-37, 37, 0, 35);
+        Spr_Wep_Offset[1] = new(0, 60, 0, 30);
     }
 }
