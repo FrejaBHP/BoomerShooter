@@ -3,7 +3,6 @@
 .import/
 export.cfg
 export_presets.cfg
-examples/
 
 # Imported translations (automatically generated from CSV files)
 *.translation
@@ -12,3 +11,7 @@ examples/
 .mono/
 data_*/
 .editorconfig
+
+# Addon ignores
+examples/
+autosave/
