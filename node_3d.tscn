@@ -1,9 +1,8 @@
-[gd_scene load_steps=6 format=3 uid="uid://qxl2w2cthfnd"]
+[gd_scene load_steps=5 format=3 uid="uid://qxl2w2cthfnd"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_72s3f"]
 [ext_resource type="PackedScene" uid="uid://rggqlnrr307x" path="res://qodot_map_1.tscn" id="2_mjfjj"]
 [ext_resource type="LightmapGIData" uid="uid://cj0hu5u0fg8x0" path="res://levelLightMap0.lmbake" id="6_e8rh3"]
-[ext_resource type="PackedScene" uid="uid://b2lsyt0chmfdm" path="res://bsPlayer.tscn" id="10_aqkq8"]
 
 [sub_resource type="Environment" id="Environment_6h28a"]
 
@@ -11,8 +10,6 @@
 script = ExtResource("1_72s3f")
 
 [node name="QodotMap" parent="." instance=ExtResource("2_mjfjj")]
-
-[node name="Player" parent="." instance=ExtResource("10_aqkq8")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6h28a")
@@ -24,3 +21,6 @@ bounce_indirect_energy = 1.5
 light_data = ExtResource("6_e8rh3")
 
 [node name="RaytraceHelper" type="Node3D" parent="."]
+
+[node name="Marker3D" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.876227, -5.98999)

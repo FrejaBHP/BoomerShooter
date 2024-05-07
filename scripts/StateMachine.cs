@@ -30,6 +30,8 @@ public abstract class State : IState {
     protected int Length { get; private set; }
     protected Weapon Weapon { get; private set; }
     protected Texture2D Texture { get; private set; }
+    protected WeaponAnimationFrame Frame { get; private set; }
+    protected WeaponAnimation Animation { get; private set; }
     protected int WState { get; private set; }
     protected State NextState { get; private set; }
     protected Action Action { get; private set; } = null;
@@ -41,7 +43,11 @@ public abstract class State : IState {
         if (WState != -1) {
             Weapon.SetWeaponState(WState);
         }
-        Weapon.Player.SetActiveWeaponSprite(Texture);
+        //Weapon.Player.SetActiveWeaponSprite(Texture);
+        if (Frame != null) {
+            Weapon.Player.SetViewSpriteFrame(Frame);
+        }
+        Weapon.Player.FetchAndPlayAnimation(Animation);
         Action?.Invoke();
     }
 
@@ -58,10 +64,30 @@ public abstract class State : IState {
 
     }
 
+    /*
     public virtual void ConfigureState(int frames, Weapon weapon, Texture2D texture, Action? action, int wState, State? next) {
         Length = frames;
         Weapon = weapon;
         Texture = texture;
+        Action = action;
+        WState = wState;
+        NextState = next;
+    }
+    */
+
+    public virtual void ConfigureState(int frames, Weapon weapon, WeaponAnimationFrame frame, Action? action, int wState, State? next) {
+        Length = frames;
+        Weapon = weapon;
+        Frame = frame;
+        Action = action;
+        WState = wState;
+        NextState = next;
+    }
+
+    public virtual void ConfigureState(Weapon weapon, WeaponAnimation animation, Action? action, int wState, State? next) {
+        Weapon = weapon;
+        Animation = animation;
+        Length = Animation.TotalLength;
         Action = action;
         WState = wState;
         NextState = next;

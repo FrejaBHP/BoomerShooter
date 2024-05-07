@@ -98,14 +98,21 @@ public abstract class Weapon {
 
         for (int pellet = 0; pellet < (16 * barrels); pellet++) {
             offsetX = Utils.RandomOffset(0.13f); // 0.13f = approx. 7,4deg
-            offsetY = Utils.RandomOffset(0.13f);
+            offsetY = Utils.RandomOffset(0.03f);
             player.FireHitscanAttack(Attacks.BulletRegular, offsetX, offsetY);
         }
 
         if (barrels == 1) {
+            if (shells == 2) {
+                player.FetchAndPlaySecondaryAnimation(WAnimCollection.Anim_Wep_SG_FlashLeft);
+            }
+            else if (shells == 1) {
+                player.FetchAndPlaySecondaryAnimation(WAnimCollection.Anim_Wep_SG_FlashRight);
+            }
             shells--;
         }
         else {
+            player.FetchAndPlaySecondaryAnimation(WAnimCollection.Anim_Wep_SG_FlashBoth);
             shells = 0;
         }
         
@@ -160,15 +167,15 @@ public sealed partial class W_Pitchfork : Weapon {
     public W_Pitchfork(bsPlayer player) {
         Player = player;
 
-        // ConfigureState: Length (frames), Weapon (this), entry Texture, Action on first frame, enum WeaponState, State NextState
+        // ConfigureState: Length (frames), Weapon (this), entry Animation, Action on first frame, enum WeaponState, State NextState
         // Negative length doesn't count frames, negative WeaponState keeps current, null Action does nothing, null NextState does not change state by itself
-        UpState.ConfigureState(1, this, WeaponSprites.Spr_Wep_PF[0], () => A_Raise(Player, this), (int)WeaponState.UpState, UpState);
-        DownState.ConfigureState(1, this, WeaponSprites.Spr_Wep_PF[0], () => A_Lower(Player, this), (int)WeaponState.DownState, DownState);
-        ReadyState.ConfigureState(-1, this, WeaponSprites.Spr_Wep_PF[0], null, (int)WeaponState.ReadyState, null);
-        AtkState.ConfigureState(3, this, WeaponSprites.Spr_Wep_PF[1], null, (int)WeaponState.AtkState, AtkState1);
-        AtkState1.ConfigureState(13, this, WeaponSprites.Spr_Wep_PF[2], () => A_Stab(Player), -1, AtkState2);
-        AtkState2.ConfigureState(3, this, WeaponSprites.Spr_Wep_PF[1], null, -1, RecoveryState);
-        RecoveryState.ConfigureState(3, this, WeaponSprites.Spr_Wep_PF[0], null, -1, ReadyState);
+        UpState.ConfigureState(1, this, WAnimCollection.Frame_Wep_PF[0], () => A_Raise(Player, this), (int)WeaponState.UpState, UpState);
+        DownState.ConfigureState(1, this, WAnimCollection.Frame_Wep_PF[0], () => A_Lower(Player, this), (int)WeaponState.DownState, DownState);
+        ReadyState.ConfigureState(-1, this, WAnimCollection.Frame_Wep_PF[0], null, (int)WeaponState.ReadyState, null);
+        AtkState.ConfigureState(3, this, WAnimCollection.Frame_Wep_PF[1], null, (int)WeaponState.AtkState, AtkState1);
+        AtkState1.ConfigureState(13, this, WAnimCollection.Frame_Wep_PF[2], () => A_Stab(Player), -1, AtkState2);
+        AtkState2.ConfigureState(3, this, WAnimCollection.Frame_Wep_PF[1], null, -1, RecoveryState);
+        RecoveryState.ConfigureState(3, this, WAnimCollection.Frame_Wep_PF[0], null, -1, ReadyState);
     }
 
     public override void EnterAltState() {
@@ -185,16 +192,11 @@ public sealed partial class W_Shotgun : Weapon {
     public override WeaponState WeaponState { get; protected set; }
     public override bsPlayer Player { get; protected set; }
 
-    //private class WAtkState1 : State {}
-    //private class WAtkState2 : State {}
-
     protected override WUpState UpState { get; } = new();
     protected override WDownState DownState { get; } = new();
     protected override WReadyState ReadyState { get; } = new();
     protected override WAtkState AtkState { get; } = new();
     protected override WAltState AltState { get; } = new();
-    //private readonly WAtkState1 AtkState1 = new();
-    //private readonly WAtkState2 AtkState2 = new();
 
     private class WRecoveryState : State {}
     private class WReloadState : State {}
@@ -216,22 +218,19 @@ public sealed partial class W_Shotgun : Weapon {
     public W_Shotgun(bsPlayer player) {
         Player = player;
 
-        // ConfigureState: Length (frames), Weapon (this), entry Texture, Action on first frame, enum WeaponState, State NextState
+        
+        // ConfigureState: Length (frames), Weapon (this), entry Animation, Action on first frame, enum WeaponState, State NextState
         // Negative length doesn't count frames, negative WeaponState keeps current, null Action does nothing, null NextState does not change state by itself
-        UpState.ConfigureState(1, this, WeaponSprites.Spr_Wep_SG[0], () => A_Raise(Player, this), (int)WeaponState.UpState, UpState);
-        DownState.ConfigureState(1, this, WeaponSprites.Spr_Wep_SG[0], () => A_Lower(Player, this), (int)WeaponState.DownState, DownState);
-        ReadyState.ConfigureState(-1, this, WeaponSprites.Spr_Wep_SG[0], null, (int)WeaponState.ReadyState, null);
-        AtkState.ConfigureState(15, this, WeaponSprites.Spr_Wep_SG[0], () => A_FireShotgun(Player, 1, ref Shells), (int)WeaponState.AtkState, RecoveryState);
-        AltState.ConfigureState(15, this, WeaponSprites.Spr_Wep_SG[0], () => A_FireShotgun(Player, 2, ref Shells), (int)WeaponState.AltState, RecoveryState);
-        //AtkState1.ConfigureState(13, this, WeaponSprites.Spr_Wep_PF[2], null, -1, AtkState2);
-        //AtkState2.ConfigureState(3, this, WeaponSprites.Spr_Wep_PF[1], null, -1, RecoveryState);
-        RecoveryState.ConfigureState(1, this, WeaponSprites.Spr_Wep_SG[0], () => A_ShotgunReloadCheck(Player, this), -1, null);
-        ReloadState.ConfigureState(10, this, WeaponSprites.Spr_Wep_SG[1], null, -1, ReloadState1);
-        ReloadState1.ConfigureState(10, this, WeaponSprites.Spr_Wep_SG[2], null, -1, ReloadState2);
-        ReloadState2.ConfigureState(10, this, WeaponSprites.Spr_Wep_SG[3], null, -1, ReloadState3);
-        ReloadState3.ConfigureState(1, this, WeaponSprites.Spr_Wep_SG[3], null, -1, ReloadState4);
-        ReloadState4.ConfigureState(1, this, WeaponSprites.Spr_Wep_SG[3], null, -1, ReloadState5);
-        ReloadState5.ConfigureState(10, this, WeaponSprites.Spr_Wep_SG[4], () => A_ReloadShotgun(Player, ref Shells), -1, ReadyState);
+        UpState.ConfigureState(1, this, WAnimCollection.Anim_Wep_SG[0], () => A_Raise(Player, this), (int)WeaponState.UpState, UpState);
+        DownState.ConfigureState(1, this, WAnimCollection.Anim_Wep_SG[0], () => A_Lower(Player, this), (int)WeaponState.DownState, DownState);
+        ReadyState.ConfigureState(-1, this, WAnimCollection.Anim_Wep_SG[0], null, (int)WeaponState.ReadyState, null);
+        AtkState.ConfigureState(this, WAnimCollection.Anim_Wep_SG_Atk, () => A_FireShotgun(Player, 1, ref Shells), (int)WeaponState.AtkState, RecoveryState);
+        AltState.ConfigureState(this, WAnimCollection.Anim_Wep_SG_Alt, () => A_FireShotgun(Player, 2, ref Shells), (int)WeaponState.AltState, RecoveryState);
+        RecoveryState.ConfigureState(1, this, WAnimCollection.Anim_Wep_SG[0], () => A_ShotgunReloadCheck(Player, this), -1, null);
+        ReloadState.ConfigureState(10, this, WAnimCollection.Anim_Wep_SG[3], null, -1, ReloadState1);
+        ReloadState1.ConfigureState(10, this, WAnimCollection.Anim_Wep_SG[4], null, -1, ReloadState2);
+        ReloadState2.ConfigureState(10, this, WAnimCollection.Anim_Wep_SG[5], null, -1, ReloadState3);
+        ReloadState3.ConfigureState(10, this, WAnimCollection.Anim_Wep_SG[6], () => A_ReloadShotgun(Player, ref Shells), -1, ReadyState);
     }
 
     public override void EnterAltState() {

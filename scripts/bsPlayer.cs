@@ -1,11 +1,12 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Numerics;
 using Vector2 = Godot.Vector2;
 using Vector3 = Godot.Vector3;
 
 public partial class bsPlayer : CharacterBody3D {
-	public const float Speed = 7.0f;
+	public const float Speed = 6.0f;
 	public const float JumpVelocity = 4f;
 
 	private int health;
@@ -39,6 +40,17 @@ public partial class bsPlayer : CharacterBody3D {
 	public Control ActiveWeaponControl { get; set; }
 	public TextureRect ActiveWeaponSprite { get; private set; }
 
+	public Control ActiveWeaponPivot { get; private set; }
+	public Godot.Collections.Array<Node> ActiveWeaponSpriteNodes { get; private set; }
+
+	public WeaponAnimation PlayingWeaponAnimation { get; private set; }
+	private int playingWeaponAnimationTick = 0;
+	private int playingWeaponAnimationFrame = 0;
+
+	public WeaponAnimation PlayingSecondaryWeaponAnimation { get; private set; }
+	private int playingSecondaryWeaponAnimationTick = 0;
+	private int playingSecondaryWeaponAnimationFrame = 0;
+
 
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
@@ -59,7 +71,10 @@ public partial class bsPlayer : CharacterBody3D {
 		vectorRay = GetNode<RayCast3D>("PlayerCamera/VectorAttackRay");
 
 		ActiveWeaponControl = GetNode<Control>("bsPlayerWeapon");
-		ActiveWeaponSprite = GetNode<TextureRect>("bsPlayerWeapon/BottomAnchor/BottomPivot/WeaponSprite");
+		ActiveWeaponSprite = GetNode<TextureRect>("bsPlayerWeapon/BottomAnchor/WeaponSprite");
+
+		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/BottomAnchor/WeaponPivot");
+		ActiveWeaponSpriteNodes = GetNode<Node>("bsPlayerWeapon/BottomAnchor/WeaponPivot").GetChildren();
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		mouseCaptured = true;
@@ -115,9 +130,16 @@ public partial class bsPlayer : CharacterBody3D {
 				TestClearHelper();
 				ActiveWeapon.EnterAtkState();
 			}
-			else if (Input.IsActionPressed("rightclick") && (PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqSec || ActiveWeapon.AmmoType == Ammotype.None)) {
-				TestClearHelper();
-				ActiveWeapon.EnterAltState();
+			else if (Input.IsActionPressed("rightclick")) {
+				if ((ActiveWeaponNum == (int)WeaponType.W_Shotgun && (ActiveWeapon as W_Shotgun).Shells == 1) ||
+				PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqSec || ActiveWeapon.AmmoType == Ammotype.None) {
+					TestClearHelper();
+					ActiveWeapon.EnterAltState();
+				}
+				//else if (PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqSec || ActiveWeapon.AmmoType == Ammotype.None) {
+				//	TestClearHelper();
+				//	ActiveWeapon.EnterAltState();
+				//}
 			}
 			else if (SwitchingWeapon) {
 				ActiveWeapon.EnterLowerState();
@@ -128,6 +150,9 @@ public partial class bsPlayer : CharacterBody3D {
 			}
 		}
 		ActiveWeapon.WStateMachine.Process();
+
+		ProcessAnimation();
+		ProcessSecondaryAnimation();
 
 		TestUpdateHUDText();
 	}
@@ -177,9 +202,86 @@ public partial class bsPlayer : CharacterBody3D {
 		Velocity = velocity;
 		MoveAndSlide();
 	}
+	
+	public void FetchAndPlayAnimation(WeaponAnimation animation) {
+		PlayingWeaponAnimation = animation;
+		playingWeaponAnimationFrame = 0;
+		playingWeaponAnimationTick = 0;
+	}
+
+	public void ProcessAnimation() {
+		if (PlayingWeaponAnimation != null) {
+			if (playingWeaponAnimationTick == 0) {
+				SetViewSpriteFrame(PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame]);
+			}
+
+			if (PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame].FrameLength != 0) {
+				playingWeaponAnimationTick++;
+			}
+
+			if (playingWeaponAnimationTick == PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame].FrameLength) {
+				if (playingWeaponAnimationFrame + 1 < PlayingWeaponAnimation.AnimFrames.Length) {
+					playingWeaponAnimationFrame++;
+					playingWeaponAnimationTick = 0;
+				}
+				else {
+					PlayingWeaponAnimation = null;
+					playingWeaponAnimationFrame = 0;
+					playingWeaponAnimationTick = 0;
+				}
+			}
+		}
+	}
+
+	public void FetchAndPlaySecondaryAnimation(WeaponAnimation animation) {
+		PlayingSecondaryWeaponAnimation = animation;
+		playingSecondaryWeaponAnimationFrame = 0;
+		playingSecondaryWeaponAnimationTick = 0;
+	}
+
+	public void ProcessSecondaryAnimation() {
+		if (PlayingSecondaryWeaponAnimation != null) {
+			if (playingSecondaryWeaponAnimationTick == 0) {
+				SetViewSpriteFrame(PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame]);
+			}
+
+			if (PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame].FrameLength != 0) {
+				playingSecondaryWeaponAnimationTick++;
+			}
+
+			if (playingSecondaryWeaponAnimationTick == PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame].FrameLength) {
+				if (playingSecondaryWeaponAnimationFrame + 1 < PlayingSecondaryWeaponAnimation.AnimFrames.Length) {
+					playingSecondaryWeaponAnimationFrame++;
+					playingSecondaryWeaponAnimationTick = 0;
+				}
+				else {
+					PlayingSecondaryWeaponAnimation = null;
+					playingSecondaryWeaponAnimationFrame = 0;
+					playingSecondaryWeaponAnimationTick = 0;
+				}
+			}
+		}
+	}
 
 	public void SetActiveWeaponSprite(Texture2D sprite) {
 		ActiveWeaponSprite.Texture = sprite;
+	}
+
+	public void SetViewSpriteFrame(WeaponAnimationFrame frame) {
+		foreach (WeaponAnimationLayer animlayer in frame.WeaponAnimationLayers) {
+			TextureRect textureRect = ActiveWeaponSpriteNodes[animlayer.Layer] as TextureRect;
+			//textureRect.Position = new(ActiveWeaponPivot.Position.X + animlayer.Offset.Right, ActiveWeaponPivot.Position.Y + animlayer.Offset.Top);
+			textureRect.Texture = animlayer.Texture;
+			textureRect.OffsetLeft = animlayer.Offset.Left;
+        	textureRect.OffsetRight = animlayer.Offset.Right;
+        	textureRect.OffsetTop = animlayer.Offset.Top;
+			textureRect.OffsetBottom = animlayer.Offset.Bottom;
+			//textureRect.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left + animlayer.Offset.Left;
+        	//textureRect.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right + animlayer.Offset.Right;
+        	//textureRect.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top + animlayer.Offset.Top;
+			//textureRect.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom + animlayer.Offset.Bottom;
+			//textureRect.Position = WeaponSprites.fuckoff[0] + new Vector2(animlayer.Offset.Right, animlayer.Offset.Top);
+		}
 	}
 
 	public void PickUpNewWeapon(WeaponType type) {
@@ -215,10 +317,17 @@ public partial class bsPlayer : CharacterBody3D {
 		ActiveWeapon = WeaponInventory[(int)type];
 		ActiveWeaponNum = (int)type;
 
+		/*
 		ActiveWeaponSprite.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
         ActiveWeaponSprite.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
         ActiveWeaponSprite.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top;
 		ActiveWeaponSprite.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom;
+		*/
+
+		ActiveWeaponPivot.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
+        ActiveWeaponPivot.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
+        ActiveWeaponPivot.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top;
+		ActiveWeaponPivot.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom;
 
 		ActiveWeapon.EnterRaiseState();
 
@@ -273,7 +382,7 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void TestUpdateHUDText() {
-		label.Text = $"Pos: {GlobalPosition}";
+		label.Text = $"Pos: {GlobalPosition}\nFrame: {playingWeaponAnimationFrame}, / Tick: {playingWeaponAnimationTick}\nSFrame: {playingSecondaryWeaponAnimationFrame}, / STick: {playingSecondaryWeaponAnimationTick}";
 		if (ActiveWeaponNum == 1) {
 			label.Text += $"\nLoaded shells: {(ActiveWeapon as W_Shotgun).Shells}";
 		}
