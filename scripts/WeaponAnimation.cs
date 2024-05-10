@@ -3,11 +3,27 @@ using Godot;
 public partial class WeaponAnimationLayer {
     public int Layer { get; private set; }
     public SpriteOffset Offset { get; private set; }
+    public int RotationDeg { get; private set; }
     public Texture2D? Texture { get; private set; }
+
+    public WeaponAnimationLayer(int layer, Texture2D? texture) {
+        Layer = layer;
+        Offset = WeaponSprites.Spr_NoOffset;
+        RotationDeg = 0;
+        Texture = texture;
+    }
 
     public WeaponAnimationLayer(int layer, SpriteOffset offset, Texture2D? texture) {
         Layer = layer;
         Offset = offset;
+        RotationDeg = 0;
+        Texture = texture;
+    }
+
+    public WeaponAnimationLayer(int layer, SpriteOffset offset, int rotation, Texture2D? texture) {
+        Layer = layer;
+        Offset = offset;
+        RotationDeg = rotation;
         Texture = texture;
     }
 }
@@ -29,7 +45,11 @@ public class WeaponAnimation {
     public WeaponAnimationFrame[] AnimFrames { get; set; }
     public int TotalLength { get; set; }
 
-    
+    public void UpdateAnimationLength() {
+        for (int i = 0; i < AnimFrames.Length; i++) {
+            TotalLength += AnimFrames[i].FrameLength;
+        }
+    }
 }
 
 public static class WAnimCollection {
@@ -66,15 +86,12 @@ public static class WAnimCollection {
             new(3, new(0, 5, 0, 8), WeaponSprites.Spr_Wep_SG[0]),
             new(4, WeaponSprites.Spr_NoOffset, null)
         }, 3);
-
-        for (int i = 0; i < Anim_Wep_SG_Atk.AnimFrames.Length; i++) {
-            Anim_Wep_SG_Atk.TotalLength += Anim_Wep_SG_Atk.AnimFrames[i].FrameLength;
-        }
+        Anim_Wep_SG_Atk.UpdateAnimationLength();
 
         // SG Alt
         Anim_Wep_SG_Alt.AnimFrames = new WeaponAnimationFrame[4];
         Anim_Wep_SG_Alt.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
-            new(3, new(0, 0, 0, 0), WeaponSprites.Spr_Wep_SG[0]),
+            new(3, WeaponSprites.Spr_Wep_SG[0]),
             new(4, new(0, -7, 0, -52), WeaponSprites.XSpr_Wep_SG[5])
         }, 3);
         Anim_Wep_SG_Alt.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
@@ -89,10 +106,7 @@ public static class WAnimCollection {
             new(3, new(0, 5, 0, 15), WeaponSprites.Spr_Wep_SG[0]),
             new(4, WeaponSprites.Spr_NoOffset, null)
         }, 3);
-        
-        for (int i = 0; i < Anim_Wep_SG_Alt.AnimFrames.Length; i++) {
-            Anim_Wep_SG_Alt.TotalLength += Anim_Wep_SG_Alt.AnimFrames[i].FrameLength;
-        }
+        Anim_Wep_SG_Alt.UpdateAnimationLength();
 
         Anim_Wep_SG_FlashLeft.AnimFrames = new WeaponAnimationFrame[4];
         Anim_Wep_SG_FlashLeft.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
@@ -105,12 +119,9 @@ public static class WAnimCollection {
             new(0, WeaponSprites.Spr_SG_Flash_Offset[0], WeaponSprites.XSpr_Wep_SG[4])
         }, 3);
         Anim_Wep_SG_FlashLeft.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
-            new(0, WeaponSprites.Spr_NoOffset, null)
+            new(0, null)
         }, 0);
-        
-        for (int i = 0; i < Anim_Wep_SG_FlashLeft.AnimFrames.Length; i++) {
-            Anim_Wep_SG_FlashLeft.TotalLength += Anim_Wep_SG_FlashLeft.AnimFrames[i].FrameLength;
-        }
+        Anim_Wep_SG_FlashLeft.UpdateAnimationLength();
 
         Anim_Wep_SG_FlashRight.AnimFrames = new WeaponAnimationFrame[4];
         Anim_Wep_SG_FlashRight.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
@@ -123,12 +134,9 @@ public static class WAnimCollection {
             new(1, WeaponSprites.Spr_SG_Flash_Offset[1], WeaponSprites.XSpr_Wep_SG[4])
         }, 3);
         Anim_Wep_SG_FlashRight.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
-            new(1, WeaponSprites.Spr_NoOffset, null)
+            new(1, null)
         }, 0);
-        
-        for (int i = 0; i < Anim_Wep_SG_FlashRight.AnimFrames.Length; i++) {
-            Anim_Wep_SG_FlashRight.TotalLength += Anim_Wep_SG_FlashRight.AnimFrames[i].FrameLength;
-        }
+        Anim_Wep_SG_FlashRight.UpdateAnimationLength();
 
         Anim_Wep_SG_FlashBoth.AnimFrames = new WeaponAnimationFrame[4];
         Anim_Wep_SG_FlashBoth.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
@@ -141,12 +149,9 @@ public static class WAnimCollection {
             new(0, WeaponSprites.Spr_SG_Flash_Offset[2], WeaponSprites.XSpr_Wep_SG[4])
         }, 3);
         Anim_Wep_SG_FlashBoth.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
-            new(0, WeaponSprites.Spr_NoOffset, null)
+            new(0, null)
         }, 0);
-        
-        for (int i = 0; i < Anim_Wep_SG_FlashBoth.AnimFrames.Length; i++) {
-            Anim_Wep_SG_FlashBoth.TotalLength += Anim_Wep_SG_FlashBoth.AnimFrames[i].FrameLength;
-        }
+        Anim_Wep_SG_FlashBoth.UpdateAnimationLength();
 
 
         // PF Idle

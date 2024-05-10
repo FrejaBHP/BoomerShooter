@@ -226,8 +226,6 @@ public partial class bsPlayer : CharacterBody3D {
 				}
 				else {
 					PlayingWeaponAnimation = null;
-					playingWeaponAnimationFrame = 0;
-					playingWeaponAnimationTick = 0;
 				}
 			}
 		}
@@ -256,8 +254,6 @@ public partial class bsPlayer : CharacterBody3D {
 				}
 				else {
 					PlayingSecondaryWeaponAnimation = null;
-					playingSecondaryWeaponAnimationFrame = 0;
-					playingSecondaryWeaponAnimationTick = 0;
 				}
 			}
 		}
@@ -270,17 +266,15 @@ public partial class bsPlayer : CharacterBody3D {
 	public void SetViewSpriteFrame(WeaponAnimationFrame frame) {
 		foreach (WeaponAnimationLayer animlayer in frame.WeaponAnimationLayers) {
 			TextureRect textureRect = ActiveWeaponSpriteNodes[animlayer.Layer] as TextureRect;
-			//textureRect.Position = new(ActiveWeaponPivot.Position.X + animlayer.Offset.Right, ActiveWeaponPivot.Position.Y + animlayer.Offset.Top);
+
 			textureRect.Texture = animlayer.Texture;
+
 			textureRect.OffsetLeft = animlayer.Offset.Left;
         	textureRect.OffsetRight = animlayer.Offset.Right;
         	textureRect.OffsetTop = animlayer.Offset.Top;
 			textureRect.OffsetBottom = animlayer.Offset.Bottom;
-			//textureRect.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left + animlayer.Offset.Left;
-        	//textureRect.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right + animlayer.Offset.Right;
-        	//textureRect.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top + animlayer.Offset.Top;
-			//textureRect.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom + animlayer.Offset.Bottom;
-			//textureRect.Position = WeaponSprites.fuckoff[0] + new Vector2(animlayer.Offset.Right, animlayer.Offset.Top);
+
+			textureRect.RotationDegrees = animlayer.RotationDeg;
 		}
 	}
 
@@ -316,13 +310,6 @@ public partial class bsPlayer : CharacterBody3D {
 
 		ActiveWeapon = WeaponInventory[(int)type];
 		ActiveWeaponNum = (int)type;
-
-		/*
-		ActiveWeaponSprite.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
-        ActiveWeaponSprite.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
-        ActiveWeaponSprite.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top;
-		ActiveWeaponSprite.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom;
-		*/
 
 		ActiveWeaponPivot.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
         ActiveWeaponPivot.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
