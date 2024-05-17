@@ -1,3 +1,5 @@
+using Godot;
+
 public enum Ammotype {
     None,
     Shells,
@@ -27,13 +29,19 @@ public enum WeaponState {
     DownState
 }
 
+public enum EnemyState {
+    Idle,
+    Chase,
+    Attack
+}
+
 public class Ammunition {
     public int Max { get; }
     private int ammo = 0;
     public int Ammo { 
         get => ammo; 
         set {
-            if (ammo + value > Max) {
+            if (value > Max) {
                 ammo = Max;
             }
             else {

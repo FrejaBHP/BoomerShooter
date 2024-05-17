@@ -43,19 +43,21 @@ public partial class bsPlayer : CharacterBody3D {
 	public Control ActiveWeaponPivot { get; private set; }
 	public Godot.Collections.Array<Node> ActiveWeaponSpriteNodes { get; private set; }
 
-	public WeaponAnimation PlayingWeaponAnimation { get; private set; }
-	private int playingWeaponAnimationTick = 0;
-	private int playingWeaponAnimationFrame = 0;
+	public WeaponAnimation PriWepAnim { get; private set; }
+	private int priWepAnimTick = 0;
+	private int priWepAnimFrame = 0;
 
-	public WeaponAnimation PlayingSecondaryWeaponAnimation { get; private set; }
-	private int playingSecondaryWeaponAnimationTick = 0;
-	private int playingSecondaryWeaponAnimationFrame = 0;
+	public WeaponAnimation SecWepAnim { get; private set; }
+	private int secWepAnimTick = 0;
+	private int secWepAnimFrame = 0;
 
+	public AudioStreamPlayer3D PriFireAudio { get; private set; }
+	public AudioStreamPlayer3D AltFireAudio { get; private set; }
+	public AudioStreamPlayer3D VoiceAudio { get; private set; }
+	public AudioStreamPlayer3D WeaponMiscAudio { get; private set; }
 
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
-
-
 
 	private Node3D helper;
 
@@ -75,6 +77,11 @@ public partial class bsPlayer : CharacterBody3D {
 
 		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/BottomAnchor/WeaponPivot");
 		ActiveWeaponSpriteNodes = GetNode<Node>("bsPlayerWeapon/BottomAnchor/WeaponPivot").GetChildren();
+
+		PriFireAudio = GetNode<AudioStreamPlayer3D>("PrimaryFireAudio");
+		AltFireAudio = GetNode<AudioStreamPlayer3D>("AltFireAudio");
+		VoiceAudio = GetNode<AudioStreamPlayer3D>("PlayerVoiceAudio");
+		WeaponMiscAudio = GetNode<AudioStreamPlayer3D>("WeaponMiscAudio");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		mouseCaptured = true;
@@ -136,10 +143,6 @@ public partial class bsPlayer : CharacterBody3D {
 					TestClearHelper();
 					ActiveWeapon.EnterAltState();
 				}
-				//else if (PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqSec || ActiveWeapon.AmmoType == Ammotype.None) {
-				//	TestClearHelper();
-				//	ActiveWeapon.EnterAltState();
-				//}
 			}
 			else if (SwitchingWeapon) {
 				ActiveWeapon.EnterLowerState();
@@ -204,56 +207,64 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 	
 	public void FetchAndPlayAnimation(WeaponAnimation animation) {
-		PlayingWeaponAnimation = animation;
-		playingWeaponAnimationFrame = 0;
-		playingWeaponAnimationTick = 0;
+		PriWepAnim = animation;
+		priWepAnimFrame = 0;
+		priWepAnimTick = 0;
 	}
 
 	public void ProcessAnimation() {
-		if (PlayingWeaponAnimation != null) {
-			if (playingWeaponAnimationTick == 0) {
-				SetViewSpriteFrame(PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame]);
+		if (PriWepAnim != null) {
+			if (priWepAnimTick == 0) {
+				SetViewSpriteFrame(PriWepAnim.AnimFrames[priWepAnimFrame]);
+				if (PriWepAnim.AnimFrames[priWepAnimFrame].Sound != null) {
+					WeaponMiscAudio.Stream = PriWepAnim.AnimFrames[priWepAnimFrame].Sound;
+					WeaponMiscAudio.Play();
+				}
 			}
 
-			if (PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame].FrameLength != 0) {
-				playingWeaponAnimationTick++;
+			if (PriWepAnim.AnimFrames[priWepAnimFrame].FrameLength != 0) {
+				priWepAnimTick++;
 			}
 
-			if (playingWeaponAnimationTick == PlayingWeaponAnimation.AnimFrames[playingWeaponAnimationFrame].FrameLength) {
-				if (playingWeaponAnimationFrame + 1 < PlayingWeaponAnimation.AnimFrames.Length) {
-					playingWeaponAnimationFrame++;
-					playingWeaponAnimationTick = 0;
+			if (priWepAnimTick == PriWepAnim.AnimFrames[priWepAnimFrame].FrameLength) {
+				if (priWepAnimFrame + 1 < PriWepAnim.AnimFrames.Length) {
+					priWepAnimFrame++;
+					priWepAnimTick = 0;
 				}
 				else {
-					PlayingWeaponAnimation = null;
+					PriWepAnim = null;
 				}
 			}
 		}
 	}
 
 	public void FetchAndPlaySecondaryAnimation(WeaponAnimation animation) {
-		PlayingSecondaryWeaponAnimation = animation;
-		playingSecondaryWeaponAnimationFrame = 0;
-		playingSecondaryWeaponAnimationTick = 0;
+		SecWepAnim = animation;
+		secWepAnimFrame = 0;
+		secWepAnimTick = 0;
 	}
 
 	public void ProcessSecondaryAnimation() {
-		if (PlayingSecondaryWeaponAnimation != null) {
-			if (playingSecondaryWeaponAnimationTick == 0) {
-				SetViewSpriteFrame(PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame]);
+		if (SecWepAnim != null) {
+			if (secWepAnimTick == 0) {
+				SetViewSpriteFrame(SecWepAnim.AnimFrames[secWepAnimFrame]);
+				if (SecWepAnim.AnimFrames[secWepAnimFrame].Sound != null) {
+					WeaponMiscAudio.Stream = SecWepAnim.AnimFrames[secWepAnimFrame].Sound;
+					WeaponMiscAudio.Play();
+				}
 			}
 
-			if (PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame].FrameLength != 0) {
-				playingSecondaryWeaponAnimationTick++;
+			if (SecWepAnim.AnimFrames[secWepAnimFrame].FrameLength != 0) {
+				secWepAnimTick++;
 			}
 
-			if (playingSecondaryWeaponAnimationTick == PlayingSecondaryWeaponAnimation.AnimFrames[playingSecondaryWeaponAnimationFrame].FrameLength) {
-				if (playingSecondaryWeaponAnimationFrame + 1 < PlayingSecondaryWeaponAnimation.AnimFrames.Length) {
-					playingSecondaryWeaponAnimationFrame++;
-					playingSecondaryWeaponAnimationTick = 0;
+			if (secWepAnimTick == SecWepAnim.AnimFrames[secWepAnimFrame].FrameLength) {
+				if (secWepAnimFrame + 1 < SecWepAnim.AnimFrames.Length) {
+					secWepAnimFrame++;
+					secWepAnimTick = 0;
 				}
 				else {
-					PlayingSecondaryWeaponAnimation = null;
+					SecWepAnim = null;
 				}
 			}
 		}
@@ -274,7 +285,10 @@ public partial class bsPlayer : CharacterBody3D {
         	textureRect.OffsetTop = animlayer.Offset.Top;
 			textureRect.OffsetBottom = animlayer.Offset.Bottom;
 
+			textureRect.PivotOffset = textureRect.Size / 2;
+
 			textureRect.RotationDegrees = animlayer.RotationDeg;
+			textureRect.FlipH = animlayer.DoFlipH;
 		}
 	}
 
@@ -311,10 +325,10 @@ public partial class bsPlayer : CharacterBody3D {
 		ActiveWeapon = WeaponInventory[(int)type];
 		ActiveWeaponNum = (int)type;
 
-		ActiveWeaponPivot.OffsetLeft = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
-        ActiveWeaponPivot.OffsetRight = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
-        ActiveWeaponPivot.OffsetTop = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Top;
-		ActiveWeaponPivot.OffsetBottom = WeaponSprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom;
+		ActiveWeaponPivot.OffsetLeft = Sprites.Spr_Wep_Offset[ActiveWeaponNum].Left;
+        ActiveWeaponPivot.OffsetRight = Sprites.Spr_Wep_Offset[ActiveWeaponNum].Right;
+        ActiveWeaponPivot.OffsetTop = Sprites.Spr_Wep_Offset[ActiveWeaponNum].Top;
+		ActiveWeaponPivot.OffsetBottom = Sprites.Spr_Wep_Offset[ActiveWeaponNum].Bottom;
 
 		ActiveWeapon.EnterRaiseState();
 
@@ -333,6 +347,9 @@ public partial class bsPlayer : CharacterBody3D {
                 (ActiveWeapon as W_Shotgun).Shells = 1;
             }
 		}
+
+		PriFireAudio.Stream = ActiveWeapon.PrimaryFireAudio;
+		AltFireAudio.Stream = ActiveWeapon.AltFireAudio;
 	}
 
 	public void GiveAmmo(Ammotype ammotype, int amount) {
@@ -369,7 +386,7 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void TestUpdateHUDText() {
-		label.Text = $"Pos: {GlobalPosition}\nFrame: {playingWeaponAnimationFrame}, / Tick: {playingWeaponAnimationTick}\nSFrame: {playingSecondaryWeaponAnimationFrame}, / STick: {playingSecondaryWeaponAnimationTick}";
+		label.Text = $"Pos: {GlobalPosition}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
 		if (ActiveWeaponNum == 1) {
 			label.Text += $"\nLoaded shells: {(ActiveWeapon as W_Shotgun).Shells}";
 		}

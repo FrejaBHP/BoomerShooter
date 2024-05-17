@@ -14,10 +14,13 @@ public class SpriteOffset {
     }
 }
 
-public static class WeaponSprites {
+public static class Sprites {
     public static Texture2D[] Spr_Wep_PF = new Texture2D[3];
     public static Texture2D[] Spr_Wep_SG = new Texture2D[5];
     public static Texture2D[] XSpr_Wep_SG = new Texture2D[6];
+
+    public static Texture2D[,] Spr_Zombie_Walk = new Texture2D[6,5];
+    public static Texture2D[,] Spr_Zombie_Attack = new Texture2D[7,5];
 
     public static SpriteOffset Spr_NoOffset = new(0, 0, 0, 0);
     public static SpriteOffset[] Spr_Wep_Offset = new SpriteOffset[(int)WeaponType.NoOfWeapons];
@@ -43,6 +46,18 @@ public static class WeaponSprites {
         XSpr_Wep_SG[3] = GD.Load<Texture2D>("res://textures/weapons/shotgun/xw_sg_flash1.png");
         XSpr_Wep_SG[4] = GD.Load<Texture2D>("res://textures/weapons/shotgun/xw_sg_flash2.png");
         XSpr_Wep_SG[5] = GD.Load<Texture2D>("res://textures/weapons/shotgun/w_sg_fire.png");
+
+        for (int frame = 0; frame < Spr_Zombie_Walk.GetLength(0); frame++) {
+            for (int dir = 0; dir < Spr_Zombie_Walk.GetLength(1); dir++) {
+                Spr_Zombie_Walk[frame, dir] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_walk{frame}_rot{dir}.png");
+            }
+        }
+
+        for (int frame = 0; frame < Spr_Zombie_Attack.GetLength(0); frame++) {
+            for (int dir = 0; dir < Spr_Zombie_Attack.GetLength(1); dir++) {
+                Spr_Zombie_Attack[frame, dir] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_atk{frame}_rot{dir}.png");
+            }
+        }
     }
 
     public static void IndexWeaponOffsets() {

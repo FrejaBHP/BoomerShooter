@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://b2lsyt0chmfdm"]
+[gd_scene load_steps=8 format=3 uid="uid://b2lsyt0chmfdm"]
 
 [ext_resource type="Script" path="res://scripts/bsPlayer.cs" id="1_kcng8"]
 [ext_resource type="Texture2D" uid="uid://crcoqoduv71gt" path="res://textures/p3870.png" id="1_qb6e2"]
@@ -9,14 +9,20 @@
 radius = 0.3
 height = 1.2
 
+[sub_resource type="AudioStreamWAV" id="AudioStreamWAV_cf1he"]
+stereo = true
+
+[sub_resource type="AudioStreamWAV" id="AudioStreamWAV_4thg3"]
+stereo = true
+
 [node name="Player" type="CharacterBody3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.681296, 0.6, -5.93294)
 rotation_edit_mode = 1
 script = ExtResource("1_kcng8")
 
-[node name="bsPlayerHUD" parent="." instance=ExtResource("2_c2kf4")]
-
 [node name="bsPlayerWeapon" parent="." instance=ExtResource("3_u78mm")]
+
+[node name="bsPlayerHUD" parent="." instance=ExtResource("2_c2kf4")]
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_gd063")
@@ -35,3 +41,21 @@ far = 1000.0
 
 [node name="VectorAttackRay" type="RayCast3D" parent="PlayerCamera"]
 rotation_edit_mode = 1
+
+[node name="PlayerVoiceAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamWAV_cf1he")
+
+[node name="PrimaryFireAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamWAV_4thg3")
+max_polyphony = 8
+bus = &"WeaponsFire"
+
+[node name="AltFireAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamWAV_4thg3")
+max_polyphony = 8
+bus = &"WeaponsFire"
+
+[node name="WeaponMiscAudio" type="AudioStreamPlayer3D" parent="."]
+stream = SubResource("AudioStreamWAV_4thg3")
+max_polyphony = 8
+bus = &"WeaponsFire"
