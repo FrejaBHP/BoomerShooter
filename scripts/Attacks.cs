@@ -11,6 +11,6 @@ public class HitscanAttack {
 }
 
 public static class Attacks {
-    public static HitscanAttack PitchforkStab = new(DamageType.Melee, 0.96f, 4);
+    public static HitscanAttack PitchforkStab = new(DamageType.Melee, 0.96f, 1);
     public static HitscanAttack BulletRegular = new(DamageType.Bullet, 128f, 4);
 }

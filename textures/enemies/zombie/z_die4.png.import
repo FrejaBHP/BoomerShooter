@@ -2,8 +2,8 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://b67rvppeq0lfg"
-path.s3tc="res://.godot/imported/z_atk0_rot0.png-d6ba943cabf67527a6ba9d873ebd295a.s3tc.ctex"
+uid="uid://sjuh32q6p5vv"
+path.s3tc="res://.godot/imported/z_die4.png-d8e2fb05e874a19fe4f3aebb9dd4c486.s3tc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -11,8 +11,8 @@ metadata={
 
 [deps]
 
-source_file="res://textures/enemies/zombie/z_atk0_rot0.png"
-dest_files=["res://.godot/imported/z_atk0_rot0.png-d6ba943cabf67527a6ba9d873ebd295a.s3tc.ctex"]
+source_file="res://textures/enemies/zombie/z_die4.png"
+dest_files=["res://.godot/imported/z_die4.png-d8e2fb05e874a19fe4f3aebb9dd4c486.s3tc.ctex"]
 
 [params]
 

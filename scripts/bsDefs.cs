@@ -32,7 +32,11 @@ public enum WeaponState {
 public enum EnemyState {
     Idle,
     Chase,
-    Attack
+    Attack,
+    AltAttack,
+    Stun,
+    Death,
+    Corpse
 }
 
 public class Ammunition {

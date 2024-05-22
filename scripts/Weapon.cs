@@ -33,6 +33,20 @@ public abstract class Weapon {
     protected abstract WAtkState AtkState { get; }
     protected virtual WAltState AltState { get; }
 
+    public virtual void PrimaryFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            Player.TestClearHelper();
+            EnterAtkState();
+        }
+    }
+
+    public virtual void AltFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            Player.TestClearHelper();
+            EnterAltState();
+        }
+    }
+
     public virtual void EnterAtkState() {
         WStateMachine.SetState(AtkState);
     }
@@ -148,6 +162,7 @@ public abstract class Weapon {
     }
 }
 
+
 public sealed partial class W_Pitchfork : Weapon {
     public override WStateMachine WStateMachine { get; } = new();
     public override Ammotype AmmoType { get; } = Ammotype.None;
@@ -187,10 +202,13 @@ public sealed partial class W_Pitchfork : Weapon {
         RecoveryState.ConfigureState(3, this, WAnimations.Frame_Wep_PF[0], null, -1, ReadyState);
     }
 
-    public override void EnterAltState() {
-        WStateMachine.SetState(AtkState);
+    public override void AltFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            EnterAtkState();
+        }
     }
 }
+
 
 public sealed partial class W_Shotgun : Weapon {
     public override WStateMachine WStateMachine { get; } = new();
@@ -236,16 +254,29 @@ public sealed partial class W_Shotgun : Weapon {
         ReloadActionState.ConfigureState(1, this, null, () => A_ReloadShotgun(Player, ref Shells), -1, ReadyState);
     }
 
-    public override void EnterAltState() {
-        if (Shells != 2) {
-            WStateMachine.SetState(AtkState);
-        }
-        else {
-            base.EnterAltState();
-        }
-    }
-
     public void EnterReloadState() {
         WStateMachine.SetState(ReloadState);
     }
+
+    public override void PrimaryFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            if (Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqPri) {
+                Player.TestClearHelper();
+                EnterAtkState();
+            }
+        }
+    }
+
+    public override void AltFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            if ((Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqSec) && Shells == 2) {
+                Player.TestClearHelper();
+                EnterAltState();
+            }
+            else if (Shells != 2) {
+                Player.TestClearHelper();
+                EnterAtkState();
+            }
+        }
+    } 
 }

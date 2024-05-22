@@ -70,7 +70,7 @@ public partial class bsPlayer : CharacterBody3D {
 		label = GetNode<Label>("bsPlayerHUD/Label");
 
 		playerCamera = GetNode<Camera3D>("PlayerCamera");
-		vectorRay = GetNode<RayCast3D>("PlayerCamera/VectorAttackRay");
+		vectorRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
 
 		ActiveWeaponControl = GetNode<Control>("bsPlayerWeapon");
 		ActiveWeaponSprite = GetNode<TextureRect>("bsPlayerWeapon/BottomAnchor/WeaponSprite");
@@ -132,19 +132,14 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 		ProcessMovement(delta);
 
-		if (ActiveWeapon != null && ActiveWeapon.WeaponState == WeaponState.ReadyState) {
-			if (Input.IsActionPressed("leftclick") && (PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqPri || ActiveWeapon.AmmoType == Ammotype.None)) {
-				TestClearHelper();
-				ActiveWeapon.EnterAtkState();
+		if (ActiveWeapon != null) {
+			if (Input.IsActionPressed("leftclick")) {
+				ActiveWeapon.PrimaryFire();
 			}
 			else if (Input.IsActionPressed("rightclick")) {
-				if ((ActiveWeaponNum == (int)WeaponType.W_Shotgun && (ActiveWeapon as W_Shotgun).Shells == 1) ||
-				PlayerAmmo[(int)ActiveWeapon.AmmoType].Ammo >= ActiveWeapon.AmmoReqSec || ActiveWeapon.AmmoType == Ammotype.None) {
-					TestClearHelper();
-					ActiveWeapon.EnterAltState();
-				}
+				ActiveWeapon.AltFire();
 			}
-			else if (SwitchingWeapon) {
+			else if (ActiveWeapon.WeaponState == WeaponState.ReadyState && SwitchingWeapon) {
 				ActiveWeapon.EnterLowerState();
 				SwitchingWeapon = false;
 			}
@@ -185,12 +180,14 @@ public partial class bsPlayer : CharacterBody3D {
 	private void ProcessMovement(double deltaTime) {
 		Vector3 velocity = Velocity;
 
-		if (!IsOnFloor())
+		if (!IsOnFloor()) {
 			velocity.Y -= gravity * (float)deltaTime;
+		}
 
-		if (Input.IsActionJustPressed("jump") && IsOnFloor())
+		if (Input.IsActionJustPressed("jump") && IsOnFloor()) {
 			velocity.Y = JumpVelocity;
-
+		}
+			
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero) {
@@ -359,6 +356,9 @@ public partial class bsPlayer : CharacterBody3D {
 
 	public void FireHitscanAttack(HitscanAttack atk, float offsetX, float offsetY) {
 		RayCast3D newVector = new();
+		newVector.SetCollisionMaskValue(1, true);
+		newVector.SetCollisionMaskValue(2, true);
+		newVector.SetCollisionMaskValue(5, true);
 		playerCamera.AddChild(newVector);
 		
 		Vector3 target = new(offsetX, offsetY, -1f);
@@ -366,8 +366,11 @@ public partial class bsPlayer : CharacterBody3D {
 		newVector.TargetPosition = target;
 		newVector.ForceRaycastUpdate();
 
-		if (newVector.IsColliding()) {
-			
+		if (newVector.IsColliding() && newVector.GetCollider().IsClass("Node3D")) {
+			Node3D collider = newVector.GetCollider() as Node3D;
+			if (collider.IsInGroup("Enemy")) {
+				(collider as EnemyBase).TakeDamage(this, atk.Damage);
+			}
 		}
 
 		newVector.SetProcess(false);
@@ -386,7 +389,7 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void TestUpdateHUDText() {
-		label.Text = $"Pos: {GlobalPosition}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
+		label.Text = $"Pos: {GlobalPosition.ToString("N4")}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
 		if (ActiveWeaponNum == 1) {
 			label.Text += $"\nLoaded shells: {(ActiveWeapon as W_Shotgun).Shells}";
 		}

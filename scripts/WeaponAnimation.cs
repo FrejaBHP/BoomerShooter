@@ -90,11 +90,11 @@ public static class WAnimations {
     public static void IndexWeaponAnimations() {
         // ----- Shotgun -----
         // SG Pri
-        Anim_Wep_SG_Atk.AnimFrames = new WeaponAnimationFrame[5];
+        Anim_Wep_SG_Atk.AnimFrames = new WeaponAnimationFrame[6];
         Anim_Wep_SG_Atk.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, Sprites.Spr_Wep_SG[0]),
             new(4, new(0, -7, 0, -52), Sprites.XSpr_Wep_SG[5])
-        }, 3);
+        }, 4);
         Anim_Wep_SG_Atk.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, new(0, 5, 0, 12), Sprites.Spr_Wep_SG[0]),
             new(4, new(0, -2, 0, -40), Sprites.XSpr_Wep_SG[5])
@@ -107,10 +107,13 @@ public static class WAnimations {
             new(3, new(0, 10, 0, 25), Sprites.Spr_Wep_SG[0]),
             new(4, new(0, 3, 0, -27), Sprites.XSpr_Wep_SG[5])
         }, 2);
-       Anim_Wep_SG_Atk.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+        Anim_Wep_SG_Atk.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, new(0, 5, 0, 8), Sprites.Spr_Wep_SG[0]),
             new(4, null)
-        }, 3);
+        }, 4);
+        Anim_Wep_SG_Atk.AnimFrames[5] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(3, Sprites.Spr_Wep_SG[0])
+        }, 4);
         Anim_Wep_SG_Atk.UpdateAnimationLength();
 
         // SG Alt
@@ -134,7 +137,7 @@ public static class WAnimations {
        Anim_Wep_SG_Alt.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, new(0, 5, 0, 15), Sprites.Spr_Wep_SG[0]),
             new(4, Sprites.Spr_NoOffset, null)
-        }, 3);
+        }, 6);
         Anim_Wep_SG_Alt.UpdateAnimationLength();
 
         // SG Reload
@@ -234,6 +237,7 @@ public static class WAnimations {
             new(3, new(0, 10, 0, 20), Sprites.Spr_Wep_SG[0]),
             new(4, new(0, 3, 0, -32), Sprites.XSpr_Wep_SG[5])
         });
+
         //SG Reload
         Anim_Wep_SG[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
             new(3, Sprites.Spr_Wep_SG[1])

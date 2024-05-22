@@ -10,7 +10,10 @@ public partial class AxeZombie : EnemyBase, IEnemy {
     public override Vector3 TargetLocation { get; set; }
 
 	public override float Speed { get; protected set; } = 4.0f;
-    public override int Health { get; protected set; } = 60;
+    public override int StartingHealth { get; protected set; } = 60;
+    public override int Health { get; protected set; }
+
+    public override CollisionShape3D ColShape { get; protected set; }
 
     public override Sprite3D VisSprite { get; protected set; }
     public override int SpriteAnimFrame { get; protected set; } = 0;
@@ -23,22 +26,34 @@ public partial class AxeZombie : EnemyBase, IEnemy {
 
     public override AudioStreamPlayer3D VoiceAudio { get; protected set; }
 
-    private class EIdleState : EState {}
-    private EIdleState IdleState { get; } = new();
+    public override Label3D DebugLabel { get; protected set; }
 
-    private class EChaseState : EState {}
-    private EChaseState ChaseState { get; } = new();
+    protected override EIdleState IdleState { get; } = new();
+    protected override EChaseState ChaseState { get; } = new();
+    protected override EAtkState AtkState { get; } = new();
+    protected override EStunState StunState { get; } = new();
+    protected override EDeathState DeathState { get; } = new();
+    protected override ECorpseState CorpseState { get; } = new();
 
     public AxeZombie() {
         InterE = this;
+        Health = StartingHealth;
+        SpriteWillUpdate = true;
+        SpriteWillRotate = true;
     }
 
     public override void _Ready() {
+        ColShape = GetNode<CollisionShape3D>("CollisionShape3D");
         VisSprite = GetNode<Sprite3D>("VisSprite");
 		VoiceAudio = GetNode<AudioStreamPlayer3D>("VoiceAudio");
+        DebugLabel = GetNode<Label3D>("DebugStats");
 
         IdleState.ConfigureState(-1, this, null, null, (int)EnemyState.Idle, null);
         ChaseState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Walk, null, (int)EnemyState.Chase, null);
+        AtkState.ConfigureState(-1, this, null, null, (int)EnemyState.Attack, null);
+        StunState.ConfigureState(-1, this, null, null, (int)EnemyState.Stun, null);
+        DeathState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Die, null, (int)EnemyState.Death, CorpseState);
+        CorpseState.ConfigureState(-1, this, null, () => OnDeath(), (int)EnemyState.Corpse, null);
         
         AI.SetTargetCharacter(this, Game.Player);
         EnterIdleState();
@@ -47,9 +62,21 @@ public partial class AxeZombie : EnemyBase, IEnemy {
     public override void _PhysicsProcess(double delta) {
         EStateMachine.Process();
         ProcessAnimation();
-        SetSpriteRotation();
-        SetSprite();
-        MoveAndSlide();
+        
+        if (SpriteWillRotate) {
+            SetSpriteRotation();
+        }
+        if (SpriteWillUpdate) {
+            SetSprite();
+            AdjustSpriteYOffset();
+        }
+
+        if (EnemyState != EnemyState.Corpse) {
+            ProcessGravity(delta);
+            MoveAndSlide();
+        }
+
+        UpdateDebugLabel(DebugLabel);
     }
 
     public void SetSprite() {
@@ -67,20 +94,31 @@ public partial class AxeZombie : EnemyBase, IEnemy {
             case EnemyState.Attack:
                 break;
 
+            case EnemyState.Stun:
+                break;
+
+            case EnemyState.Death:
+                VisSprite.Texture = Sprites.Spr_Zombie_Death[SpriteAnimFrame];
+                VisSprite.FlipH = false;
+                break;
+
+            case EnemyState.Corpse:
+                
+                break;
+
             default:
                 break;
         }
     }
 
-    public override void WakeUp() {
-
-    }
-
-    public void EnterIdleState() {
-        EStateMachine.SetState(IdleState);
-    }
-
-    public void EnterChaseState() {
-        EStateMachine.SetState(ChaseState);
+    public override void OnDeath() {
+        VisSprite.Texture = Sprites.Spr_Zombie_Death[4];
+        (ColShape.Shape as CapsuleShape3D).Height = 0.25f;
+        float newHeight = Position.Y - 0.375f;
+        Position = Position with { Y = newHeight };
+        AdjustSpriteYOffset();
+        VisSprite.FlipH = false;
+        SpriteWillUpdate = false;
+        SpriteWillRotate = false;
     }
 }

@@ -6,8 +6,8 @@
 [ext_resource type="PackedScene" uid="uid://dlp6xgwcsnere" path="res://bs_player_weapon.tscn" id="3_u78mm"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gd063"]
-radius = 0.3
-height = 1.2
+radius = 0.25
+height = 0.94
 
 [sub_resource type="AudioStreamWAV" id="AudioStreamWAV_cf1he"]
 stereo = true
@@ -16,8 +16,9 @@ stereo = true
 stereo = true
 
 [node name="Player" type="CharacterBody3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.681296, 0.6, -5.93294)
 rotation_edit_mode = 1
+collision_layer = 8
+collision_mask = 27
 script = ExtResource("1_kcng8")
 
 [node name="bsPlayerWeapon" parent="." instance=ExtResource("3_u78mm")]
@@ -28,19 +29,21 @@ script = ExtResource("1_kcng8")
 shape = SubResource("CapsuleShape3D_gd063")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
+pixel_size = 0.008
 billboard = 2
 texture_filter = 0
 texture = ExtResource("1_qb6e2")
 
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.25, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
 rotation_edit_mode = 1
 current = true
 fov = 90.0
 far = 1000.0
 
-[node name="VectorAttackRay" type="RayCast3D" parent="PlayerCamera"]
+[node name="InteractVector" type="RayCast3D" parent="PlayerCamera"]
 rotation_edit_mode = 1
+collision_mask = 2
 
 [node name="PlayerVoiceAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamWAV_cf1he")

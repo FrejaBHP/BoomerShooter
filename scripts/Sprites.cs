@@ -21,6 +21,7 @@ public static class Sprites {
 
     public static Texture2D[,] Spr_Zombie_Walk = new Texture2D[6,5];
     public static Texture2D[,] Spr_Zombie_Attack = new Texture2D[7,5];
+    public static Texture2D[] Spr_Zombie_Death = new Texture2D[5];
 
     public static SpriteOffset Spr_NoOffset = new(0, 0, 0, 0);
     public static SpriteOffset[] Spr_Wep_Offset = new SpriteOffset[(int)WeaponType.NoOfWeapons];
@@ -57,6 +58,10 @@ public static class Sprites {
             for (int dir = 0; dir < Spr_Zombie_Attack.GetLength(1); dir++) {
                 Spr_Zombie_Attack[frame, dir] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_atk{frame}_rot{dir}.png");
             }
+        }
+
+        for (int frame = 0; frame < Spr_Zombie_Death.Length; frame++) {
+            Spr_Zombie_Death[frame] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_die{frame}.png");
         }
     }
 
