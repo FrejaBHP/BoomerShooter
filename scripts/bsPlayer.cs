@@ -25,21 +25,20 @@ public partial class bsPlayer : CharacterBody3D {
 	private RayCast3D vectorRay;
 
 	public Ammunition[] PlayerAmmo = {
-		new(0), new(50)
+		new(0), new(50), new(200)
 	};
 
-	public Weapon[] WeaponInventory = new Weapon[(int)WeaponType.NoOfWeapons];
-	private bool[] hasWeapon = new bool[(int)WeaponType.NoOfWeapons];
+	public Weapon[] WeaponInventory { get; private set; } = new Weapon[(int)WeaponType.NoOfWeapons];
+	public bool[] HasWeapon { get; private set; } = new bool[(int)WeaponType.NoOfWeapons];
 	public Weapon ActiveWeapon { get; set; }
 	public int ActiveWeaponNum { get; set; }
 	public bool SwitchingWeapon { get; private set; } = false;
 	public int WeaponToSwitchTo { get; private set; } = 0;
 
 	private Label label;
-	public PlayerHUD PlayerHUD { get; set; }
-	public Control ActiveWeaponControl { get; set; }
-	public TextureRect ActiveWeaponSprite { get; private set; }
+	public PlayerHUD PlayerHUD { get; private set; }
 
+	public Control ActiveWeaponControl { get; private set; }
 	public Control ActiveWeaponPivot { get; private set; }
 	public Godot.Collections.Array<Node> ActiveWeaponSpriteNodes { get; private set; }
 
@@ -55,6 +54,7 @@ public partial class bsPlayer : CharacterBody3D {
 	public AudioStreamPlayer3D AltFireAudio { get; private set; }
 	public AudioStreamPlayer3D VoiceAudio { get; private set; }
 	public AudioStreamPlayer3D WeaponMiscAudio { get; private set; }
+	public AudioStreamPlayer3D MiscAudio { get; private set; }
 
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
@@ -64,7 +64,7 @@ public partial class bsPlayer : CharacterBody3D {
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public override void _Ready() {
-		helper = GetParent().GetNode<Node3D>("RaytraceHelper");
+		helper = Game.RayTraceHelper;
 
 		PlayerHUD = GetNode<PlayerHUD>("bsPlayerHUD");
 		label = GetNode<Label>("bsPlayerHUD/Label");
@@ -73,8 +73,6 @@ public partial class bsPlayer : CharacterBody3D {
 		vectorRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
 
 		ActiveWeaponControl = GetNode<Control>("bsPlayerWeapon");
-		ActiveWeaponSprite = GetNode<TextureRect>("bsPlayerWeapon/BottomAnchor/WeaponSprite");
-
 		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/BottomAnchor/WeaponPivot");
 		ActiveWeaponSpriteNodes = GetNode<Node>("bsPlayerWeapon/BottomAnchor/WeaponPivot").GetChildren();
 
@@ -82,18 +80,15 @@ public partial class bsPlayer : CharacterBody3D {
 		AltFireAudio = GetNode<AudioStreamPlayer3D>("AltFireAudio");
 		VoiceAudio = GetNode<AudioStreamPlayer3D>("PlayerVoiceAudio");
 		WeaponMiscAudio = GetNode<AudioStreamPlayer3D>("WeaponMiscAudio");
+		MiscAudio = GetNode<AudioStreamPlayer3D>("MiscAudio");
+
+		AddToGroup("Player");
 
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		mouseCaptured = true;
 
 		Health = 100;
-		TestGiveWeapon();
-	}
-
-	private async void TestGiveWeapon() {
-		await ToSignal(GetTree(), SceneTree.SignalName.PhysicsFrame);
 		PickUpNewWeapon(WeaponType.W_Pitchfork);
-		PickUpNewWeapon(WeaponType.W_Shotgun);
 	}
 
 	public override void _Input(InputEvent @event) {
@@ -112,13 +107,13 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 		if (!SwitchingWeapon) {
 			if (Input.IsActionJustPressed("wkey1")) {
-				if (hasWeapon[0] && ActiveWeaponNum != 0) {
+				if (HasWeapon[0] && ActiveWeaponNum != 0) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 0;
 				}
 			}
-			if (Input.IsActionJustPressed("wkey2")) {
-				if (hasWeapon[1] && ActiveWeaponNum != 1) {
+			else if (Input.IsActionJustPressed("wkey2")) {
+				if (HasWeapon[1] && ActiveWeaponNum != 1) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 1;
 				}
@@ -133,26 +128,28 @@ public partial class bsPlayer : CharacterBody3D {
 		ProcessMovement(delta);
 
 		if (ActiveWeapon != null) {
-			if (Input.IsActionPressed("leftclick")) {
+			if (mouseCaptured) {
+				if (Input.IsActionPressed("leftclick")) {
 				ActiveWeapon.PrimaryFire();
+				}
+				else if (Input.IsActionPressed("rightclick")) {
+					ActiveWeapon.AltFire();
+				}
+				else if (ActiveWeapon.WeaponState == WeaponState.ReadyState && SwitchingWeapon) {
+					ActiveWeapon.EnterLowerState();
+					SwitchingWeapon = false;
+				}
+				else {
+					WeaponReady();
+				}
 			}
-			else if (Input.IsActionPressed("rightclick")) {
-				ActiveWeapon.AltFire();
-			}
-			else if (ActiveWeapon.WeaponState == WeaponState.ReadyState && SwitchingWeapon) {
-				ActiveWeapon.EnterLowerState();
-				SwitchingWeapon = false;
-			}
-			else {
-				WeaponReady();
-			}
+			ActiveWeapon.WStateMachine.Process();
 		}
-		ActiveWeapon.WStateMachine.Process();
 
 		ProcessAnimation();
 		ProcessSecondaryAnimation();
 
-		TestUpdateHUDText();
+		//TestUpdateHUDText();
 	}
 
 	public static void WeaponReady() {
@@ -267,9 +264,9 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 	}
 
-	public void SetActiveWeaponSprite(Texture2D sprite) {
-		ActiveWeaponSprite.Texture = sprite;
-	}
+	//public void SetActiveWeaponSprite(Texture2D sprite) {
+	//	ActiveWeaponSprite.Texture = sprite;
+	//}
 
 	public void SetViewSpriteFrame(WeaponAnimationFrame frame) {
 		foreach (WeaponAnimationLayer animlayer in frame.WeaponAnimationLayers) {
@@ -294,14 +291,14 @@ public partial class bsPlayer : CharacterBody3D {
 			case WeaponType.W_Pitchfork:
 				if (WeaponInventory[0] == null) {
 					WeaponInventory[0] = new W_Pitchfork(this);
-					hasWeapon[0] = true;
+					HasWeapon[0] = true;
 				}
 				break;
 			
 			case WeaponType.W_Shotgun:
 				if (WeaponInventory[1] == null) {
 					WeaponInventory[1] = new W_Shotgun(this);
-					hasWeapon[1] = true;
+					HasWeapon[1] = true;
 				}
 				break;
 			
@@ -309,10 +306,12 @@ public partial class bsPlayer : CharacterBody3D {
 				break;
 		}
 
-		GiveAmmo(WeaponInventory[(int)type].AmmoType, WeaponInventory[(int)type].AmmoOnPickup);
-
 		if (ActiveWeapon == null) {
 			BringUpNewWeapon(type);
+		}
+		else if (ActiveWeaponNum == 0) {
+			SwitchingWeapon = true;
+			WeaponToSwitchTo = (int)type;
 		}
 	}
 
@@ -351,7 +350,10 @@ public partial class bsPlayer : CharacterBody3D {
 
 	public void GiveAmmo(Ammotype ammotype, int amount) {
 		PlayerAmmo[(int)ammotype].Ammo += amount;
-		GD.Print($"Received {WeaponInventory[(int)ammotype].AmmoOnPickup} ammo of type: {WeaponInventory[(int)ammotype].AmmoType}");
+
+		if (ActiveWeapon != null && ammotype == ActiveWeapon.AmmoType) {
+			PlayerHUD.HUDUpdatePlayerAmmo(PlayerAmmo[(int)ammotype].Ammo);
+		}
 	}
 
 	public void FireHitscanAttack(HitscanAttack atk, float offsetX, float offsetY) {

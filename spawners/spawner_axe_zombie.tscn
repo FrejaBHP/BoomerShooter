@@ -1,0 +1,11 @@
+[gd_scene load_steps=3 format=3 uid="uid://d16ppfrqr527n"]
+
+[ext_resource type="PackedScene" uid="uid://cgh6e6ggqvext" path="res://spawners/enemyspawner_base.tscn" id="1_gewid"]
+[ext_resource type="Texture2D" uid="uid://b67rvppeq0lfg" path="res://textures/enemies/zombie/z_atk0_rot0.png" id="2_au2cc"]
+
+[node name="SpawnerAxeZombie" instance=ExtResource("1_gewid")]
+
+[node name="Sprite3D" parent="." index="0"]
+offset = Vector2(0, 12)
+double_sided = false
+texture = ExtResource("2_au2cc")

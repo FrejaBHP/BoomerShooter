@@ -10,16 +10,24 @@ collision_mask = 27
 shape = SubResource("CapsuleShape3D_6d68b")
 
 [node name="VisSprite" type="Sprite3D" parent="."]
+ignore_occlusion_culling = true
 pixel_size = 0.008
 billboard = 2
+double_sided = false
+alpha_cut = 1
 texture_filter = 0
 
 [node name="VoiceAudio" type="AudioStreamPlayer3D" parent="."]
 bus = &"EnemyGeneral"
 
 [node name="DebugStats" type="Label3D" parent="."]
+ignore_occlusion_culling = true
 offset = Vector2(0, 112)
 billboard = 2
+double_sided = false
+no_depth_test = true
+render_priority = 1
+outline_render_priority = 0
 font_size = 20
 outline_size = 8
 vertical_alignment = 2

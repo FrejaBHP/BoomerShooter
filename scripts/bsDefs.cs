@@ -3,18 +3,25 @@ using Godot;
 public enum Ammotype {
     None,
     Shells,
+    Bullets,
     NoOfTypes
 }
 
 public enum WeaponType {
     W_Pitchfork,
     W_Shotgun,
+    W_Tommygun,
     NoOfWeapons
 }
 
 public enum DamageType {
     Melee,
     Bullet
+}
+
+public enum EnemyType {
+    AxeZombie,
+    NoOfEnemies
 }
 
 public enum KeyType {

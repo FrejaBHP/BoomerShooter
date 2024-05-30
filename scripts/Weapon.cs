@@ -9,7 +9,6 @@ public abstract class Weapon {
     public abstract bsPlayer Player { get; protected set; }
     public abstract int AmmoReqPri { get; }
     public abstract int AmmoReqSec { get; }
-    public abstract int AmmoOnPickup { get; }
 
     public abstract AudioStreamWav PrimaryFireAudio { get; protected set; }
     public abstract AudioStreamWav AltFireAudio { get; protected set; }
@@ -168,7 +167,6 @@ public sealed partial class W_Pitchfork : Weapon {
     public override Ammotype AmmoType { get; } = Ammotype.None;
     public override int AmmoReqPri { get; } = 0;
     public override int AmmoReqSec { get; } = 0;
-    public override int AmmoOnPickup { get; } = 0;
 
     public override AudioStreamWav PrimaryFireAudio { get; protected set; } = null;
     public override AudioStreamWav AltFireAudio { get; protected set; } = null;
@@ -215,7 +213,6 @@ public sealed partial class W_Shotgun : Weapon {
     public override Ammotype AmmoType { get; } = Ammotype.Shells;
     public override int AmmoReqPri { get; } = 1;
     public override int AmmoReqSec { get; } = 2;
-    public override int AmmoOnPickup { get; } = 40; // 8
 
     public override AudioStreamWav PrimaryFireAudio { get; protected set; } = SFX.ShotgunFire;
     public override AudioStreamWav AltFireAudio { get; protected set; } = SFX.ShotgunAltFire;

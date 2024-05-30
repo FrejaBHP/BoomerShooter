@@ -1,0 +1,10 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://djdv1vmbf1o4q"]
+
+[ext_resource type="Texture2D" uid="uid://u8jgcc75f41r" path="res://textures/fence_spike.png" id="1_jeo1s"]
+
+[resource]
+transparency = 4
+shading_mode = 0
+specular_mode = 2
+albedo_texture = ExtResource("1_jeo1s")
+texture_filter = 4

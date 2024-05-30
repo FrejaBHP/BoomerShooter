@@ -1,0 +1,13 @@
+[gd_scene load_steps=2 format=3 uid="uid://cgh6e6ggqvext"]
+
+[ext_resource type="Script" path="res://scripts/Spawner.cs" id="1_w57sv"]
+
+[node name="SpawnerBase" type="Node3D"]
+script = ExtResource("1_w57sv")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+ignore_occlusion_culling = true
+pixel_size = 0.008
+billboard = 2
+alpha_cut = 1
+texture_filter = 0

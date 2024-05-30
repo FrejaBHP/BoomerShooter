@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="QodotFGDPointClass" load_steps=4 format=3 uid="uid://bdwtqy8hgr5l2"]
+
+[ext_resource type="PackedScene" uid="uid://dnnmr7hxri5sq" path="res://pickups/weapon_pickup_shotgun.tscn" id="1_j06jl"]
+[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_point_class.gd" id="2_sbv7c"]
+[ext_resource type="Script" path="res://scripts/PickupWeapon.cs" id="3_eqqxb"]
+
+[resource]
+script = ExtResource("2_sbv7c")
+scene_file = ExtResource("1_j06jl")
+script_class = ExtResource("3_eqqxb")
+apply_rotation_on_map_build = true
+classname = "w_shotgun"
+description = "The classic sawed-off"
+qodot_internal = false
+base_classes = Array[Resource]([])
+class_properties = {}
+class_property_descriptions = {}
+meta_properties = {
+"color": Color(0.8, 0.8, 0.8, 1),
+"size": AABB(-4, -4, -4, 4, 4, 4)
+}
+node_class = "Area3D"
+transient_node = false

@@ -1,0 +1,11 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://5dlvu6jtj8js"]
+
+[ext_resource type="Texture2D" uid="uid://b7qtt17dxaq12" path="res://textures/fence_spike_single.png" id="1_jdegg"]
+
+[resource]
+transparency = 2
+alpha_scissor_threshold = 0.5
+alpha_antialiasing_mode = 0
+shading_mode = 0
+albedo_texture = ExtResource("1_jdegg")
+texture_filter = 0

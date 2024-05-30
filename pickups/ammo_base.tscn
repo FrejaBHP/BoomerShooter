@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://bi3fbpbi07ttr"]
+
+[ext_resource type="Script" path="res://scripts/PickupAmmo.cs" id="1_g62ub"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_rxu1j"]
+size = Vector3(0.35, 0.25, 0.35)
+
+[node name="AmmoBase" type="Area3D"]
+collision_layer = 4
+collision_mask = 8
+audio_bus_name = &"Misc"
+script = ExtResource("1_g62ub")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_rxu1j")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+ignore_occlusion_culling = true
+billboard = 2
+double_sided = false
+alpha_cut = 1
+texture_filter = 0
+
+[connection signal="body_entered" from="." to="." method="OnPlayerEntered"]

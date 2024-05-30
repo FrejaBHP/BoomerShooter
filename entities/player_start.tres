@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="QodotFGDPointClass" load_steps=4 format=3 uid="uid://w6arveryipv7"]
+
+[ext_resource type="PackedScene" uid="uid://dha2ylja5x8ve" path="res://spawners/playerspawner.tscn" id="1_qu6wx"]
+[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_point_class.gd" id="2_d4cby"]
+[ext_resource type="Script" path="res://scripts/PlayerSpawner.cs" id="3_4wyu7"]
+
+[resource]
+script = ExtResource("2_d4cby")
+scene_file = ExtResource("1_qu6wx")
+script_class = ExtResource("3_4wyu7")
+apply_rotation_on_map_build = true
+classname = "player_start"
+description = "Spawns a player"
+qodot_internal = false
+base_classes = Array[Resource]([])
+class_properties = {}
+class_property_descriptions = {}
+meta_properties = {
+"color": Color(0.482353, 0.917647, 0.141176, 1),
+"size": AABB(-8, -8, -16, 8, 8, 16)
+}
+node_class = "Area3D"
+transient_node = false

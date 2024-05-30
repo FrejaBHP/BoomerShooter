@@ -1,11 +1,11 @@
 using Godot;
 
-public partial class WeaponAnimationLayer {
-    public int Layer { get; private set; }
-    public SpriteOffset Offset { get; private set; }
-    public int RotationDeg { get; private set; }
-    public Texture2D? Texture { get; private set; }
-    public bool DoFlipH { get; private set; }
+public readonly struct WeaponAnimationLayer {
+    public readonly int Layer ;
+    public readonly SpriteOffset Offset;
+    public readonly int RotationDeg;
+    public readonly Texture2D? Texture;
+    public readonly bool DoFlipH;
 
     public WeaponAnimationLayer(int layer, Texture2D? texture) {
         Layer = layer;
@@ -72,15 +72,15 @@ public class WeaponAnimation {
 }
 
 public static class WAnimations {
-    public static WeaponAnimationFrame[] Frame_Wep_PF = new WeaponAnimationFrame[3];
-    public static WeaponAnimationFrame[] Anim_Wep_SG = new WeaponAnimationFrame[7];
+    public static readonly WeaponAnimationFrame[] Frame_Wep_PF = new WeaponAnimationFrame[3];
+    public static readonly WeaponAnimationFrame[] Anim_Wep_SG = new WeaponAnimationFrame[7];
 
-    public static WeaponAnimation Anim_Wep_SG_Atk = new WeaponAnimation();
-    public static WeaponAnimation Anim_Wep_SG_Alt = new WeaponAnimation();
-    public static WeaponAnimation Anim_Wep_SG_Reload = new WeaponAnimation();
-    public static WeaponAnimation Anim_Wep_SG_FlashLeft = new WeaponAnimation();
-    public static WeaponAnimation Anim_Wep_SG_FlashRight = new WeaponAnimation();
-    public static WeaponAnimation Anim_Wep_SG_FlashBoth = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_Atk = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_Alt = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_Reload = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_FlashLeft = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_FlashRight = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_SG_FlashBoth = new WeaponAnimation();
 
 
     public static void PlayAnimationFrame(bsPlayer player, WeaponAnimationFrame frame) {

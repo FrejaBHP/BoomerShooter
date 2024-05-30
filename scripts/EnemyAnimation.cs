@@ -1,9 +1,9 @@
 using Godot;
 
-public partial class EnemyAnimationFrame {
-    public int TextureFrame { get; private set; }
-    public int FrameLength { get; set; }
-    public AudioStreamWav? Sound { get; set; }
+public class EnemyAnimationFrame {
+    public readonly int TextureFrame;
+    public readonly int FrameLength;
+    public readonly AudioStreamWav? Sound;
 
     public EnemyAnimationFrame(int textureframe, int length, AudioStreamWav? sound) {
         TextureFrame = textureframe;
@@ -12,9 +12,10 @@ public partial class EnemyAnimationFrame {
     }
 }
 
+
 public partial class EnemyAnimation {
     public EnemyAnimationFrame[] AnimFrames { get; set; }
-    public int TotalLength { get; set; }
+    public int TotalLength { get; private set; }
 
     public void UpdateAnimationLength() {
         for (int i = 0; i < AnimFrames.Length; i++) {

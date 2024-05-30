@@ -1,37 +1,50 @@
 using Godot;
 using System;
+using System.Linq;
 
 public partial class Game : Node3D {
-	PackedScene player = GD.Load<PackedScene>("res://bsPlayer.tscn");
-	PackedScene axezombie = GD.Load<PackedScene>("res://axe_zombie.tscn");
-	Marker3D marker3D;
-	Marker3D enemymarker3D;
-	Marker3D enemymarker3D2;
+	public static Node3D EnemiesNode { get; private set; }
+	public static Node3D PlayersNode { get; private set; }
+	public static Node3D RayTraceHelper { get; private set; }
 
-	public static bsPlayer Player { get; private set; }
+	public static bsPlayer Player { get; set; }
 
 	public override void _Ready() {
-		Sprites.IndexWeaponSprites();
-		Sprites.IndexWeaponOffsets();
+		EnemiesNode = GetNode<Node3D>("Enemies");
+		PlayersNode = GetNode<Node3D>("Players");
+		RayTraceHelper = GetNode<Node3D>("RaytraceHelper");
+
+		Sprites.IndexSpriteArrays();
 		WAnimations.IndexWeaponAnimations();
 		EAnimations.IndexEnemyAnimations();
-		
-		marker3D = GetNode<Marker3D>("Marker3D");
-		bsPlayer playerInstance = player.Instantiate() as bsPlayer;
-		AddChild(playerInstance);
-		playerInstance.Position = marker3D.Position;
 
-		Player = playerInstance;
+		LoadMap(); // For later
+	}
 
-		enemymarker3D = GetNode<Marker3D>("EnemyMarker");
-		AxeZombie az = axezombie.Instantiate() as AxeZombie;
-		AddChild(az);
-		az.Position = enemymarker3D.Position;
+	private void LoadMap() {
+		ActivateSpawners();
+	}
 
-		enemymarker3D2 = GetNode<Marker3D>("EnemyMarker2");
-		AxeZombie az1 = axezombie.Instantiate() as AxeZombie;
-		AddChild(az1);
-		az1.Position = enemymarker3D2.Position;
+	private void ActivateSpawners() {
+		var map = GetNode("QodotMap");
+		foreach (Node child in map.GetChildren()) {
+			if (child.IsInGroup("Spawner")) {
+				(child as Spawner).SpawnEnemy();
+			}
+			else if (child.IsInGroup("PlayerSpawner")) {
+				(child as PlayerSpawner).SpawnPlayer();
+			}
+		}
+
+		ActivateEnemies();
+	}
+
+	private void ActivateEnemies() {
+		foreach (Node enemy in EnemiesNode.GetChildren()) {
+			if (enemy.IsInGroup("Enemy")) {
+				(enemy as EnemyBase).Activate();
+			}
+		}
 	}
 
 	public override void _Process(double delta) {

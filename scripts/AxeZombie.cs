@@ -38,8 +38,8 @@ public partial class AxeZombie : EnemyBase, IEnemy {
     public AxeZombie() {
         InterE = this;
         Health = StartingHealth;
-        SpriteWillUpdate = true;
-        SpriteWillRotate = true;
+        spriteWillUpdate = true;
+        spriteWillRotate = true;
     }
 
     public override void _Ready() {
@@ -55,22 +55,23 @@ public partial class AxeZombie : EnemyBase, IEnemy {
         DeathState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Die, null, (int)EnemyState.Death, CorpseState);
         CorpseState.ConfigureState(-1, this, null, () => OnDeath(), (int)EnemyState.Corpse, null);
         
-        AI.SetTargetCharacter(this, Game.Player);
         EnterIdleState();
     }
 
     public override void _PhysicsProcess(double delta) {
-        EStateMachine.Process();
-        ProcessAnimation();
+        if (isActive) {
+            EStateMachine.Process();
+            ProcessAnimation();
+            
+            if (spriteWillRotate) {
+                SetSpriteRotation();
+            }
+            if (spriteWillUpdate) {
+                SetSprite();
+                AdjustSpriteYOffset();
+            }
+        }
         
-        if (SpriteWillRotate) {
-            SetSpriteRotation();
-        }
-        if (SpriteWillUpdate) {
-            SetSprite();
-            AdjustSpriteYOffset();
-        }
-
         if (EnemyState != EnemyState.Corpse) {
             ProcessGravity(delta);
             MoveAndSlide();
@@ -118,7 +119,7 @@ public partial class AxeZombie : EnemyBase, IEnemy {
         Position = Position with { Y = newHeight };
         AdjustSpriteYOffset();
         VisSprite.FlipH = false;
-        SpriteWillUpdate = false;
-        SpriteWillRotate = false;
+        spriteWillUpdate = false;
+        spriteWillRotate = false;
     }
 }

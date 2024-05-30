@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://efht3ea7tmvy"]
+
+[ext_resource type="PackedScene" uid="uid://bi3fbpbi07ttr" path="res://pickups/ammo_base.tscn" id="1_2ekju"]
+[ext_resource type="AudioStream" uid="uid://kkw6mxlauq0q" path="res://sounds/misc/ammopickup.wav" id="2_ks6bc"]
+[ext_resource type="Texture2D" uid="uid://crjypfdqmw66a" path="res://textures/pickups/ammo_shotgun_large.png" id="3_85rj4"]
+
+[node name="AmmoShotgunSmall" instance=ExtResource("1_2ekju")]
+TextAppend = "box of shotgun shells"
+Type = 1
+Amount = 20
+PickupSound = ExtResource("2_ks6bc")
+
+[node name="Sprite3D" parent="." index="1"]
+texture = ExtResource("3_85rj4")

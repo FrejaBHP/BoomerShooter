@@ -1,0 +1,15 @@
+[gd_scene load_steps=2 format=3 uid="uid://dha2ylja5x8ve"]
+
+[ext_resource type="Texture2D" uid="uid://crcoqoduv71gt" path="res://textures/p3870.png" id="1_tco5n"]
+
+[node name="PlayerSpawner" type="Node3D"]
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+ignore_occlusion_culling = true
+offset = Vector2(0, -4)
+pixel_size = 0.008
+billboard = 2
+double_sided = false
+alpha_cut = 1
+texture_filter = 0
+texture = ExtResource("1_tco5n")

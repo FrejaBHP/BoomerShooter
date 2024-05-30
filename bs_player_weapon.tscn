@@ -116,11 +116,3 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
-
-[node name="WeaponSprite" type="TextureRect" parent="BottomAnchor"]
-layout_mode = 1
-anchors_preset = -1
-anchor_right = 0.5
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 0

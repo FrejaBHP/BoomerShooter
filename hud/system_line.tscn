@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://bhhmiqwagv52d"]
+
+[ext_resource type="FontFile" uid="uid://cati8385rf7l5" path="res://hud/pickupfont.tres" id="1_gk6ad"]
+[ext_resource type="Script" path="res://scripts/SystemLine.cs" id="2_st7nh"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_gm5y3"]
+font = ExtResource("1_gk6ad")
+font_size = 12
+shadow_size = 0
+
+[node name="SystemLine" type="Label"]
+visible = false
+label_settings = SubResource("LabelSettings_gm5y3")
+uppercase = true
+script = ExtResource("2_st7nh")
+
+[node name="LineTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+
+[connection signal="timeout" from="LineTimer" to="." method="OnLineTimeout"]

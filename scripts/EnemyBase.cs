@@ -32,10 +32,11 @@ public partial class EnemyBase : CharacterBody3D {
 	public virtual int SpriteRotation { get; protected set; }
 	public virtual bool SpriteIsFlipped { get; protected set; }
 	
-	protected bool SpriteWillUpdate;
-	protected bool SpriteWillRotate;
-	protected float SpriteYOffset;
+	protected bool spriteWillUpdate;
+	protected bool spriteWillRotate;
+	protected float spriteYOffset;
 
+	protected bool isActive = false;
 	public virtual CharacterBody3D Target { get; set; }
 	public virtual Vector3 TargetLocation { get; set; }
 
@@ -119,9 +120,9 @@ public partial class EnemyBase : CharacterBody3D {
 	}
 
 	public void SetSpriteRotation() {
-		if (SpriteWillRotate) {
-			float dotProductX = AI.GetDotProdX(this, Target);
-			float dotProductZ = AI.GetDotProdZ(this, Target);
+		if (spriteWillRotate) {
+			float dotProductX = AI.GetDotProdX(this, Game.Player);
+			float dotProductZ = AI.GetDotProdZ(this, Game.Player);
 
 			SpriteIsFlipped = false;
 			
@@ -150,8 +151,13 @@ public partial class EnemyBase : CharacterBody3D {
     }
 
 	public void AdjustSpriteYOffset() {
-		SpriteYOffset = -(((ColShape.Shape as CapsuleShape3D).Height * 128f) - VisSprite.Texture.GetHeight()) / 2;
-		VisSprite.Offset = VisSprite.Offset with { Y = SpriteYOffset };
+		spriteYOffset = -(((ColShape.Shape as CapsuleShape3D).Height * 128f) - VisSprite.Texture.GetHeight()) / 2;
+		VisSprite.Offset = VisSprite.Offset with { Y = spriteYOffset };
+	}
+
+	public virtual void Activate() {
+		isActive = true;
+		//AI.SetTargetCharacter(this, Game.Player);
 	}
 
 	public virtual void WakeUp() {
@@ -192,6 +198,4 @@ public partial class EnemyBase : CharacterBody3D {
 	public void UpdateDebugLabel(Label3D label) {
 		label.Text = $"Health: {Health} / {StartingHealth}\nState: {EnemyState}";
 	}
-
-	
 }
