@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="QodotFGDFile" load_steps=24 format=3 uid="uid://c3b7o7y47grsm"]
+[gd_resource type="Resource" script_class="QodotFGDFile" load_steps=25 format=3 uid="uid://c3b7o7y47grsm"]
 
 [ext_resource type="Resource" uid="uid://dgm276g7bw8q5" path="res://addons/qodot/game_definitions/fgd/base_classes/target_base_class.tres" id="1_ce0hy"]
 [ext_resource type="Resource" uid="uid://ccdjpf5j25aua" path="res://addons/qodot/game_definitions/fgd/base_classes/targetname_base_class.tres" id="2_0cml8"]
@@ -23,6 +23,7 @@
 [ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_file.gd" id="21_jkl1l"]
 [ext_resource type="Resource" uid="uid://dyyeyp4b623jd" path="res://entities/e_enemy_axezombie.tres" id="21_jybxl"]
 [ext_resource type="Resource" uid="uid://w6arveryipv7" path="res://entities/player_start.tres" id="22_qcty2"]
+[ext_resource type="Resource" uid="uid://oreui2bwgkpq" path="res://entities/e_sliding_door.tres" id="23_16c4a"]
 
 [resource]
 script = ExtResource("21_jkl1l")
@@ -30,4 +31,4 @@ export_file = false
 target_folder = ""
 fgd_name = "Qodot"
 base_fgd_files = Array[Resource]([])
-entity_definitions = Array[Resource]([ExtResource("1_ce0hy"), ExtResource("2_0cml8"), ExtResource("3_vvwt7"), ExtResource("4_ghswo"), ExtResource("5_us6vw"), ExtResource("6_w7d20"), ExtResource("7_kegyp"), ExtResource("8_mo1yu"), ExtResource("9_rhgox"), ExtResource("10_7ev14"), ExtResource("11_7d04w"), ExtResource("12_5042d"), ExtResource("13_grgp6"), ExtResource("14_1c8ro"), ExtResource("15_lf2bj"), ExtResource("16_6l8pc"), ExtResource("17_d7f37"), ExtResource("18_a6svr"), ExtResource("19_ug3uo"), ExtResource("20_05bic"), ExtResource("21_jybxl"), ExtResource("22_qcty2")])
+entity_definitions = Array[Resource]([ExtResource("1_ce0hy"), ExtResource("2_0cml8"), ExtResource("3_vvwt7"), ExtResource("4_ghswo"), ExtResource("5_us6vw"), ExtResource("6_w7d20"), ExtResource("7_kegyp"), ExtResource("8_mo1yu"), ExtResource("9_rhgox"), ExtResource("10_7ev14"), ExtResource("11_7d04w"), ExtResource("12_5042d"), ExtResource("13_grgp6"), ExtResource("14_1c8ro"), ExtResource("15_lf2bj"), ExtResource("16_6l8pc"), ExtResource("17_d7f37"), ExtResource("18_a6svr"), ExtResource("19_ug3uo"), ExtResource("20_05bic"), ExtResource("21_jybxl"), ExtResource("22_qcty2"), ExtResource("23_16c4a")])

@@ -8,6 +8,7 @@ using Vector3 = Godot.Vector3;
 public partial class bsPlayer : CharacterBody3D {
 	public const float Speed = 6.0f;
 	public const float JumpVelocity = 4f;
+	public const float MaxStepHeight = 0.25f;
 
 	private int health;
 	public int Health {
@@ -22,7 +23,7 @@ public partial class bsPlayer : CharacterBody3D {
 	private float cameraRotaY = 0f;
 
 	private Camera3D playerCamera;
-	private RayCast3D vectorRay;
+	private RayCast3D useRay;
 
 	public Ammunition[] PlayerAmmo = {
 		new(0), new(50), new(200)
@@ -56,6 +57,11 @@ public partial class bsPlayer : CharacterBody3D {
 	public AudioStreamPlayer3D WeaponMiscAudio { get; private set; }
 	public AudioStreamPlayer3D MiscAudio { get; private set; }
 
+	private RayCast3D stairUpCast;
+	private RayCast3D stairDownCast;
+	private bool justMovedOnStairs = false;
+	private ulong justWasOnFloor = 0;
+
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
 
@@ -70,7 +76,8 @@ public partial class bsPlayer : CharacterBody3D {
 		label = GetNode<Label>("bsPlayerHUD/Label");
 
 		playerCamera = GetNode<Camera3D>("PlayerCamera");
-		vectorRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
+		useRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
+		useRay.Enabled = false;
 
 		ActiveWeaponControl = GetNode<Control>("bsPlayerWeapon");
 		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/BottomAnchor/WeaponPivot");
@@ -81,6 +88,9 @@ public partial class bsPlayer : CharacterBody3D {
 		VoiceAudio = GetNode<AudioStreamPlayer3D>("PlayerVoiceAudio");
 		WeaponMiscAudio = GetNode<AudioStreamPlayer3D>("WeaponMiscAudio");
 		MiscAudio = GetNode<AudioStreamPlayer3D>("MiscAudio");
+
+		stairUpCast = GetNode<RayCast3D>("StairUpCast");
+		stairDownCast = GetNode<RayCast3D>("StairDownCast");
 
 		AddToGroup("Player");
 
@@ -116,6 +126,16 @@ public partial class bsPlayer : CharacterBody3D {
 				if (HasWeapon[1] && ActiveWeaponNum != 1) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 1;
+				}
+			}
+		}
+		if (Input.IsActionJustPressed("use")) {
+			useRay.ForceRaycastUpdate();
+
+			if (useRay.IsColliding()) {
+				StaticBody3D colBody = useRay.GetCollider() as StaticBody3D;
+				if (colBody.IsInGroup("DoorSliding")) {
+					(colBody as SlidingDoor).Open();
 				}
 			}
 		}
@@ -157,8 +177,8 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	private void ProcessCamera(double deltaTime) {
-		cameraRotaX -= mouseRelative.X * 0.5f * (float)deltaTime;
-		cameraRotaY -= mouseRelative.Y * 0.5f * (float)deltaTime;
+		cameraRotaX -= mouseRelative.X * 0.4f * (float)deltaTime;
+		cameraRotaY -= mouseRelative.Y * 0.4f * (float)deltaTime;
 		cameraRotaY = Mathf.Clamp(cameraRotaY, -1.3f, 1.3f);
 		mouseRelative = Vector2.Zero;
 
@@ -180,6 +200,9 @@ public partial class bsPlayer : CharacterBody3D {
 		if (!IsOnFloor()) {
 			velocity.Y -= gravity * (float)deltaTime;
 		}
+		else {
+			justWasOnFloor = Engine.GetPhysicsFrames();
+		}
 
 		if (Input.IsActionJustPressed("jump") && IsOnFloor()) {
 			velocity.Y = JumpVelocity;
@@ -197,7 +220,63 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 
 		Velocity = velocity;
-		MoveAndSlide();
+
+		// Translated to C# from https://github.com/majikayogames/SimpleFPSController
+		if (!TryClimbStair(deltaTime)) {
+			MoveAndSlide();
+			TryDescendStair();
+		}
+	}
+
+	private bool TryClimbStair(double deltaTime) {
+		if (!IsOnFloor() && !justMovedOnStairs) {
+			return false;
+		}
+
+		Vector3 moveVector = new(1,0,1);
+		if (Velocity.Y > 0 || (Velocity * moveVector).Length() == 0) {
+			return false;
+		}
+
+		Vector3 projectVector = Velocity * moveVector * (float)deltaTime;
+		Transform3D stepPosition = GlobalTransform.Translated(projectVector + (Vector3)new(0, MaxStepHeight * 2, 0));
+
+		KinematicCollision3D colCheckResult = new();
+		if (TestMove(stepPosition, new(0, -MaxStepHeight * 2, 0), colCheckResult) && colCheckResult.GetCollider().IsClass("StaticBody3D")) {
+            float stepHeight = (stepPosition.Origin + colCheckResult.GetTravel() - GlobalPosition).Y;
+			if (stepHeight > MaxStepHeight || stepHeight <= 0.01f || (colCheckResult.GetPosition() - GlobalPosition).Y > MaxStepHeight) {
+				return false;
+			}
+
+			stairUpCast.GlobalPosition = colCheckResult.GetPosition() + (Vector3)new(0, MaxStepHeight, 0) + projectVector.Normalized() * 0.1f;
+			stairUpCast.ForceRaycastUpdate();
+			if (stairUpCast.IsColliding() && !Utils.IsSurfaceTooSteep(stairUpCast.GetCollisionNormal(), this)) {
+				GlobalPosition = stepPosition.Origin + colCheckResult.GetTravel();
+				ApplyFloorSnap();
+				justMovedOnStairs = true;
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	private void TryDescendStair() {
+		stairDownCast.ForceRaycastUpdate();
+		bool isFloorBelow = stairDownCast.IsColliding() && !Utils.IsSurfaceTooSteep(stairDownCast.GetCollisionNormal(), this);
+		bool wasOnFloor = Engine.GetPhysicsFrames() == justWasOnFloor;
+		if (!IsOnFloor() && Velocity.Y <= 0 && (justMovedOnStairs || wasOnFloor) && isFloorBelow) {
+			KinematicCollision3D colCheckResult = new();
+			if (TestMove(GlobalTransform, new(0, -MaxStepHeight, 0), colCheckResult)) {
+				float posY = Position.Y + colCheckResult.GetTravel().Y;
+				Position = Position with { Y = posY };
+				ApplyFloorSnap();
+				justMovedOnStairs = true;
+			}
+		}
+		else {
+			justMovedOnStairs = false;
+		}
 	}
 	
 	public void FetchAndPlayAnimation(WeaponAnimation animation) {

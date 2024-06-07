@@ -1,4 +1,5 @@
 using System;
+using Godot;
 
 public static class Utils {
     static readonly Random random = new Random();
@@ -20,5 +21,9 @@ public static class Utils {
         // 1.0  = 45 deg
 
         return (random.NextSingle() - random.NextSingle()) * ratio;
+    }
+
+    public static bool IsSurfaceTooSteep(Vector3 normal, CharacterBody3D body) {
+        return normal.AngleTo(Vector3.Up) > body.FloorMaxAngle;
     }
 }

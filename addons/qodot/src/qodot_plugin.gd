@@ -50,16 +50,16 @@ func _enter_tree() -> void:
 	qodot_map_progress_bar.set_visible(false)
 	add_control_to_container(EditorPlugin.CONTAINER_INSPECTOR_BOTTOM, qodot_map_progress_bar)
 
+	add_custom_type("QodotNode3D", "Node3D", preload("res://addons/qodot/src/nodes/qodot_node3d.gd"), null)
 	add_custom_type("QodotMap", "Node3D", preload("res://addons/qodot/src/nodes/qodot_map.gd"), null)
 	add_custom_type("QodotEntity", "Node3D", preload("res://addons/qodot/src/nodes/qodot_entity.gd"), null)
-	add_custom_type("QodotNode3D", "Node3D", preload("res://addons/qodot/src/nodes/qodot_node3d.gd"), null)
 
 	add_inspector_plugin(qodot_editor_button)
 
 func _exit_tree() -> void:
+	remove_custom_type("QodotNode3D")
 	remove_custom_type("QodotMap")
 	remove_custom_type("QodotEntity")
-	remove_custom_type("QodotNode3D")
 	remove_import_plugin(map_import_plugin)
 	remove_import_plugin(palette_import_plugin)
 	if wad_import_plugin:

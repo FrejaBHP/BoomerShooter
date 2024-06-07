@@ -1,10 +1,21 @@
-[gd_scene load_steps=5 format=3 uid="uid://qxl2w2cthfnd"]
+[gd_scene load_steps=8 format=3 uid="uid://qxl2w2cthfnd"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_47wr0"]
+[ext_resource type="Texture2D" uid="uid://25cop5v0qalb" path="res://textures/sky1.png" id="2_anxj2"]
 [ext_resource type="LightmapGIData" uid="uid://cj0hu5u0fg8x0" path="res://levelLightMap0.lmbake" id="2_dyk8n"]
 [ext_resource type="PackedScene" uid="uid://rggqlnrr307x" path="res://qodot_map_1.tscn" id="3_kxk12"]
 
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_tvf7p"]
+panorama = ExtResource("2_anxj2")
+filter = false
+
+[sub_resource type="Sky" id="Sky_jp7m4"]
+sky_material = SubResource("PanoramaSkyMaterial_tvf7p")
+radiance_size = 2
+
 [sub_resource type="Environment" id="Environment_6h28a"]
+background_mode = 2
+sky = SubResource("Sky_jp7m4")
 
 [node name="Game" type="Node3D"]
 script = ExtResource("1_47wr0")
@@ -14,7 +25,7 @@ environment = SubResource("Environment_6h28a")
 
 [node name="LightmapGI" type="LightmapGI" parent="."]
 bounces = 1
-bounce_indirect_energy = 1.5
+bounce_indirect_energy = 1.6
 interior = true
 light_data = ExtResource("2_dyk8n")
 

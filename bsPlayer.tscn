@@ -1,9 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://b2lsyt0chmfdm"]
+[gd_scene load_steps=10 format=3 uid="uid://b2lsyt0chmfdm"]
 
 [ext_resource type="Script" path="res://scripts/bsPlayer.cs" id="1_kcng8"]
 [ext_resource type="Texture2D" uid="uid://crcoqoduv71gt" path="res://textures/p3870.png" id="1_qb6e2"]
 [ext_resource type="PackedScene" uid="uid://bnriohryyqrx" path="res://bs_player_hud.tscn" id="2_c2kf4"]
 [ext_resource type="PackedScene" uid="uid://dlp6xgwcsnere" path="res://bs_player_weapon.tscn" id="3_u78mm"]
+[ext_resource type="PackedScene" uid="uid://bty1s86k43ekx" path="res://stair_up_cast.tscn" id="5_mcitq"]
+[ext_resource type="PackedScene" uid="uid://cf4nfahm4yahm" path="res://stair_down_cast.tscn" id="6_yq21q"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_gd063"]
 radius = 0.25
@@ -36,8 +38,15 @@ alpha_cut = 1
 texture_filter = 0
 texture = ExtResource("1_qb6e2")
 
+[node name="StairUpCast" parent="." instance=ExtResource("5_mcitq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.249676)
+
+[node name="StairDownCast" parent="." instance=ExtResource("6_yq21q")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+target_position = Vector3(0, -0.35, 0)
+
 [node name="PlayerCamera" type="Camera3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.35, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.37, 0)
 rotation_edit_mode = 1
 current = true
 fov = 90.0
@@ -45,7 +54,9 @@ far = 1000.0
 
 [node name="InteractVector" type="RayCast3D" parent="PlayerCamera"]
 rotation_edit_mode = 1
-collision_mask = 2
+target_position = Vector3(0, 0, -0.65)
+collision_mask = 3
+collide_with_areas = true
 
 [node name="PlayerVoiceAudio" type="AudioStreamPlayer3D" parent="."]
 stream = SubResource("AudioStreamWAV_cf1he")
