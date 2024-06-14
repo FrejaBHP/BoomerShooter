@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=3 uid="uid://bnriohryyqrx"]
+[gd_scene load_steps=16 format=3 uid="uid://bnriohryyqrx"]
 
 [ext_resource type="Texture2D" uid="uid://co5w2gr6jpfkq" path="res://hud/healthammo.png" id="1_g6vyp"]
 [ext_resource type="Texture2D" uid="uid://dq113emh4xesy" path="res://textures/weapons/crosshair.png" id="1_p8bi6"]
@@ -9,6 +9,7 @@
 [ext_resource type="Script" path="res://addons/texture_fonts/Classes/TextureFont.gd" id="3_kcxug"]
 [ext_resource type="Script" path="res://addons/texture_fonts/Classes/TextureFontMapping.gd" id="4_ir8qs"]
 [ext_resource type="Texture2D" uid="uid://cfovrtrns157p" path="res://textures/font/HealthNumbers.png" id="6_ndnhi"]
+[ext_resource type="Texture2D" uid="uid://djwtb7yxxu1qh" path="res://hud/chargebar.png" id="10_1rrvs"]
 
 [sub_resource type="Resource" id="Resource_qv3ty"]
 script = ExtResource("2_vtg6f")
@@ -140,6 +141,27 @@ grow_vertical = 2
 scale = Vector2(3, 3)
 pivot_offset = Vector2(3.5, 3.5)
 texture = ExtResource("1_p8bi6")
+
+[node name="ChargeBar" type="TextureProgressBar" parent="."]
+visible = false
+texture_filter = 2
+texture_repeat = 2
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -126.0
+offset_top = -76.0
+offset_right = -54.0
+offset_bottom = -73.0
+grow_horizontal = 2
+grow_vertical = 0
+scale = Vector2(3.5, 3.5)
+max_value = 120.0
+nine_patch_stretch = true
+texture_progress = ExtResource("10_1rrvs")
 
 [node name="PickupTextContainer" type="VBoxContainer" parent="."]
 layout_mode = 0

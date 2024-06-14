@@ -1,17 +1,15 @@
-[gd_resource type="Resource" script_class="QodotFGDPointClass" load_steps=4 format=3 uid="uid://dyyeyp4b623jd"]
+[gd_resource type="Resource" script_class="FuncGodotFGDPointClass" load_steps=3 format=3 uid="uid://yip2ogdvhe6s"]
 
 [ext_resource type="PackedScene" uid="uid://d16ppfrqr527n" path="res://spawners/spawner_axe_zombie.tscn" id="1_5o2xv"]
-[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_point_class.gd" id="2_fwd4m"]
-[ext_resource type="Script" path="res://scripts/Spawner.cs" id="3_my8t7"]
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class.gd" id="2_2eeji"]
 
 [resource]
-script = ExtResource("2_fwd4m")
+script = ExtResource("2_2eeji")
 scene_file = ExtResource("1_5o2xv")
-script_class = ExtResource("3_my8t7")
 apply_rotation_on_map_build = true
 classname = "enemy_axezombie"
 description = "Axe Zombie. Woah!"
-qodot_internal = false
+func_godot_internal = false
 base_classes = Array[Resource]([])
 class_properties = {}
 class_property_descriptions = {}
@@ -19,5 +17,5 @@ meta_properties = {
 "color": Color(0.921569, 0.25098, 0.254902, 1),
 "size": AABB(-8, -8, -16, 8, 8, 16)
 }
-node_class = "Area3D"
-transient_node = false
+node_class = ""
+name_property = ""

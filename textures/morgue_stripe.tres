@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://djmpxu2w4agcd"]
+
+[ext_resource type="Texture2D" uid="uid://0biwdwq286jh" path="res://textures/morgue_stripe.png" id="1_6gexe"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_6gexe")
+texture_filter = 2

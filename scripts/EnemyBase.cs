@@ -24,8 +24,11 @@ public partial class EnemyBase : CharacterBody3D {
 	public virtual float Speed { get; protected set; }
 	public virtual int StartingHealth { get; protected set; }
 	public virtual int Health { get; protected set; }
+	public virtual bool IsMoving { get; protected set; }
+	public virtual bool CanMove { get; protected set; }
 
 	public virtual CollisionShape3D ColShape { get; protected set; }
+	public virtual float ColHeight { get; protected set; }
 
     public virtual Sprite3D VisSprite { get; protected set; }
 	public virtual int SpriteAnimFrame { get; protected set; }
@@ -58,6 +61,18 @@ public partial class EnemyBase : CharacterBody3D {
 
     public override void _PhysicsProcess(double delta) {
 
+	}
+
+	public virtual void ProcessGroundMovement(double deltaTime) {
+
+	}
+
+	public void ProcessGravity(double deltaTime) {
+		Vector3 velocity = Velocity;
+		if (!IsOnFloor()) {
+			velocity.Y -= gravity * (float)deltaTime;
+		}
+		Velocity = velocity;
 	}
 
 	public void SetEnemyState(int estate) {
@@ -151,7 +166,7 @@ public partial class EnemyBase : CharacterBody3D {
     }
 
 	public void AdjustSpriteYOffset() {
-		spriteYOffset = -(((ColShape.Shape as CapsuleShape3D).Height * 128f) - VisSprite.Texture.GetHeight()) / 2;
+		spriteYOffset = -((ColHeight * 128f) - VisSprite.Texture.GetHeight()) / 2;
 		VisSprite.Offset = VisSprite.Offset with { Y = spriteYOffset };
 	}
 
@@ -164,14 +179,6 @@ public partial class EnemyBase : CharacterBody3D {
 		EnterChaseState();
 	}
 
-	public void ProcessGravity(double deltaTime) {
-		Vector3 velocity = Velocity;
-		if (!IsOnFloor()) {
-			velocity.Y -= gravity * (float)deltaTime;
-		}
-		Velocity = velocity;
-	}
-
 	public void TakeDamage(CharacterBody3D? source, int damage) {
 		if ((Health - damage) <= 0) {
 			Health = 0;
@@ -180,7 +187,7 @@ public partial class EnemyBase : CharacterBody3D {
 		}
 		else {
 			Health -= damage;
-			AI.OnTakeDamage(this, source, damage);
+			AI.WakeUpAndTargetSource(this, source, damage);
 		}
 	}
 
@@ -191,6 +198,7 @@ public partial class EnemyBase : CharacterBody3D {
 	// Probably smarter to replace the enemy with a generic corpse entity that inherits its last death animation frame
 	// Alternatively, alter the script to make the collision very short to avoid tanking projectiles unintentionally - Done, executed in individual death script
 	public void SetCorpseCollision() {
+		SetCollisionMaskValue(4, false);
 		SetCollisionLayerValue(5, false);
 		SetCollisionLayerValue(6, true);
 	}

@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ckannibngbahs"]
+
+[ext_resource type="Texture2D" uid="uid://b7tccyalq0gor" path="res://textures/edge_wood.png" id="1_u8fed"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_u8fed")
+texture_filter = 2

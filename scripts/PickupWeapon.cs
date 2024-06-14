@@ -25,14 +25,17 @@ public partial class PickupWeapon : Area3D {
 
 			if (!player.HasWeapon[(int)Type]) {
                 player.PickUpNewWeapon(Type);
-                player.GiveAmmo(player.WeaponInventory[(int)Type].AmmoType, Amount);
-		        player.PlayerHUD.PrintPickupStatusText(TextAppend);
-				if (PickupSound != null) {
-					player.MiscAudio.Stream = PickupSound;
-					player.MiscAudio.Play();
-				}
-				QueueFree();
 			}
+
+			player.GiveAmmo(player.WeaponInventory[(int)Type].AmmoType, Amount);
+		    player.PlayerHUD.PrintPickupStatusText(TextAppend);
+			
+			if (PickupSound != null) {
+				player.MiscAudio.Stream = PickupSound;
+				player.MiscAudio.Play();
+			}
+
+			QueueFree();
 		}
 	}
 }

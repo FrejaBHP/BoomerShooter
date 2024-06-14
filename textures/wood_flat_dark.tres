@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://ccsor5hbpbvth"]
+
+[ext_resource type="Texture2D" uid="uid://cjx55xsh6el2d" path="res://textures/wood_flat_dark.png" id="1_mfuqe"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_mfuqe")
+texture_filter = 2

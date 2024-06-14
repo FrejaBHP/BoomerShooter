@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjxuidvm7t1as"]
+
+[ext_resource type="PackedScene" uid="uid://ddqloieli4ufs" path="res://pickups/weapon_pickup_base.tscn" id="1_t21sn"]
+[ext_resource type="AudioStream" uid="uid://kkw6mxlauq0q" path="res://sounds/misc/ammopickup.wav" id="2_6j38q"]
+[ext_resource type="Texture2D" uid="uid://bda2wl8ulu3sm" path="res://textures/pickups/ammo_dynamite_reg.png" id="3_s46nb"]
+
+[node name="WeaponPickupDynamiteLarge" instance=ExtResource("1_t21sn")]
+TextAppend = "case of tnt"
+Type = 2
+Amount = 5
+PickupSound = ExtResource("2_6j38q")
+
+[node name="Sprite3D" parent="." index="1"]
+offset = Vector2(0, -1)
+texture = ExtResource("3_s46nb")

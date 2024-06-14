@@ -82,6 +82,24 @@ public static class WAnimations {
     public static readonly WeaponAnimation Anim_Wep_SG_FlashRight = new WeaponAnimation();
     public static readonly WeaponAnimation Anim_Wep_SG_FlashBoth = new WeaponAnimation();
 
+    public static readonly WeaponAnimation Anim_Wep_Light_Up = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_Light_Down = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_Light_Idle = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_Light_Cook = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_Light_Cook_Idle = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_Light_Recover = new WeaponAnimation();
+
+    public static readonly WeaponAnimation Anim_Wep_DynaReg_Up = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_DynaReg_Down = new WeaponAnimation();
+    public static readonly WeaponAnimationFrame Frame_Wep_DynaReg_Idle = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+            //new(3, new(0, 65, 0, 4), Sprites.Spr_Wep_DynaReg_Idle)
+        });
+    public static readonly WeaponAnimation Anim_Wep_DynaReg_Cook = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_DynaReg_Throw = new WeaponAnimation();
+    public static readonly WeaponAnimation Anim_Wep_DynaReg_Recover = new WeaponAnimation();
+
 
     public static void PlayAnimationFrame(bsPlayer player, WeaponAnimationFrame frame) {
         
@@ -159,7 +177,7 @@ public static class WAnimations {
         }, 8, SFX.ShotgunCock);
         Anim_Wep_SG_Reload.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, Sprites.Spr_Wep_SG[4]),
-            new(5, null)
+            new(5, Sprites.Spr_NoOffset, null)
         }, 8);
         Anim_Wep_SG_Reload.UpdateAnimationLength();
 
@@ -190,7 +208,7 @@ public static class WAnimations {
             new(1, Sprites.Spr_SG_Flash_Offset[1], Sprites.XSpr_Wep_SG[4])
         }, 3);
         Anim_Wep_SG_FlashRight.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
-            new(1, null)
+            new(1, Sprites.Spr_NoOffset, null)
         }, 0);
         Anim_Wep_SG_FlashRight.UpdateAnimationLength();
 
@@ -205,10 +223,174 @@ public static class WAnimations {
             new(0, Sprites.Spr_SG_Flash_Offset[2], Sprites.XSpr_Wep_SG[4])
         }, 3);
         Anim_Wep_SG_FlashBoth.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
-            new(0, null)
+            new(0, Sprites.Spr_NoOffset, null)
         }, 0);
         Anim_Wep_SG_FlashBoth.UpdateAnimationLength();
 
+        // CUSTOM UP AND DOWN ANIMS SHOULD LAST 18 FRAMES
+        // Lighter
+        Anim_Wep_Light_Up.AnimFrames = new WeaponAnimationFrame[5];
+        Anim_Wep_Light_Up.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Up[0])
+        }, 3);
+        Anim_Wep_Light_Up.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Up[1])
+        }, 6);
+        Anim_Wep_Light_Up.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Up[2]),
+            new(5, new(-146, 0, 0, -96), Sprites.Spr_Wep_Light_Strike)
+        }, 5);
+        Anim_Wep_Light_Up.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[3] {
+            new(1, Sprites.Spr_Light_Flame_Offset, Sprites.Spr_Wep_Light_Flame[0]),
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Idle),
+            new(5, Sprites.Spr_NoOffset, null)
+        }, 2);
+        Anim_Wep_Light_Up.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, Sprites.Spr_Light_Flame_Offset, Sprites.Spr_Wep_Light_Flame[1])
+        }, 2);
+        Anim_Wep_Light_Up.UpdateAnimationLength();
+
+        Anim_Wep_Light_Down.AnimFrames = new WeaponAnimationFrame[4];
+        Anim_Wep_Light_Down.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, null),
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Down[0])
+        }, 6);
+        Anim_Wep_Light_Down.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, null),
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Down[1])
+        }, 6);
+        Anim_Wep_Light_Down.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, null),
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Down[2])
+        }, 6);
+        Anim_Wep_Light_Down.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, Sprites.Spr_NoOffset, null),
+            new(2, Sprites.Spr_NoOffset, null)
+        }, 0);
+        Anim_Wep_Light_Down.UpdateAnimationLength();
+
+        Anim_Wep_Light_Idle.AnimFrames = new WeaponAnimationFrame[3];
+        Anim_Wep_Light_Idle.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, Sprites.Spr_Light_Flame_Offset, Sprites.Spr_Wep_Light_Flame[2]),
+            new(2, Sprites.Spr_Light_Offset, Sprites.Spr_Wep_Light_Idle)
+        }, 5);
+        Anim_Wep_Light_Idle.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, Sprites.Spr_Light_Flame_Offset, Sprites.Spr_Wep_Light_Flame[3])
+        }, 5);
+        Anim_Wep_Light_Idle.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, Sprites.Spr_Light_Flame_Offset, Sprites.Spr_Wep_Light_Flame[4])
+        }, 5);
+        Anim_Wep_Light_Idle.UpdateAnimationLength();
+
+        Anim_Wep_Light_Cook.AnimFrames = new WeaponAnimationFrame[5];
+        Anim_Wep_Light_Cook.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[0] {
+        }, 7);
+        Anim_Wep_Light_Cook.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, new(-185, 0, 0, -88), Sprites.Spr_Wep_Light_Flame[2]),
+            new(2, new(-125, -125, 0, 5), Sprites.Spr_Wep_Light_Idle)
+        }, 4);
+        Anim_Wep_Light_Cook.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, new(-205, 0, 0, -78), Sprites.Spr_Wep_Light_Flame[3]),
+            new(2, new(-135, -135, 0, 15), Sprites.Spr_Wep_Light_Idle)
+        }, 4);
+        Anim_Wep_Light_Cook.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, new(-225, 0, 0, -68), Sprites.Spr_Wep_Light_Flame[4]),
+            new(2, new(-145, -145, 0, 25), Sprites.Spr_Wep_Light_Idle)
+        }, 4);
+        Anim_Wep_Light_Cook.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(1, new(-245, 0, 0, -58), Sprites.Spr_Wep_Light_Flame[4]),
+            new(2, new(-155, -155, 0, 35), Sprites.Spr_Wep_Light_Idle)
+        }, 1);
+        Anim_Wep_Light_Cook.UpdateAnimationLength();
+
+        Anim_Wep_Light_Cook_Idle.AnimFrames = new WeaponAnimationFrame[3];
+        Anim_Wep_Light_Cook_Idle.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, new(-245, 0, 0, -58), Sprites.Spr_Wep_Light_Flame[2]),
+        }, 5);
+        Anim_Wep_Light_Cook_Idle.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, new(-245, 0, 0, -58), Sprites.Spr_Wep_Light_Flame[3])
+        }, 5);
+        Anim_Wep_Light_Cook_Idle.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(1, new(-245, 0, 0, -58), Sprites.Spr_Wep_Light_Flame[4])
+        }, 5);
+        Anim_Wep_Light_Cook_Idle.UpdateAnimationLength();
+
+        // Dynamite Regular
+        Anim_Wep_DynaReg_Up.AnimFrames = new WeaponAnimationFrame[3];
+        Anim_Wep_DynaReg_Up.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Up.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Up.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Up.UpdateAnimationLength();
+
+        Anim_Wep_DynaReg_Down.AnimFrames = new WeaponAnimationFrame[4];
+        Anim_Wep_DynaReg_Down.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Down.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Down.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-103, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, Sprites.Spr_Wep_DynaReg_Idle)
+        }, 6);
+        Anim_Wep_DynaReg_Down.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, Sprites.Spr_NoOffset, null),
+            new(3, Sprites.Spr_NoOffset, null)
+        }, 0);
+        Anim_Wep_DynaReg_Down.UpdateAnimationLength();
+
+        Anim_Wep_DynaReg_Cook.AnimFrames = new WeaponAnimationFrame[5];
+        Anim_Wep_DynaReg_Cook.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-133, 0, 0, -90), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, new(-30, 0, 0, 0), Sprites.Spr_Wep_DynaReg_Idle)
+        }, 7);
+        Anim_Wep_DynaReg_Cook.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-113, 0, 0, -80), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, new(-10, 0, 0, 10), Sprites.Spr_Wep_DynaReg_Idle)
+        }, 4);
+        Anim_Wep_DynaReg_Cook.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-93, 0, 0, -70), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, new(10, 0, 0, 20), Sprites.Spr_Wep_DynaReg_Idle)
+        }, 4);
+        Anim_Wep_DynaReg_Cook.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-73, 0, 0, -60), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, new(30, 0, 0, 30), Sprites.Spr_Wep_DynaReg_Idle)
+        }, 4);
+        Anim_Wep_DynaReg_Cook.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(-53, 0, 0, -50), Sprites.Spr_Wep_DynaReg_Fuse),
+            new(3, new(50, 0, 0, 40), Sprites.Spr_Wep_DynaReg_Idle)
+        }, 231);
+        Anim_Wep_DynaReg_Cook.UpdateAnimationLength();
+
+        Anim_Wep_DynaReg_Throw.AnimFrames = new WeaponAnimationFrame[5];
+        Anim_Wep_DynaReg_Throw.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, Sprites.Spr_NoOffset, null),
+            new(3, new(50, 0, 0, 40), Sprites.Spr_Wep_DynaReg_Throw[0])
+        }, 4);
+        Anim_Wep_DynaReg_Throw.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(3, new(45, 0, 0, 20), Sprites.Spr_Wep_DynaReg_Throw[0])
+        }, 3);
+        Anim_Wep_DynaReg_Throw.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(3, new(41, 0, 0, 10), Sprites.Spr_Wep_DynaReg_Throw[1])
+        }, 2);
+        Anim_Wep_DynaReg_Throw.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(3, new(38, 0, 0, -5), Sprites.Spr_Wep_DynaReg_Throw[1])
+        }, 1);
+        Anim_Wep_DynaReg_Throw.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
+            new(3, new(35, 0, 0, -15), Sprites.Spr_Wep_DynaReg_Throw[1])
+        }, 1);
+        Anim_Wep_DynaReg_Throw.UpdateAnimationLength();
 
 
         // PF Idle

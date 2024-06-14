@@ -23,7 +23,7 @@ public static class AI {
         return facing.Dot(target);
     }
     
-    public static void OnTakeDamage(EnemyBase enemy, CharacterBody3D? source, int damage) {
+    public static void WakeUpAndTargetSource(EnemyBase enemy, CharacterBody3D? source, int damage) {
         if (source != null) {
             if (enemy.EnemyState == EnemyState.Idle) {
                 enemy.WakeUp();

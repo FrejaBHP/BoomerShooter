@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cgcm1hpyw1l3v"]
+
+[ext_resource type="Texture2D" uid="uid://bjuh5ux1b34yh" path="res://textures/leaves.png" id="1_s42qe"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_s42qe")
+texture_filter = 2

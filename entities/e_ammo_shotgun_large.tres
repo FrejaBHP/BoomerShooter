@@ -1,17 +1,15 @@
-[gd_resource type="Resource" script_class="QodotFGDPointClass" load_steps=4 format=3 uid="uid://7dcl3g1hespm"]
+[gd_resource type="Resource" script_class="FuncGodotFGDPointClass" load_steps=3 format=3 uid="uid://chd43865ts26x"]
 
 [ext_resource type="PackedScene" uid="uid://efht3ea7tmvy" path="res://pickups/ammo_shotgun_large.tscn" id="1_l6sse"]
-[ext_resource type="Script" path="res://addons/qodot/src/resources/game-definitions/fgd/qodot_fgd_point_class.gd" id="2_oso0t"]
-[ext_resource type="Script" path="res://scripts/PickupAmmo.cs" id="3_uhdc8"]
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class.gd" id="2_cawqm"]
 
 [resource]
-script = ExtResource("2_oso0t")
+script = ExtResource("2_cawqm")
 scene_file = ExtResource("1_l6sse")
-script_class = ExtResource("3_uhdc8")
 apply_rotation_on_map_build = true
 classname = "ammo_shot_large"
 description = "Gives 20 shells"
-qodot_internal = false
+func_godot_internal = false
 base_classes = Array[Resource]([])
 class_properties = {}
 class_property_descriptions = {}
@@ -19,5 +17,5 @@ meta_properties = {
 "color": Color(0.8, 0.8, 0.8, 1),
 "size": AABB(-4, -4, -4, 4, 4, 4)
 }
-node_class = "Area3D"
-transient_node = false
+node_class = ""
+name_property = ""

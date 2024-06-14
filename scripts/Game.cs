@@ -5,6 +5,7 @@ using System.Linq;
 public partial class Game : Node3D {
 	public static Node3D EnemiesNode { get; private set; }
 	public static Node3D PlayersNode { get; private set; }
+	public static Node3D EntitiesNode { get; private set; }
 	public static Node3D RayTraceHelper { get; private set; }
 
 	public static bsPlayer Player { get; set; }
@@ -12,6 +13,7 @@ public partial class Game : Node3D {
 	public override void _Ready() {
 		EnemiesNode = GetNode<Node3D>("Enemies");
 		PlayersNode = GetNode<Node3D>("Players");
+		EntitiesNode = GetNode<Node3D>("Entities");
 		RayTraceHelper = GetNode<Node3D>("RaytraceHelper");
 
 		Sprites.IndexSpriteArrays();
@@ -22,17 +24,20 @@ public partial class Game : Node3D {
 	}
 
 	private void LoadMap() {
-		ActivateSpawners();
+		IterateEntities();
 	}
 
-	private void ActivateSpawners() {
-		var map = GetNode("QodotMap");
+	private void IterateEntities() {
+		var map = GetNode("Map01");
 		foreach (Node child in map.GetChildren()) {
 			if (child.IsInGroup("Spawner")) {
 				(child as Spawner).SpawnEnemy();
 			}
 			else if (child.IsInGroup("PlayerSpawner")) {
 				(child as PlayerSpawner).SpawnPlayer();
+			}
+			else if (child.IsInGroup("DoorHinge")) {
+				(child as DoorHinge).GetAndReparentDoors();
 			}
 		}
 
@@ -45,6 +50,10 @@ public partial class Game : Node3D {
 				(enemy as EnemyBase).Activate();
 			}
 		}
+	}
+
+	private void ConnectTriggers() {
+
 	}
 
 	public override void _Process(double delta) {

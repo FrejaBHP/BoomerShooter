@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bbcnqknik2r36"]
+
+[ext_resource type="Texture2D" uid="uid://d0kxc8akvdq8c" path="res://textures/trigger.png" id="1_tcro6"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_tcro6")
+texture_filter = 2

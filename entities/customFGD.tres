@@ -1,0 +1,24 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDFile" load_steps=15 format=3 uid="uid://7jndj1m62gll"]
+
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_file.gd" id="1_f4y5j"]
+[ext_resource type="Resource" uid="uid://crgpdahjaj" path="res://addons/func_godot/fgd/func_godot_fgd.tres" id="1_kqyi3"]
+[ext_resource type="Resource" uid="uid://chd43865ts26x" path="res://entities/e_ammo_shotgun_large.tres" id="2_qyr81"]
+[ext_resource type="Resource" uid="uid://bb70a0ihyepnd" path="res://entities/e_ammo_shotgun_small.tres" id="3_ijg11"]
+[ext_resource type="Resource" uid="uid://yip2ogdvhe6s" path="res://entities/e_enemy_axezombie.tres" id="4_t3gcj"]
+[ext_resource type="Resource" uid="uid://6d5eq41f3oud" path="res://entities/e_sliding_door.tres" id="5_d0p77"]
+[ext_resource type="Resource" uid="uid://v85qafj4ojv7" path="res://entities/e_weapon_shotgun.tres" id="6_7oxds"]
+[ext_resource type="Resource" uid="uid://cyhfx5h528epv" path="res://entities/player_start.tres" id="7_j12qw"]
+[ext_resource type="Resource" uid="uid://bfo2aoricilqw" path="res://entities/e_doorhinge.tres" id="8_vmpaq"]
+[ext_resource type="Resource" uid="uid://dn6jftwty43gw" path="res://entities/e_revolving_door.tres" id="9_rdjqb"]
+[ext_resource type="Resource" uid="uid://c76e5ct26tpo0" path="res://entities/e_trigger_once.tres" id="10_408v1"]
+[ext_resource type="Resource" uid="uid://j7mce50iuaj8" path="res://entities/e_trigger_repeat.tres" id="11_6hslj"]
+[ext_resource type="Resource" uid="uid://w81falbtd35f" path="res://entities/e_weapon_tnt_small.tres" id="12_cwu7i"]
+[ext_resource type="Resource" uid="uid://cl22ao0gtynp7" path="res://entities/e_weapon_tnt_large.tres" id="13_02lle"]
+
+[resource]
+script = ExtResource("1_f4y5j")
+export_file = false
+model_key_word_supported = true
+fgd_name = "FuncGodot"
+base_fgd_files = Array[Resource]([ExtResource("1_kqyi3")])
+entity_definitions = Array[Resource]([ExtResource("2_qyr81"), ExtResource("3_ijg11"), ExtResource("4_t3gcj"), ExtResource("5_d0p77"), ExtResource("6_7oxds"), ExtResource("7_j12qw"), ExtResource("8_vmpaq"), ExtResource("9_rdjqb"), ExtResource("10_408v1"), ExtResource("11_6hslj"), ExtResource("12_cwu7i"), ExtResource("13_02lle")])

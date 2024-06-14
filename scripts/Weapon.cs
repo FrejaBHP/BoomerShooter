@@ -34,16 +34,20 @@ public abstract class Weapon {
 
     public virtual void PrimaryFire() {
         if (WeaponState == WeaponState.ReadyState) {
-            Player.TestClearHelper();
+            //Player.TestClearHelper();
             EnterAtkState();
         }
     }
 
     public virtual void AltFire() {
         if (WeaponState == WeaponState.ReadyState) {
-            Player.TestClearHelper();
+            //Player.TestClearHelper();
             EnterAltState();
         }
+    }
+
+    public virtual void PrimaryFireReleased() {
+        
     }
 
     public virtual void EnterAtkState() {
@@ -89,6 +93,14 @@ public abstract class Weapon {
             float newY = player.ActiveWeaponControl.Position.Y + 16f;
             player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = newY });
         }
+    }
+
+    public static void A_SnapToTop(bsPlayer player) {
+        player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetTop });
+    }
+
+    public static void A_SnapToBottom(bsPlayer player) {
+        player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetBottom });
     }
 
     public static void W_UseAmmo(bsPlayer player, Ammotype ammo, int amount) {
@@ -276,4 +288,129 @@ public sealed partial class W_Shotgun : Weapon {
             }
         }
     } 
+}
+
+public sealed partial class W_DynamiteReg : Weapon {
+    public override WStateMachine WStateMachine { get; } = new();
+    public override Ammotype AmmoType { get; } = Ammotype.DynamiteReg;
+    public override int AmmoReqPri { get; } = 1;
+    public override int AmmoReqSec { get; } = 1;
+
+    public override AudioStreamWav PrimaryFireAudio { get; protected set; } = null;
+    public override AudioStreamWav AltFireAudio { get; protected set; } = null;
+
+    public override WeaponState WeaponState { get; protected set; }
+    public override bsPlayer Player { get; protected set; }
+
+    protected override WUpState UpState { get; } = new();
+    protected override WDownState DownState { get; } = new();
+    protected override WReadyState ReadyState { get; } = new();
+    protected override WAtkState AtkState { get; } = new();
+    protected override WAltState AltState { get; } = new();
+
+    private class WSwapState : WState {}
+    private class WCookState : WState {}
+    private class WThrowState : WState {}
+    private class WThrowActionState : WState {}
+    private class WRecoveryState : WState {}
+    private readonly WSwapState SwapState = new();
+    private readonly WCookState CookState = new();
+    private readonly WThrowState ThrowState = new();
+    private readonly WThrowActionState ThrowActionState = new();
+    private readonly WRecoveryState RecoveryState = new();
+
+    private bool cooking = false;
+    private int cookTime = 0;
+
+    public W_DynamiteReg(bsPlayer player) {
+        Player = player;
+
+        // ConfigureState: Length (frames), Weapon (this), entry Animation, Action on first frame, enum WeaponState, State NextState
+        // Negative length doesn't count frames, negative WeaponState keeps current, null Action does nothing, null NextState does not change state by itself
+        UpState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Up, () => RaiseLighter(), (int)WeaponState.UpState, ReadyState);
+        DownState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Down, () => LowerLighter(), (int)WeaponState.DownState, SwapState);
+        ReadyState.ConfigureState(WAnimations.Anim_Wep_Light_Idle.TotalLength, this, WAnimations.Frame_Wep_DynaReg_Idle, () => LighterIdle(), (int)WeaponState.ReadyState, ReadyState);
+        SwapState.ConfigureState(0, this, null, () => SwapFromDynamite(), -1, null);
+        CookState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Cook, null, (int)WeaponState.CustomState, null);
+        ThrowState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Throw, null, -1, ThrowActionState);
+        ThrowActionState.ConfigureState(1, this, null, () => Throw(), -1, RecoveryState);
+        RecoveryState.ConfigureState(5, this, null, null, -1, ReadyState);
+    }
+
+    public override void PrimaryFire() {
+        if (WeaponState == WeaponState.ReadyState && Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqPri) {
+            WStateMachine.SetState(CookState);
+            Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Cook);
+            cooking = true;
+            Player.PlayerHUD.ShowChargeBar();
+        }
+        else if (WeaponState == WeaponState.CustomState && cooking) {
+            IncreaseCookTimer();
+        }
+    }
+
+    public override void AltFire() {
+        if (WeaponState == WeaponState.ReadyState && Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqSec) {
+            
+        }
+    }
+
+    public override void PrimaryFireReleased() {
+        if (WeaponState == WeaponState.CustomState && cooking) {
+            WStateMachine.SetState(ThrowState);
+            cooking = false;
+            Player.PlayerHUD.HideChargeBar();
+        }
+    }
+
+    private void IncreaseCookTimer() {
+        cookTime++;
+        if (cookTime <= 120) {
+            Player.PlayerHUD.ChargeBarProgress = cookTime;
+        }
+        if (cookTime >= WAnimations.Anim_Wep_Light_Cook.TotalLength) {
+            if ((cookTime - WAnimations.Anim_Wep_Light_Cook.TotalLength) % WAnimations.Anim_Wep_Light_Cook_Idle.TotalLength == 0) {
+                Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Cook_Idle);
+            }
+        }
+    }
+
+    private void Throw() {
+        float force;
+        if (cookTime <= 120f) {
+            force = cookTime / 8f;
+        }
+        else {
+            force = 15f;
+        }
+        
+        Player.ThrowObject(ThrowableType.TNTBundle, force);
+        cookTime = 0;
+        Player.PlayerHUD.ChargeBarProgress = cookTime;
+        W_UseAmmo(Player, AmmoType, 1);
+    }
+
+    private void RaiseLighter() {
+        A_SnapToTop(Player);
+        Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Up);
+    }
+
+    private void LowerLighter() {
+        Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Down);
+    }
+
+    private void LighterIdle() {
+        Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Idle);
+    }
+
+    private void RestartLighterCookIdleAnimation() {
+        Player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_Light_Cook_Idle);
+    }
+
+    private void SwapFromDynamite() {
+        A_SnapToBottom(Player);
+        Player.ActiveWeapon = Player.WeaponInventory[Player.WeaponToSwitchTo];
+        Player.ActiveWeaponNum = Player.WeaponToSwitchTo;
+        Player.BringUpNewWeapon((WeaponType)Player.WeaponToSwitchTo);
+    }
 }

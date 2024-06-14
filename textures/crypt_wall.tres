@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bb0bvbplympnf"]
+
+[ext_resource type="Texture2D" uid="uid://cq2qw10r76jjr" path="res://textures/crypt_wall.png" id="1_swqfp"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_swqfp")
+texture_filter = 2

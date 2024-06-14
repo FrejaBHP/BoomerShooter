@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dljcv1yihiyfs"]
+
+[ext_resource type="Texture2D" uid="uid://o1v3jx2448ii" path="res://textures/cobble_sq.png" id="1_y0rtb"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_y0rtb")
+texture_filter = 2

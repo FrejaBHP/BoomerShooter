@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cw1wwkp54clrd"]
+
+[ext_resource type="Texture2D" uid="uid://di1pg18c4a0r1" path="res://textures/brick_orange_small.png" id="1_ajyq0"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_ajyq0")
+texture_filter = 2

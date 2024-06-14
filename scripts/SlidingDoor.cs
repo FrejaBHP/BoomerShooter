@@ -4,10 +4,10 @@ using System;
 
 public partial class SlidingDoor : StaticBody3D {
 	[Export]
-	Dictionary properties;
+	Dictionary func_godot_properties;
 
 	private bool isOpening = false;
-	private bool alreadyOpened = false;
+	private bool interactedWith = false;
 	private float moveDist = 0f;
 	private Vector3 endPos;
 
@@ -22,31 +22,31 @@ public partial class SlidingDoor : StaticBody3D {
 
 			if (GlobalPosition == endPos) {
 				isOpening = false;
-				GD.Print("Door finished opening!");
+				//GD.Print("Door finished opening!");
 			}
 		}
     }
 
-    public void Open() {
-		if (!alreadyOpened) {
-			moveDist = properties["speed"].AsSingle() / 32f;
+    public void Trigger() {
+		if (!interactedWith) {
+			moveDist = func_godot_properties["speed"].AsSingle() / 32f;
 
-			if (properties["angle"].AsSingle() >= 0) {
-				Vector3 angleVector = new(properties["distance"].AsSingle() / 32, 0, 0);
-				endPos = GlobalPosition + angleVector.Rotated(Vector3.Up, ((float)Math.PI / 180) * properties["angle"].AsSingle());
+			if (func_godot_properties["angle"].AsSingle() >= 0) {
+				Vector3 angleVector = new(func_godot_properties["distance"].AsSingle() / 32, 0, 0);
+				endPos = GlobalPosition + angleVector.Rotated(Vector3.Up, ((float)Math.PI / 180) * func_godot_properties["angle"].AsSingle());
 			}
-			else if (properties["angle"].AsSingle() == -1) {
-				Vector3 angleVector = new(0, properties["distance"].AsSingle() / 32, 0);
+			else if (func_godot_properties["angle"].AsSingle() == -1) {
+				Vector3 angleVector = new(0, func_godot_properties["distance"].AsSingle() / 32, 0);
 				endPos = GlobalPosition + angleVector;
 			}
-			else if (properties["angle"].AsSingle() == -2) {
-				Vector3 angleVector = new(0, -properties["distance"].AsSingle() / 32, 0);
+			else if (func_godot_properties["angle"].AsSingle() == -2) {
+				Vector3 angleVector = new(0, -func_godot_properties["distance"].AsSingle() / 32, 0);
 				endPos = GlobalPosition + angleVector;
 			}
 
-			GD.Print($"StartPos: {GlobalPosition}, EndPos: {endPos}");
+			//GD.Print($"StartPos: {GlobalPosition}, EndPos: {endPos}");
 			isOpening = true;
-			alreadyOpened = true;
+			interactedWith = true;
 		}
 	}
 }

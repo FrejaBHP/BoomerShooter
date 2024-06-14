@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cx8q13bvso3c6"]
+
+[ext_resource type="Texture2D" uid="uid://dn1aocg705a1q" path="res://textures/fabric0.png" id="1_8qksu"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_8qksu")
+texture_filter = 2

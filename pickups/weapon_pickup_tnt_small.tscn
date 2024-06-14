@@ -1,0 +1,14 @@
+[gd_scene load_steps=4 format=3 uid="uid://cjvsqdq7vwws5"]
+
+[ext_resource type="PackedScene" uid="uid://ddqloieli4ufs" path="res://pickups/weapon_pickup_base.tscn" id="1_otiyb"]
+[ext_resource type="AudioStream" uid="uid://kkw6mxlauq0q" path="res://sounds/misc/ammopickup.wav" id="2_c3f6m"]
+[ext_resource type="Texture2D" uid="uid://cmnmv7kwb3xv1" path="res://textures/pickups/weapon_dynamite_reg.png" id="3_fno0d"]
+
+[node name="WeaponPickupDynamiteReg" instance=ExtResource("1_otiyb")]
+TextAppend = "bundle of tnt"
+Type = 2
+Amount = 1
+PickupSound = ExtResource("2_c3f6m")
+
+[node name="Sprite3D" parent="." index="1"]
+texture = ExtResource("3_fno0d")

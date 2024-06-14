@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dhx6lt08h6kti"]
+
+[ext_resource type="Texture2D" uid="uid://b8k3kv4c18ppr" path="res://textures/door_wood_fancy.png" id="1_2ea13"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_2ea13")
+texture_filter = 2

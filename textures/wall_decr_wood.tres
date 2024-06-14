@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cymivpdqockho"]
+
+[ext_resource type="Texture2D" uid="uid://bjnojgiob7lwd" path="res://textures/wall_decr_wood.png" id="1_08d8v"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_08d8v")
+texture_filter = 2

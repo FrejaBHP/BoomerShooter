@@ -3,7 +3,7 @@
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_47wr0"]
 [ext_resource type="Texture2D" uid="uid://25cop5v0qalb" path="res://textures/sky1.png" id="2_anxj2"]
 [ext_resource type="LightmapGIData" uid="uid://cj0hu5u0fg8x0" path="res://levelLightMap0.lmbake" id="2_dyk8n"]
-[ext_resource type="PackedScene" uid="uid://rggqlnrr307x" path="res://qodot_map_1.tscn" id="3_kxk12"]
+[ext_resource type="PackedScene" uid="uid://y452jojynx0q" path="res://map_01.tscn" id="4_6sgny"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_tvf7p"]
 panorama = ExtResource("2_anxj2")
@@ -35,4 +35,6 @@ light_data = ExtResource("2_dyk8n")
 
 [node name="Players" type="Node3D" parent="."]
 
-[node name="QodotMap" parent="." instance=ExtResource("3_kxk12")]
+[node name="Entities" type="Node3D" parent="."]
+
+[node name="Map01" parent="." instance=ExtResource("4_6sgny")]

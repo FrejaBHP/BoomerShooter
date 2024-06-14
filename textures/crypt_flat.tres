@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dhqiv2q1ot5tc"]
+
+[ext_resource type="Texture2D" uid="uid://c6tpxwcov4fn8" path="res://textures/crypt_flat.png" id="1_mg2w4"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_mg2w4")
+texture_filter = 2

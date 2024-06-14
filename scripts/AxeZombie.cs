@@ -12,8 +12,11 @@ public partial class AxeZombie : EnemyBase, IEnemy {
 	public override float Speed { get; protected set; } = 4.0f;
     public override int StartingHealth { get; protected set; } = 60;
     public override int Health { get; protected set; }
+    public override bool IsMoving { get; protected set; }
+    public override bool CanMove { get; protected set; } = true;
 
     public override CollisionShape3D ColShape { get; protected set; }
+    public override float ColHeight { get; protected set; }
 
     public override Sprite3D VisSprite { get; protected set; }
     public override int SpriteAnimFrame { get; protected set; } = 0;
@@ -44,6 +47,8 @@ public partial class AxeZombie : EnemyBase, IEnemy {
 
     public override void _Ready() {
         ColShape = GetNode<CollisionShape3D>("CollisionShape3D");
+        ColHeight = (ColShape.Shape as CapsuleShape3D).Height;
+
         VisSprite = GetNode<Sprite3D>("VisSprite");
 		VoiceAudio = GetNode<AudioStreamPlayer3D>("VoiceAudio");
         DebugLabel = GetNode<Label3D>("DebugStats");
@@ -54,7 +59,7 @@ public partial class AxeZombie : EnemyBase, IEnemy {
         StunState.ConfigureState(-1, this, null, null, (int)EnemyState.Stun, null);
         DeathState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Die, null, (int)EnemyState.Death, CorpseState);
         CorpseState.ConfigureState(-1, this, null, () => OnDeath(), (int)EnemyState.Corpse, null);
-        
+
         EnterIdleState();
     }
 
@@ -71,13 +76,34 @@ public partial class AxeZombie : EnemyBase, IEnemy {
                 AdjustSpriteYOffset();
             }
         }
-        
-        if (EnemyState != EnemyState.Corpse) {
+
+        if (CanMove) {
+            ProcessGroundMovement(delta);
             ProcessGravity(delta);
             MoveAndSlide();
         }
 
         UpdateDebugLabel(DebugLabel);
+    }
+
+    public override void ProcessGroundMovement(double deltaTime) {
+        if (EnemyState == EnemyState.Chase && IsOnFloor()) {
+			IsMoving = true;
+		}
+		else {
+			IsMoving = false;
+		}
+
+        if (IsMoving) {
+
+        }
+        else {
+            Velocity = Velocity.Lerp(new(0, Velocity.Y, 0), 0.04f);
+        }
+
+        if (EnemyState == EnemyState.Corpse && Velocity == Vector3.Zero) {
+            CanMove = false;
+        }
     }
 
     public void SetSprite() {
@@ -115,8 +141,11 @@ public partial class AxeZombie : EnemyBase, IEnemy {
     public override void OnDeath() {
         VisSprite.Texture = Sprites.Spr_Zombie_Death[4];
         (ColShape.Shape as CapsuleShape3D).Height = 0.25f;
+        ColHeight = (ColShape.Shape as CapsuleShape3D).Height;
+
         float newHeight = Position.Y - 0.375f;
         Position = Position with { Y = newHeight };
+        
         AdjustSpriteYOffset();
         VisSprite.FlipH = false;
         spriteWillUpdate = false;

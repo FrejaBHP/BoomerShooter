@@ -3,20 +3,26 @@ using Godot;
 public enum Ammotype {
     None,
     Shells,
-    Bullets,
+    //Bullets,
+    DynamiteReg,
     NoOfTypes
 }
 
 public enum WeaponType {
     W_Pitchfork,
     W_Shotgun,
-    W_Tommygun,
+    //W_Tommygun,
+    W_DynamiteReg,
     NoOfWeapons
 }
 
 public enum DamageType {
     Melee,
     Bullet
+}
+
+public enum ThrowableType {
+    TNTBundle
 }
 
 public enum EnemyType {
@@ -33,7 +39,8 @@ public enum WeaponState {
     AtkState,
     AltState,
     UpState,
-    DownState
+    DownState,
+    CustomState
 }
 
 public enum EnemyState {

@@ -4,7 +4,8 @@
 
 [resource]
 transparency = 4
+cull_mode = 2
 shading_mode = 0
 specular_mode = 2
 albedo_texture = ExtResource("1_jeo1s")
-texture_filter = 4
+texture_filter = 0

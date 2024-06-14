@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://cdggusyd0nc58"]
+
+[ext_resource type="Texture2D" uid="uid://cb7ma106x80ri" path="res://textures/wood_panel_trim.png" id="1_mdrqi"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_mdrqi")
+texture_filter = 2

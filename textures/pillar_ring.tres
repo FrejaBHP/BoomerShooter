@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://bewn4va6mkdb0"]
+
+[ext_resource type="Texture2D" uid="uid://d0dtqhk2wktb8" path="res://textures/pillar_ring.png" id="1_t15jn"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_t15jn")
+texture_filter = 2

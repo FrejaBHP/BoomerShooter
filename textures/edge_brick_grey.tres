@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://djs4oe8mpkt2p"]
+
+[ext_resource type="Texture2D" uid="uid://cbmelwxugq32y" path="res://textures/edge_brick_grey.png" id="1_266lt"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_266lt")
+texture_filter = 2

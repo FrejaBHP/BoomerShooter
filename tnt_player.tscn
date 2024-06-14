@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=3 uid="uid://yhf750580g08"]
+
+[ext_resource type="Script" path="res://scripts/TNTBundle.cs" id="1_rihjd"]
+[ext_resource type="Texture2D" uid="uid://dtukl5nx7101b" path="res://textures/entity/tnt/tntTemp.png" id="1_y3hcv"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_3kd3o"]
+radius = 0.15
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_0mgr7"]
+radius = 0.25
+
+[node name="TNT_Player" type="RigidBody3D"]
+collision_layer = 0
+collision_mask = 25
+script = ExtResource("1_rihjd")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_3kd3o")
+
+[node name="Area3D" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 25
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Area3D"]
+shape = SubResource("SphereShape3D_0mgr7")
+
+[node name="Sprite3D" type="Sprite3D" parent="."]
+pixel_size = 0.008
+billboard = 2
+texture_filter = 2
+texture = ExtResource("1_y3hcv")
+
+[connection signal="body_entered" from="Area3D" to="." method="OnBodyEntered"]

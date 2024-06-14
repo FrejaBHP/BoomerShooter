@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://w6nugqw77pkm"]
+
+[ext_resource type="Texture2D" uid="uid://bp7etmpc05vlh" path="res://textures/concrete_flat_grey.png" id="1_bjy2q"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_bjy2q")
+texture_filter = 2

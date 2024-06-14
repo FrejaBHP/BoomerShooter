@@ -1,0 +1,8 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://c0521allujws0"]
+
+[ext_resource type="Texture2D" uid="uid://daivr5b17j2fk" path="res://textures/pianokeys.png" id="1_plm5n"]
+
+[resource]
+shading_mode = 0
+albedo_texture = ExtResource("1_plm5n")
+texture_filter = 2

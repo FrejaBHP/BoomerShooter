@@ -6,6 +6,8 @@ using Vector2 = Godot.Vector2;
 using Vector3 = Godot.Vector3;
 
 public partial class bsPlayer : CharacterBody3D {
+	private readonly PackedScene tntbundle = GD.Load<PackedScene>("res://tnt_player.tscn");
+
 	public const float Speed = 6.0f;
 	public const float JumpVelocity = 4f;
 	public const float MaxStepHeight = 0.25f;
@@ -26,7 +28,7 @@ public partial class bsPlayer : CharacterBody3D {
 	private RayCast3D useRay;
 
 	public Ammunition[] PlayerAmmo = {
-		new(0), new(50), new(200)
+		new(0), new(100), new(50)//, new(500)
 	};
 
 	public Weapon[] WeaponInventory { get; private set; } = new Weapon[(int)WeaponType.NoOfWeapons];
@@ -38,6 +40,9 @@ public partial class bsPlayer : CharacterBody3D {
 
 	private Label label;
 	public PlayerHUD PlayerHUD { get; private set; }
+
+	public CollisionShape3D ColShape { get; private set; }
+	public float ColHeight { get; private set; }
 
 	public Control ActiveWeaponControl { get; private set; }
 	public Control ActiveWeaponPivot { get; private set; }
@@ -74,6 +79,9 @@ public partial class bsPlayer : CharacterBody3D {
 
 		PlayerHUD = GetNode<PlayerHUD>("bsPlayerHUD");
 		label = GetNode<Label>("bsPlayerHUD/Label");
+
+		ColShape = GetNode<CollisionShape3D>("CollisionShape3D");
+		ColHeight = (ColShape.Shape as CapsuleShape3D).Height;
 
 		playerCamera = GetNode<Camera3D>("PlayerCamera");
 		useRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
@@ -128,18 +136,45 @@ public partial class bsPlayer : CharacterBody3D {
 					WeaponToSwitchTo = 1;
 				}
 			}
-		}
-		if (Input.IsActionJustPressed("use")) {
-			useRay.ForceRaycastUpdate();
-
-			if (useRay.IsColliding()) {
-				StaticBody3D colBody = useRay.GetCollider() as StaticBody3D;
-				if (colBody.IsInGroup("DoorSliding")) {
-					(colBody as SlidingDoor).Open();
+			else if (Input.IsActionJustPressed("wkey3")) {
+				if (HasWeapon[2] && ActiveWeaponNum != 2) {
+					SwitchingWeapon = true;
+					WeaponToSwitchTo = 2;
 				}
 			}
 		}
+		if (Input.IsActionJustPressed("use")) {
+			Interact();
+		}
     }
+
+	private void Interact() {
+		useRay.ForceRaycastUpdate();
+
+		if (useRay.IsColliding()) {
+			if (useRay.GetCollider().IsClass("Area3D")) {
+				Area3D colBody = useRay.GetCollider() as Area3D;
+				if (colBody.IsInGroup("Trigger")) {
+					colBody.Call("TriggerTargets");
+				}
+			}
+			else if (useRay.GetCollider().IsClass("StaticBody3D")) {
+				StaticBody3D colBody = useRay.GetCollider() as StaticBody3D;
+				if (colBody.GetCollisionLayerValue(2)) {
+					colBody.Call("Trigger");
+				}
+			}
+			
+			/*
+			if (colBody.IsInGroup("DoorSliding")) {
+				(colBody as SlidingDoor).Trigger();
+			}
+			else if (colBody.IsInGroup("DoorRevolving")) {
+				(colBody as RevolvingDoor).Trigger();
+			}
+			*/
+		}
+	}
 
     public override void _PhysicsProcess(double delta) {
 		if (mouseCaptured) {
@@ -150,7 +185,7 @@ public partial class bsPlayer : CharacterBody3D {
 		if (ActiveWeapon != null) {
 			if (mouseCaptured) {
 				if (Input.IsActionPressed("leftclick")) {
-				ActiveWeapon.PrimaryFire();
+					ActiveWeapon.PrimaryFire();
 				}
 				else if (Input.IsActionPressed("rightclick")) {
 					ActiveWeapon.AltFire();
@@ -158,6 +193,9 @@ public partial class bsPlayer : CharacterBody3D {
 				else if (ActiveWeapon.WeaponState == WeaponState.ReadyState && SwitchingWeapon) {
 					ActiveWeapon.EnterLowerState();
 					SwitchingWeapon = false;
+				}
+				else if (Input.IsActionJustReleased("leftclick")) {
+					ActiveWeapon.PrimaryFireReleased();
 				}
 				else {
 					WeaponReady();
@@ -278,6 +316,15 @@ public partial class bsPlayer : CharacterBody3D {
 			justMovedOnStairs = false;
 		}
 	}
+
+	public void TakeDamage(CharacterBody3D? source, int damage) {
+		if ((Health - damage) <= 0) {
+			Health = 0;
+		}
+		else {
+			Health -= damage;
+		}
+	}
 	
 	public void FetchAndPlayAnimation(WeaponAnimation animation) {
 		PriWepAnim = animation;
@@ -343,10 +390,6 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 	}
 
-	//public void SetActiveWeaponSprite(Texture2D sprite) {
-	//	ActiveWeaponSprite.Texture = sprite;
-	//}
-
 	public void SetViewSpriteFrame(WeaponAnimationFrame frame) {
 		foreach (WeaponAnimationLayer animlayer in frame.WeaponAnimationLayers) {
 			TextureRect textureRect = ActiveWeaponSpriteNodes[animlayer.Layer] as TextureRect;
@@ -378,6 +421,13 @@ public partial class bsPlayer : CharacterBody3D {
 				if (WeaponInventory[1] == null) {
 					WeaponInventory[1] = new W_Shotgun(this);
 					HasWeapon[1] = true;
+				}
+				break;
+			
+			case WeaponType.W_DynamiteReg:
+				if (WeaponInventory[2] == null) {
+					WeaponInventory[2] = new W_DynamiteReg(this);
+					HasWeapon[2] = true;
 				}
 				break;
 			
@@ -428,7 +478,9 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void GiveAmmo(Ammotype ammotype, int amount) {
-		PlayerAmmo[(int)ammotype].Ammo += amount;
+		// Enum values and array should be becoupled, 1:1 is bad and leads to future errors. 
+		// Currently forces Shotgun == 1, therefore checks for ShotgunAmmo in Ammo[1]
+		PlayerAmmo[(int)ammotype].Ammo += amount; 
 
 		if (ActiveWeapon != null && ammotype == ActiveWeapon.AmmoType) {
 			PlayerHUD.HUDUpdatePlayerAmmo(PlayerAmmo[(int)ammotype].Ammo);
@@ -454,11 +506,40 @@ public partial class bsPlayer : CharacterBody3D {
 			}
 		}
 
-		newVector.SetProcess(false);
-		newVector.SetPhysicsProcess(false);
-		playerCamera.RemoveChild(newVector);
-		helper.AddChild(newVector);
-		//newVector.Free();
+		//newVector.SetProcess(false);
+		//newVector.SetPhysicsProcess(false);
+		//playerCamera.RemoveChild(newVector);
+		//helper.AddChild(newVector);
+		newVector.Free();
+	}
+
+	public void ThrowObject(ThrowableType throwable, float force) {
+		//float angle = force / 4f;
+		float angle = 4f;
+		//GD.Print($"Y Vector Pre: {angle}");
+		angle *= (cameraRotaY + 1.3f) / 2f;
+		//GD.Print($"Y Vector Post: {angle}");
+
+		Vector3 impulse = new(0, angle, -force);
+		switch (throwable) {
+			case ThrowableType.TNTBundle:
+				TNTBundle tnt = tntbundle.Instantiate() as TNTBundle;
+				tnt.AddCollisionExceptionWith(this);
+				Game.EntitiesNode.AddChild(tnt);
+				
+				Vector3 origin = playerCamera.GlobalPosition;
+				origin.Y -= 0.1f;
+				tnt.GlobalPosition = origin;
+
+				impulse = impulse.Rotated(Vector3.Up, cameraRotaX);
+				//GD.Print($"Impulse: {cameraRotaX} -> {impulse}");
+
+				tnt.ApplyCentralImpulse(impulse);
+				break;
+			
+			default:
+				break;
+		}
 	}
 
 	public void TestClearHelper() {
@@ -470,7 +551,8 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void TestUpdateHUDText() {
-		label.Text = $"Pos: {GlobalPosition.ToString("N4")}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
+		//label.Text = $"Pos: {GlobalPosition.ToString("N4")}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
+		label.Text = $"RotaX: {cameraRotaX:N4}\nRotaY: {cameraRotaY:N4}";
 		if (ActiveWeaponNum == 1) {
 			label.Text += $"\nLoaded shells: {(ActiveWeapon as W_Shotgun).Shells}";
 		}
