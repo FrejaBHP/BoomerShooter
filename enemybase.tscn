@@ -1,10 +1,16 @@
-[gd_scene load_steps=2 format=3 uid="uid://bx3k8ow8unkls"]
+[gd_scene load_steps=4 format=3 uid="uid://bx3k8ow8unkls"]
+
+[ext_resource type="PackedScene" uid="uid://bty1s86k43ekx" path="res://stair_up_cast.tscn" id="1_hjlo5"]
+[ext_resource type="PackedScene" uid="uid://cf4nfahm4yahm" path="res://stair_down_cast.tscn" id="2_2tora"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6d68b"]
 
 [node name="Enemy" type="CharacterBody3D" groups=["Enemy"]]
+process_mode = 1
+rotation_edit_mode = 1
 collision_layer = 16
 collision_mask = 27
+input_ray_pickable = false
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("CapsuleShape3D_6d68b")
@@ -21,6 +27,7 @@ texture_filter = 0
 bus = &"EnemyGeneral"
 
 [node name="DebugStats" type="Label3D" parent="."]
+visible = false
 ignore_occlusion_culling = true
 offset = Vector2(0, 112)
 billboard = 2
@@ -28,6 +35,28 @@ double_sided = false
 no_depth_test = true
 render_priority = 1
 outline_render_priority = 0
-font_size = 20
-outline_size = 8
+font_size = 16
+outline_size = 6
 vertical_alignment = 2
+
+[node name="PathCast" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, 0)
+collision_mask = 25
+hit_from_inside = true
+debug_shape_thickness = 1
+
+[node name="AttackRay" type="RayCast3D" parent="."]
+target_position = Vector3(0, 0, 0)
+collision_mask = 25
+
+[node name="SightRay" type="RayCast3D" parent="."]
+enabled = false
+target_position = Vector3(0, 0, 0)
+collision_mask = 25
+
+[node name="StairUpCast" parent="." instance=ExtResource("1_hjlo5")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.249676)
+
+[node name="StairDownCast" parent="." instance=ExtResource("2_2tora")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.45, 0)
+target_position = Vector3(0, -0.35, 0)

@@ -5,17 +5,16 @@ using System.Numerics;
 using Vector2 = Godot.Vector2;
 using Vector3 = Godot.Vector3;
 
-public partial class bsPlayer : CharacterBody3D {
+public partial class bsPlayer : Actor {
 	private readonly PackedScene tntbundle = GD.Load<PackedScene>("res://tnt_player.tscn");
 
-	public const float Speed = 6.0f;
+	public const float MaxVerticalSpeed = 8.0f; // pesky tnt jumps
 	public const float JumpVelocity = 4f;
-	public const float MaxStepHeight = 0.25f;
 
 	private int health;
-	public int Health {
+	public override int Health {
 		get => health;
-		set {
+		protected set {
 			health = value;
 			PlayerHUD.HUDUpdatePlayerHealth(health);
 		}
@@ -24,7 +23,7 @@ public partial class bsPlayer : CharacterBody3D {
 	private float cameraRotaX = 0f;
 	private float cameraRotaY = 0f;
 
-	private Camera3D playerCamera;
+	public Camera3D PlayerCamera { get; private set; }
 	private RayCast3D useRay;
 
 	public Ammunition[] PlayerAmmo = {
@@ -41,12 +40,16 @@ public partial class bsPlayer : CharacterBody3D {
 	private Label label;
 	public PlayerHUD PlayerHUD { get; private set; }
 
-	public CollisionShape3D ColShape { get; private set; }
-	public float ColHeight { get; private set; }
-
+	public float WeaponYOffset { get; set; } = 0f;
 	public Control ActiveWeaponControl { get; private set; }
+	public Control ActiveWeaponView { get; private set; }
+	public Control ActiveWeaponAnchor { get; private set; }
 	public Control ActiveWeaponPivot { get; private set; }
 	public Godot.Collections.Array<Node> ActiveWeaponSpriteNodes { get; private set; }
+
+	private ulong modGameTick = 0;
+	private float sineSway;
+	private float cosineSway;
 
 	public WeaponAnimation PriWepAnim { get; private set; }
 	private int priWepAnimTick = 0;
@@ -62,34 +65,27 @@ public partial class bsPlayer : CharacterBody3D {
 	public AudioStreamPlayer3D WeaponMiscAudio { get; private set; }
 	public AudioStreamPlayer3D MiscAudio { get; private set; }
 
-	private RayCast3D stairUpCast;
-	private RayCast3D stairDownCast;
-	private bool justMovedOnStairs = false;
-	private ulong justWasOnFloor = 0;
-
 	private Vector2 mouseRelative;
 	private bool mouseCaptured;
-
-	private Node3D helper;
 
 	public float gravity = ProjectSettings.GetSetting("physics/3d/default_gravity").AsSingle();
 
     public override void _Ready() {
-		helper = Game.RayTraceHelper;
-
 		PlayerHUD = GetNode<PlayerHUD>("bsPlayerHUD");
 		label = GetNode<Label>("bsPlayerHUD/Label");
 
 		ColShape = GetNode<CollisionShape3D>("CollisionShape3D");
 		ColHeight = (ColShape.Shape as CapsuleShape3D).Height;
 
-		playerCamera = GetNode<Camera3D>("PlayerCamera");
+		PlayerCamera = GetNode<Camera3D>("PlayerCamera");
 		useRay = GetNode<RayCast3D>("PlayerCamera/InteractVector");
 		useRay.Enabled = false;
 
 		ActiveWeaponControl = GetNode<Control>("bsPlayerWeapon");
-		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/BottomAnchor/WeaponPivot");
-		ActiveWeaponSpriteNodes = GetNode<Node>("bsPlayerWeapon/BottomAnchor/WeaponPivot").GetChildren();
+		ActiveWeaponView = GetNode<Control>("bsPlayerWeapon/WeaponView");
+		ActiveWeaponAnchor = GetNode<Control>("bsPlayerWeapon/WeaponView/BottomAnchor");
+		ActiveWeaponPivot = GetNode<Control>("bsPlayerWeapon/WeaponView/BottomAnchor/WeaponPivot");
+		ActiveWeaponSpriteNodes = GetNode<Node>("bsPlayerWeapon/WeaponView/BottomAnchor/WeaponPivot").GetChildren();
 
 		PriFireAudio = GetNode<AudioStreamPlayer3D>("PrimaryFireAudio");
 		AltFireAudio = GetNode<AudioStreamPlayer3D>("AltFireAudio");
@@ -100,12 +96,14 @@ public partial class bsPlayer : CharacterBody3D {
 		stairUpCast = GetNode<RayCast3D>("StairUpCast");
 		stairDownCast = GetNode<RayCast3D>("StairDownCast");
 
-		AddToGroup("Player");
-
 		Input.MouseMode = Input.MouseModeEnum.Captured;
 		mouseCaptured = true;
 
-		Health = 100;
+		MaxSpeed = 5.0f;
+		StartingHealth = 100;
+		Health = StartingHealth;
+		SurfaceType = SurfaceType.Flesh;
+		
 		PickUpNewWeapon(WeaponType.W_Pitchfork);
 	}
 
@@ -113,6 +111,7 @@ public partial class bsPlayer : CharacterBody3D {
 		if (@event is InputEventMouseMotion motion) {
 			mouseRelative = motion.Relative;
 		}
+
 		if (Input.IsActionJustPressed("esc")) {
 			if (mouseCaptured) {
 				Input.MouseMode = Input.MouseModeEnum.Visible;
@@ -123,26 +122,28 @@ public partial class bsPlayer : CharacterBody3D {
 				mouseCaptured = true;
 			}
 		}
+
 		if (!SwitchingWeapon) {
 			if (Input.IsActionJustPressed("wkey1")) {
-				if (HasWeapon[0] && ActiveWeaponNum != 0) {
+				if (CanSwitchToWeapon(WeaponType.W_Pitchfork)) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 0;
 				}
 			}
 			else if (Input.IsActionJustPressed("wkey2")) {
-				if (HasWeapon[1] && ActiveWeaponNum != 1) {
+				if (CanSwitchToWeapon(WeaponType.W_Shotgun)) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 1;
 				}
 			}
 			else if (Input.IsActionJustPressed("wkey3")) {
-				if (HasWeapon[2] && ActiveWeaponNum != 2) {
+				if (CanSwitchToWeapon(WeaponType.W_DynamiteReg)) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 2;
 				}
 			}
 		}
+
 		if (Input.IsActionJustPressed("use")) {
 			Interact();
 		}
@@ -164,15 +165,6 @@ public partial class bsPlayer : CharacterBody3D {
 					colBody.Call("Trigger");
 				}
 			}
-			
-			/*
-			if (colBody.IsInGroup("DoorSliding")) {
-				(colBody as SlidingDoor).Trigger();
-			}
-			else if (colBody.IsInGroup("DoorRevolving")) {
-				(colBody as RevolvingDoor).Trigger();
-			}
-			*/
 		}
 	}
 
@@ -207,11 +199,44 @@ public partial class bsPlayer : CharacterBody3D {
 		ProcessAnimation();
 		ProcessSecondaryAnimation();
 
+		ProcessWeaponSway();
+
 		//TestUpdateHUDText();
 	}
 
 	public static void WeaponReady() {
 
+	}
+
+	private void TestCameraShake() {
+		
+	}
+
+	private void ProcessWeaponSway() {
+		modGameTick = (Engine.GetPhysicsFrames() % 120) * 3;
+
+		if (Velocity != Vector3.Zero) {
+			sineSway = (float)Math.Sin(modGameTick * (Math.PI / 180f));
+
+			Vector2 groundVelocity = new(Velocity.X, Velocity.Z);
+			sineSway *= groundVelocity.Length() / MaxSpeed;
+
+			if (IsOnFloor()) {
+				cosineSway = (float)Math.Cos(modGameTick * (Math.PI / 180f));
+				cosineSway *= groundVelocity.Length() / MaxSpeed;
+
+				if (cosineSway < 0) {
+					cosineSway = -cosineSway;
+				}
+			}
+			else {
+				cosineSway = Math.Clamp(Velocity.Y, -2f, 2f);
+			}
+			ActiveWeaponControl.Position = ActiveWeaponControl.Position.Lerp(ActiveWeaponControl.Position with { X = sineSway * 33f, Y = cosineSway * 33f}, 0.25f);
+		}
+		else {
+			ActiveWeaponControl.Position = ActiveWeaponControl.Position.Lerp(Vector2.Zero, 0.1f);
+		}
 	}
 
 	private void ProcessCamera(double deltaTime) {
@@ -220,16 +245,16 @@ public partial class bsPlayer : CharacterBody3D {
 		cameraRotaY = Mathf.Clamp(cameraRotaY, -1.3f, 1.3f);
 		mouseRelative = Vector2.Zero;
 
-		Transform3D transform = playerCamera.Transform;
+		Transform3D transform = PlayerCamera.Transform;
 		transform.Basis = Basis.Identity;
-		playerCamera.Transform = transform;
+		PlayerCamera.Transform = transform;
 
 		Transform3D ptransform = Transform;
 		ptransform.Basis = Basis.Identity;
 		Transform = ptransform;
 
 		RotateObjectLocal(Vector3.Up, cameraRotaX);
-		playerCamera.RotateObjectLocal(Vector3.Right, cameraRotaY);
+		PlayerCamera.RotateObjectLocal(Vector3.Right, cameraRotaY);
 	}
 
 	private void ProcessMovement(double deltaTime) {
@@ -249,80 +274,20 @@ public partial class bsPlayer : CharacterBody3D {
 		Vector2 inputDir = Input.GetVector("move_left", "move_right", "move_forward", "move_backward");
 		Vector3 direction = (Transform.Basis * new Vector3(inputDir.X, 0, inputDir.Y)).Normalized();
 		if (direction != Vector3.Zero) {
-			velocity.X = direction.X * Speed;
-			velocity.Z = direction.Z * Speed;
+			velocity.X = direction.X * MaxSpeed;
+			velocity.Z = direction.Z * MaxSpeed;
 		}
 		else {
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, Speed);
-			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, Speed);
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, MaxSpeed);
+			velocity.Z = Mathf.MoveToward(Velocity.Z, 0, MaxSpeed);
 		}
 
+		velocity.Y = Math.Clamp(velocity.Y, -MaxVerticalSpeed, MaxVerticalSpeed);
 		Velocity = velocity;
 
-		// Translated to C# from https://github.com/majikayogames/SimpleFPSController
 		if (!TryClimbStair(deltaTime)) {
 			MoveAndSlide();
 			TryDescendStair();
-		}
-	}
-
-	private bool TryClimbStair(double deltaTime) {
-		if (!IsOnFloor() && !justMovedOnStairs) {
-			return false;
-		}
-
-		Vector3 moveVector = new(1,0,1);
-		if (Velocity.Y > 0 || (Velocity * moveVector).Length() == 0) {
-			return false;
-		}
-
-		Vector3 projectVector = Velocity * moveVector * (float)deltaTime;
-		Transform3D stepPosition = GlobalTransform.Translated(projectVector + (Vector3)new(0, MaxStepHeight * 2, 0));
-
-		KinematicCollision3D colCheckResult = new();
-		if (TestMove(stepPosition, new(0, -MaxStepHeight * 2, 0), colCheckResult) && colCheckResult.GetCollider().IsClass("StaticBody3D")) {
-            float stepHeight = (stepPosition.Origin + colCheckResult.GetTravel() - GlobalPosition).Y;
-			if (stepHeight > MaxStepHeight || stepHeight <= 0.01f || (colCheckResult.GetPosition() - GlobalPosition).Y > MaxStepHeight) {
-				return false;
-			}
-
-			stairUpCast.GlobalPosition = colCheckResult.GetPosition() + (Vector3)new(0, MaxStepHeight, 0) + projectVector.Normalized() * 0.1f;
-			stairUpCast.ForceRaycastUpdate();
-			if (stairUpCast.IsColliding() && !Utils.IsSurfaceTooSteep(stairUpCast.GetCollisionNormal(), this)) {
-				GlobalPosition = stepPosition.Origin + colCheckResult.GetTravel();
-				ApplyFloorSnap();
-				justMovedOnStairs = true;
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	private void TryDescendStair() {
-		stairDownCast.ForceRaycastUpdate();
-		bool isFloorBelow = stairDownCast.IsColliding() && !Utils.IsSurfaceTooSteep(stairDownCast.GetCollisionNormal(), this);
-		bool wasOnFloor = Engine.GetPhysicsFrames() == justWasOnFloor;
-		if (!IsOnFloor() && Velocity.Y <= 0 && (justMovedOnStairs || wasOnFloor) && isFloorBelow) {
-			KinematicCollision3D colCheckResult = new();
-			if (TestMove(GlobalTransform, new(0, -MaxStepHeight, 0), colCheckResult)) {
-				float posY = Position.Y + colCheckResult.GetTravel().Y;
-				Position = Position with { Y = posY };
-				ApplyFloorSnap();
-				justMovedOnStairs = true;
-			}
-		}
-		else {
-			justMovedOnStairs = false;
-		}
-	}
-
-	public void TakeDamage(CharacterBody3D? source, int damage) {
-		if ((Health - damage) <= 0) {
-			Health = 0;
-		}
-		else {
-			Health -= damage;
 		}
 	}
 	
@@ -411,21 +376,21 @@ public partial class bsPlayer : CharacterBody3D {
 	public void PickUpNewWeapon(WeaponType type) {
 		switch (type) {
 			case WeaponType.W_Pitchfork:
-				if (WeaponInventory[0] == null) {
+				if (!HasWeapon[0]) {
 					WeaponInventory[0] = new W_Pitchfork(this);
 					HasWeapon[0] = true;
 				}
 				break;
 			
 			case WeaponType.W_Shotgun:
-				if (WeaponInventory[1] == null) {
+				if (!HasWeapon[1]) {
 					WeaponInventory[1] = new W_Shotgun(this);
 					HasWeapon[1] = true;
 				}
 				break;
 			
 			case WeaponType.W_DynamiteReg:
-				if (WeaponInventory[2] == null) {
+				if (!HasWeapon[2]) {
 					WeaponInventory[2] = new W_DynamiteReg(this);
 					HasWeapon[2] = true;
 				}
@@ -444,8 +409,22 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 	}
 
+	public void SwitchToWeaponWithAmmo() {
+		SwitchingWeapon = true;
+		if (CanSwitchToWeapon(WeaponType.W_Shotgun)) {
+			WeaponToSwitchTo = 1;
+		}
+		else if (CanSwitchToWeapon(WeaponType.W_DynamiteReg)) {
+			WeaponToSwitchTo = 2;
+		}
+		// If all else fails, trusty fork to the rescue!
+		else {
+			WeaponToSwitchTo = 0;
+		}
+	}
+
 	public void BringUpNewWeapon(WeaponType type) {
-		ActiveWeaponControl.SetPosition(ActiveWeaponControl.Position with { Y = Weapon.WeaponOffsetBottom });
+		ActiveWeaponView.SetPosition(ActiveWeaponView.Position with { Y = Weapon.WeaponOffsetBottom });
 
 		ActiveWeapon = WeaponInventory[(int)type];
 		ActiveWeaponNum = (int)type;
@@ -478,7 +457,7 @@ public partial class bsPlayer : CharacterBody3D {
 	}
 
 	public void GiveAmmo(Ammotype ammotype, int amount) {
-		// Enum values and array should be becoupled, 1:1 is bad and leads to future errors. 
+		// Enum values and array should be decoupled, 1:1 is bad and leads to future errors. 
 		// Currently forces Shotgun == 1, therefore checks for ShotgunAmmo in Ammo[1]
 		PlayerAmmo[(int)ammotype].Ammo += amount; 
 
@@ -487,52 +466,23 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 	}
 
-	public void FireHitscanAttack(HitscanAttack atk, float offsetX, float offsetY) {
-		RayCast3D newVector = new();
-		newVector.SetCollisionMaskValue(1, true);
-		newVector.SetCollisionMaskValue(2, true);
-		newVector.SetCollisionMaskValue(5, true);
-		playerCamera.AddChild(newVector);
-		
-		Vector3 target = new(offsetX, offsetY, -1f);
-		target *= atk.Range;
-		newVector.TargetPosition = target;
-		newVector.ForceRaycastUpdate();
-
-		if (newVector.IsColliding() && newVector.GetCollider().IsClass("Node3D")) {
-			Node3D collider = newVector.GetCollider() as Node3D;
-			if (collider.IsInGroup("Enemy")) {
-				(collider as EnemyBase).TakeDamage(this, atk.Damage);
-			}
-		}
-
-		//newVector.SetProcess(false);
-		//newVector.SetPhysicsProcess(false);
-		//playerCamera.RemoveChild(newVector);
-		//helper.AddChild(newVector);
-		newVector.Free();
-	}
-
 	public void ThrowObject(ThrowableType throwable, float force) {
-		//float angle = force / 4f;
-		float angle = 4f;
-		//GD.Print($"Y Vector Pre: {angle}");
-		angle *= (cameraRotaY + 1.3f) / 2f;
-		//GD.Print($"Y Vector Post: {angle}");
+		float angle = 4f + (float)Math.Cbrt(force);
+			angle *= (cameraRotaY + 1.3f) * 0.5f;
 
 		Vector3 impulse = new(0, angle, -force);
+			impulse = impulse.Rotated(Vector3.Up, cameraRotaX);
+
+		Vector3 origin = PlayerCamera.GlobalPosition;
+			origin.Y -= 0.1f;
+		
 		switch (throwable) {
 			case ThrowableType.TNTBundle:
 				TNTBundle tnt = tntbundle.Instantiate() as TNTBundle;
 				tnt.AddCollisionExceptionWith(this);
+				tnt.SetOwner(this);
 				Game.EntitiesNode.AddChild(tnt);
-				
-				Vector3 origin = playerCamera.GlobalPosition;
-				origin.Y -= 0.1f;
 				tnt.GlobalPosition = origin;
-
-				impulse = impulse.Rotated(Vector3.Up, cameraRotaX);
-				//GD.Print($"Impulse: {cameraRotaX} -> {impulse}");
 
 				tnt.ApplyCentralImpulse(impulse);
 				break;
@@ -542,19 +492,47 @@ public partial class bsPlayer : CharacterBody3D {
 		}
 	}
 
-	public void TestClearHelper() {
-		foreach (var item in helper.GetChildren()) {
-			item.Free();
+	private bool CanSwitchToWeapon(WeaponType type) {
+		switch (type) {
+			case WeaponType.W_Pitchfork:
+				if (HasWeapon[0] && ActiveWeaponNum != 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			
+			case WeaponType.W_Shotgun:
+				if (HasWeapon[1] && ActiveWeaponNum != 1 && PlayerAmmo[(int)Ammotype.Shells].Ammo != 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+			
+			case WeaponType.W_DynamiteReg:
+				if (HasWeapon[2] && ActiveWeaponNum != 2 && PlayerAmmo[(int)Ammotype.DynamiteReg].Ammo != 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
+
+			// How would you even get here?
+			default:
+				return false;
 		}
-		helper.GlobalPosition = playerCamera.GlobalPosition;
-		helper.Rotation = playerCamera.Rotation + Rotation;
 	}
 
 	public void TestUpdateHUDText() {
 		//label.Text = $"Pos: {GlobalPosition.ToString("N4")}\nFrame: {priWepAnimFrame}, / Tick: {priWepAnimTick}\nSFrame: {secWepAnimFrame}, / STick: {secWepAnimTick}";
-		label.Text = $"RotaX: {cameraRotaX:N4}\nRotaY: {cameraRotaY:N4}";
+		//label.Text = $"RotaX: {cameraRotaX:N4}\nRotaY: {cameraRotaY:N4}";
+		//label.Text = $"Tick: {modGameTick} / 360\nSin: {sineSway:F3}\nCos: {cosineSway:F3}";
+		label.Text = $"LRotationY: {RotationDegrees.Y:F3}\nGRotationY: {GlobalRotationDegrees.Y:F3}\nBasisZ: {Transform.Basis.Z:F3}\nGBasisZ: {GlobalTransform.Basis.Z:F3}";
+		/*
 		if (ActiveWeaponNum == 1) {
 			label.Text += $"\nLoaded shells: {(ActiveWeapon as W_Shotgun).Shells}";
 		}
+		*/
 	}
 }

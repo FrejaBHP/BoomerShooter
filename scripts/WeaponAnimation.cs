@@ -1,7 +1,7 @@
 using Godot;
 
 public readonly struct WeaponAnimationLayer {
-    public readonly int Layer ;
+    public readonly int Layer;
     public readonly SpriteOffset Offset;
     public readonly int RotationDeg;
     public readonly Texture2D? Texture;

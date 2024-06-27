@@ -17,7 +17,8 @@ stereo = true
 [sub_resource type="AudioStreamWAV" id="AudioStreamWAV_4thg3"]
 stereo = true
 
-[node name="Player" type="CharacterBody3D"]
+[node name="Player" type="CharacterBody3D" groups=["Player"]]
+process_mode = 1
 rotation_edit_mode = 1
 collision_layer = 8
 collision_mask = 25

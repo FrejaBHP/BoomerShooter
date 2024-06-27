@@ -2,16 +2,14 @@ using Godot;
 using Godot.Collections;
 using System;
 
-public partial class SlidingDoor : StaticBody3D {
-	[Export]
-	Dictionary func_godot_properties;
-
+public partial class SlidingDoor : SurfaceBrush {
 	private bool isOpening = false;
 	private bool interactedWith = false;
 	private float moveDist = 0f;
 	private Vector3 endPos;
 
 	public override void _Ready() {
+		base._Ready();
 		AddToGroup("DoorSliding");
 		GetChild<MeshInstance3D>(0).IgnoreOcclusionCulling = true;
 	}

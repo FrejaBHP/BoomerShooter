@@ -29,8 +29,6 @@ bounce_indirect_energy = 1.6
 interior = true
 light_data = ExtResource("2_dyk8n")
 
-[node name="RaytraceHelper" type="Node3D" parent="."]
-
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="Players" type="Node3D" parent="."]

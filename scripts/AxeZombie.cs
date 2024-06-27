@@ -3,61 +3,47 @@ using System;
 
 public partial class AxeZombie : EnemyBase, IEnemy {
     public IEnemy InterE { get; }
-
-    public override EStateMachine EStateMachine { get; protected set; } = new();
-    public override EnemyState EnemyState { get; protected set; }
-    public override CharacterBody3D Target { get; set; }
-    public override Vector3 TargetLocation { get; set; }
-
-	public override float Speed { get; protected set; } = 4.0f;
-    public override int StartingHealth { get; protected set; } = 60;
-    public override int Health { get; protected set; }
-    public override bool IsMoving { get; protected set; }
-    public override bool CanMove { get; protected set; } = true;
-
-    public override CollisionShape3D ColShape { get; protected set; }
-    public override float ColHeight { get; protected set; }
-
-    public override Sprite3D VisSprite { get; protected set; }
-    public override int SpriteAnimFrame { get; protected set; } = 0;
-    public override int SpriteRotation { get; protected set; } = 0;
-    public override bool SpriteIsFlipped { get; protected set; } = false;
-
-    public override EnemyAnimation CurAnim { get; protected set; }
-    public override int CurAnimFrame { get; protected set; }
-    public override int CurAnimTick { get; protected set; }
-
-    public override AudioStreamPlayer3D VoiceAudio { get; protected set; }
-
-    public override Label3D DebugLabel { get; protected set; }
-
-    protected override EIdleState IdleState { get; } = new();
-    protected override EChaseState ChaseState { get; } = new();
-    protected override EAtkState AtkState { get; } = new();
-    protected override EStunState StunState { get; } = new();
-    protected override EDeathState DeathState { get; } = new();
-    protected override ECorpseState CorpseState { get; } = new();
+    private float anglething;
+    private bool hasAttacked = false;
 
     public AxeZombie() {
         InterE = this;
+        MaxSpeed = 2.0f;
+        Speed = 0f;
+        TurnRate = 0.05f;
+        Acceleration = 0.1f;
+
+        SurfaceType = SurfaceType.Flesh;
+        StartingHealth = 60;
         Health = StartingHealth;
+        PainChance = 0.2f;
+
+        GoalVector = new();
+        SightRange = 25f;
+
+        CanMove = true;
+        
         spriteWillUpdate = true;
         spriteWillRotate = true;
+
+        EStateMachine = new();
+        IdleState = new();
+        ChaseState = new();
+        AtkState = new();
+        StunState = new();
+        DeathState = new();
+        CorpseState = new();
     }
 
     public override void _Ready() {
-        ColShape = GetNode<CollisionShape3D>("CollisionShape3D");
+        ConnectNodes();
         ColHeight = (ColShape.Shape as CapsuleShape3D).Height;
-
-        VisSprite = GetNode<Sprite3D>("VisSprite");
-		VoiceAudio = GetNode<AudioStreamPlayer3D>("VoiceAudio");
-        DebugLabel = GetNode<Label3D>("DebugStats");
 
         IdleState.ConfigureState(-1, this, null, null, (int)EnemyState.Idle, null);
         ChaseState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Walk, null, (int)EnemyState.Chase, null);
-        AtkState.ConfigureState(-1, this, null, null, (int)EnemyState.Attack, null);
-        StunState.ConfigureState(-1, this, null, null, (int)EnemyState.Stun, null);
-        DeathState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Die, null, (int)EnemyState.Death, CorpseState);
+        AtkState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Attack, null, (int)EnemyState.Attack, ChaseState);
+        StunState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Stun, null, (int)EnemyState.Stun, ChaseState);
+        DeathState.ConfigureState(this, EAnimations.Anim_Enemy_AZ_Die, () => PlayDeathSound(), (int)EnemyState.Death, CorpseState);
         CorpseState.ConfigureState(-1, this, null, () => OnDeath(), (int)EnemyState.Corpse, null);
 
         EnterIdleState();
@@ -65,6 +51,8 @@ public partial class AxeZombie : EnemyBase, IEnemy {
 
     public override void _PhysicsProcess(double delta) {
         if (isActive) {
+            Think();
+
             EStateMachine.Process();
             ProcessAnimation();
             
@@ -80,30 +68,130 @@ public partial class AxeZombie : EnemyBase, IEnemy {
         if (CanMove) {
             ProcessGroundMovement(delta);
             ProcessGravity(delta);
-            MoveAndSlide();
+            
+            if (!TryClimbStair(delta)) {
+                MoveAndSlide();
+                TryDescendStair();
+            }
         }
 
-        UpdateDebugLabel(DebugLabel);
+        UpdateDebugLabel();
+        AddExtraLabelInfo("AngleThing", anglething);
+        if (Target != null) {
+            AddExtraLabelInfo("DotZ Goal", GlobalTransform.Basis.Z.Dot(GoalVector));
+        }
+    }
+
+    private void Think() {
+        switch (EnemyState) {
+            case EnemyState.Idle:
+                break;
+            
+            case EnemyState.Chase:
+                Vector3 facing = -GlobalTransform.Basis.Z;
+                Vector3 targetFlat = new(Target.GlobalPosition.X, GlobalPosition.Y, Target.GlobalPosition.Z);
+                Vector3 targetFlatDist = targetFlat - GlobalPosition;
+                float targetAngle = facing.SignedAngleTo(targetFlatDist, Vector3.Up);
+
+                anglething = targetAngle;
+                AI.ChooseDirection(this, targetAngle);
+ 
+                if (AI.GetDotProdZ(this, Target) < 0.9f) {
+                    MoveState = MoveState.Turn;
+                    AI.Turn(this);
+                }
+                else {
+                    if (GlobalPosition.DistanceTo(targetFlat) < Attacks.AxeZombieSwing.Range * 0.75f) {
+                        SightRay.TargetPosition = new(0, 0, -1);
+                        SightRay.ForceRaycastUpdate();
+                        if (SightRay.IsColliding()) {
+                            Actor collider = SightRay.GetCollider() as Actor;
+                            if (collider == Target) {
+                                MoveState = MoveState.Stand;
+                                EStateMachine.SetState(AtkState);
+                                break;
+                            }
+                        }
+                    }
+                    MoveState = MoveState.Walk;
+                    AI.Turn(this);
+                    AI.MoveForward(this);
+                }
+                break;
+            
+            case EnemyState.Attack:
+                break;
+
+            case EnemyState.Stun:
+                break;
+
+            case EnemyState.Death:
+                break;
+
+            case EnemyState.Corpse:
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public override void ExecuteAction(EnemyAction action) {
+        switch (action) {
+            case EnemyAction.AZ_Swing:
+                Attack();
+                break;
+            
+            default:
+                break;
+        }
     }
 
     public override void ProcessGroundMovement(double deltaTime) {
-        if (EnemyState == EnemyState.Chase && IsOnFloor()) {
-			IsMoving = true;
-		}
-		else {
-			IsMoving = false;
-		}
+        switch (MoveState) {
+            case MoveState.None:
+                Velocity = Velocity.Lerp(Vector3.Zero, 0.08f);
+                break;
 
-        if (IsMoving) {
+            case MoveState.Stand:
+                Velocity = Vector3.Zero;
+                break;
 
+            case MoveState.Turn:
+                Velocity = Velocity.Lerp(Vector3.Zero, 0.03f);
+                break;
+            
+            case MoveState.Walk:
+                break;
+            
+            case MoveState.Fly:
+                break;
+            
+            case MoveState.Knockback:
+                if (!IsOnFloor()) {
+                    Velocity = Velocity.Lerp(new(0, Velocity.Y, 0), 0.04f);
+                }
+                else {
+                    if (EnemyState == EnemyState.Death || EnemyState == EnemyState.Corpse) {
+                        MoveState = MoveState.None;
+                    }
+                    else {
+                        MoveState = MoveState.Stand;
+                    }
+                }
+                break;
+            
+            default:
+                break;
         }
-        else {
-            Velocity = Velocity.Lerp(new(0, Velocity.Y, 0), 0.04f);
-        }
+    }
 
-        if (EnemyState == EnemyState.Corpse && Velocity == Vector3.Zero) {
-            CanMove = false;
-        }
+    public override void Attack() {
+        FireHitscanAttack(this, Attacks.AxeZombieSwing, 0f, 0f, true);
+    }
+
+    private void RemoveAttackFlag() {
+        hasAttacked = false;
     }
 
     public void SetSprite() {
@@ -119,9 +207,13 @@ public partial class AxeZombie : EnemyBase, IEnemy {
                 break;
             
             case EnemyState.Attack:
+                VisSprite.Texture = Sprites.Spr_Zombie_Attack[SpriteAnimFrame, SpriteRotation];
+                VisSprite.FlipH = SpriteIsFlipped;
                 break;
 
             case EnemyState.Stun:
+                VisSprite.Texture = Sprites.Spr_Zombie_Pain[SpriteAnimFrame, SpriteRotation];
+                VisSprite.FlipH = SpriteIsFlipped;
                 break;
 
             case EnemyState.Death:
@@ -136,6 +228,23 @@ public partial class AxeZombie : EnemyBase, IEnemy {
             default:
                 break;
         }
+    }
+
+    private void PlayDeathSound() {
+        switch (Utils.RandomInt(0, 3)) {
+            case 0:
+                VoiceAudio.Stream = SFX.AxeZombieDie1;
+                break;
+            
+            case 1:
+                VoiceAudio.Stream = SFX.AxeZombieDie2;
+                break;
+            
+            case 2:
+                VoiceAudio.Stream = SFX.AxeZombieDie3;
+                break;
+        }
+        VoiceAudio.Play();
     }
 
     public override void OnDeath() {

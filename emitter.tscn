@@ -1,0 +1,16 @@
+[gd_scene load_steps=2 format=3 uid="uid://deja25tw8go83"]
+
+[ext_resource type="Script" path="res://scripts/Emitter.cs" id="1_2mqvf"]
+
+[node name="Emitter" type="Node3D"]
+script = ExtResource("1_2mqvf")
+
+[node name="Sprite" type="Sprite3D" parent="."]
+billboard = 2
+double_sided = false
+no_depth_test = true
+alpha_cut = 1
+texture_filter = 0
+
+[node name="Audio" type="AudioStreamPlayer3D" parent="."]
+bus = &"Hitspark"

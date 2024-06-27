@@ -8,18 +8,26 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="BottomAnchor" type="Control" parent="."]
+[node name="WeaponView" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 0
+
+[node name="BottomAnchor" type="Control" parent="WeaponView"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0
 anchor_right = 0.5
 anchor_bottom = 1.0
+offset_left = 640.0
+offset_top = 720.0
+offset_right = 640.0
+offset_bottom = 720.0
 grow_horizontal = 2
 grow_vertical = 0
 scale = Vector2(3.5, 3.5)
 
-[node name="WeaponPivot" type="Control" parent="BottomAnchor"]
+[node name="WeaponPivot" type="Control" parent="WeaponView/BottomAnchor"]
 layout_mode = 1
 anchors_preset = 7
 anchor_left = 0.5
@@ -29,7 +37,7 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
 
-[node name="SprL1X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL1X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -40,7 +48,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL2X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL2X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -51,7 +59,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL3X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL3X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -62,7 +70,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL4W" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL4W" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -73,7 +81,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL5X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL5X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -84,7 +92,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL6X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL6X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -95,7 +103,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL7X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL7X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5
@@ -106,7 +114,7 @@ grow_horizontal = 2
 grow_vertical = 0
 stretch_mode = 3
 
-[node name="SprL8X" type="TextureRect" parent="BottomAnchor/WeaponPivot"]
+[node name="SprL8X" type="TextureRect" parent="WeaponView/BottomAnchor/WeaponPivot"]
 layout_mode = 1
 anchors_preset = -1
 anchor_left = 0.5

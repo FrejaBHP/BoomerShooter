@@ -5,7 +5,10 @@ public partial class Explosion : Node3D {
     private ShapeCast3D shapeCast;
     private AudioStreamPlayer3D audio;
 
-    private int damage = 80;
+    private Actor owner;
+    private Rid throwee;
+
+    private int maxDamage = 80;
 
     private int spriteFrame = 0;
     private int framesToWait = 5;
@@ -47,36 +50,57 @@ public partial class Explosion : Node3D {
             for (int i = 0; i < shapeCast.GetCollisionCount(); i++) {
                 if (shapeCast.GetCollider(i).IsClass("CharacterBody3D")) {
                     CharacterBody3D collider = shapeCast.GetCollider(i) as CharacterBody3D;
+
+                    int explosionDamage = DamageFactor(shapeCast.GetCollisionPoint(i));
                     
-                    float yOffset = 0.10f;
                     if (collider.IsInGroup("Enemy")) {
-                        (collider as EnemyBase).TakeDamage(null, DamageFactor(shapeCast.GetCollisionPoint(i)));
-                        //yOffset = (collider as EnemyBase).ColHeight / 2;
-                        //GD.Print(DamageFactor(shapeCast.GetCollisionPoint(i)));
+                        (collider as Actor).TakeDamage(owner, explosionDamage);
+                        (collider as EnemyBase).MoveState = MoveState.Knockback;
                     }
                     else if (collider.IsInGroup("Player")) {
-                        (collider as bsPlayer).TakeDamage(null, DamageFactor(shapeCast.GetCollisionPoint(i)));
-                        //yOffset = (collider as bsPlayer).ColHeight / 2;
-                        //GD.Print(DamageFactor(shapeCast.GetCollisionPoint(i)));
+                        if (collider.GetRid() == throwee) {
+                            (collider as Actor).TakeDamage(owner, (int)(explosionDamage * 0.5f));
+                        }
+                        else {
+                            (collider as Actor).TakeDamage(owner, explosionDamage);
+                        }
                     }
+
+                    Vector3 force = collider.GlobalPosition - GlobalPosition;
+                    force.Y += 0.25f;
+                    force = force.Normalized();
+
+                    float knockback = explosionDamage * 0.125f;
+
+                    if (knockback > 8f) {
+                        knockback = 8f;
+                    }
+
+                    Vector3 appliedForce = force * knockback;
+                    collider.Velocity += appliedForce;
                     
-                    Vector3 velocity = collider.GlobalPosition - GlobalPosition;
-                    velocity.Y += yOffset;
-                    velocity *= 8f;
-                    collider.Velocity += velocity;
+                    //GD.Print($"Force: {force:F3}, KB: {knockback:F2}\nAppl.: {appliedForce:F3}");
                 }
             }
         }
         audio.Play();
     }
 
+    public void SetThrowee(Rid rid) {
+        throwee = rid;
+    }
+
+    public void SetOwner(Actor owner) {
+        this.owner = owner;
+    }
+
     private void OnAudioFinished() {
         QueueFree();
     }
 
-    private int DamageFactor(Vector3 victimpos) {
-        float factor = radius - (GlobalPosition.DistanceTo(victimpos) / 2f);
-        return (int)(damage * factor);
+    private int DamageFactor(Vector3 targetOverlap) {
+        float factor = 1f - ((GlobalPosition.DistanceTo(targetOverlap) / radius));
+        return (int)(maxDamage * factor);
     }
 
     private void FixSpriteOffset() {

@@ -81,24 +81,50 @@ public static class Sprites {
     };
 
     public static readonly Texture2D[] Spr_FX_Explosion = new Texture2D[13] {
-        GD.Load<Texture2D>("res://textures/effect/exflame0.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame1.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame2.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame3.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame4.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame5.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame6.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame7.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame8.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame9.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame10.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame11.png"),
-        GD.Load<Texture2D>("res://textures/effect/exflame12.png")
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame0.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame1.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame2.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame3.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame4.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame5.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame6.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame7.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame8.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame9.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame10.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame11.png"),
+        GD.Load<Texture2D>("res://textures/effect/explosion/exflame12.png")
+    };
+
+    public static readonly Texture2D[] Spr_FX_Hitspark_Metal = new Texture2D[6] {
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal0.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal1.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal2.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal3.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal4.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_metal5.png")
+    };
+
+    public static readonly Texture2D[] Spr_FX_Hitspark_Wood = new Texture2D[5] {
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_wood0.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_wood1.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_wood2.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_wood3.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_wood4.png")
+    };
+
+    public static readonly Texture2D[] Spr_FX_Hitspark_Flesh = new Texture2D[5] {
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_flesh0.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_flesh1.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_flesh2.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_flesh3.png"),
+        GD.Load<Texture2D>("res://textures/effect/hitspark/hitspark_flesh4.png")
     };
 
     // OTHER
     public static readonly Texture2D[,] Spr_Zombie_Walk = new Texture2D[6,5];
     public static readonly Texture2D[,] Spr_Zombie_Attack = new Texture2D[7,5];
+    public static readonly Texture2D[,] Spr_Zombie_Pain = new Texture2D[1,5];
     public static readonly Texture2D[] Spr_Zombie_Death = new Texture2D[5];
 
     // Left, Right, Top, Bottom
@@ -131,6 +157,10 @@ public static class Sprites {
             for (int dir = 0; dir < Spr_Zombie_Attack.GetLength(1); dir++) {
                 Spr_Zombie_Attack[frame, dir] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_atk{frame}_rot{dir}.png");
             }
+        }
+
+        for (int dir = 0; dir < Spr_Zombie_Pain.GetLength(1); dir++) {
+            Spr_Zombie_Pain[0, dir] = GD.Load<Texture2D>($"res://textures/enemies/zombie/z_pain_rot{dir}.png");
         }
 
         for (int frame = 0; frame < Spr_Zombie_Death.Length; frame++) {

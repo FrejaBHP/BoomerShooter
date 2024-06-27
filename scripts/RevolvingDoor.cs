@@ -1,10 +1,7 @@
 using Godot;
 using Godot.Collections;
 
-public partial class RevolvingDoor : StaticBody3D {
-    [Export]
-	Dictionary func_godot_properties;
-
+public partial class RevolvingDoor : SurfaceBrush {
     private Node3D hinge;
     private bool isOpening = false;
     private bool isClosing = false;
@@ -14,6 +11,7 @@ public partial class RevolvingDoor : StaticBody3D {
     private float degreesTurned = 0f;
 
     public override void _Ready() {
+        base._Ready();
         if (func_godot_properties["hingename"].AsString() != "") {
             AddToGroup(func_godot_properties["hingename"].AsString());
         }
@@ -21,6 +19,7 @@ public partial class RevolvingDoor : StaticBody3D {
             AddToGroup(func_godot_properties["targetname"].AsString());
         }
         AddToGroup("DoorRevolving");
+        GetChild<MeshInstance3D>(0).IgnoreOcclusionCulling = true;
         
         rotationRad = ((float)System.Math.PI / 180) * func_godot_properties["speed"].AsSingle();
         

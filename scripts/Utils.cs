@@ -2,7 +2,13 @@ using System;
 using Godot;
 
 public static class Utils {
+    private static readonly PackedScene emitter = GD.Load<PackedScene>("res://emitter.tscn");
+
     static readonly Random random = new Random();
+
+    public static int RandomInt(int min, int max) {
+        return random.Next(min, max);
+    }
     public static float RandomFloat(float scale) {
         return random.NextSingle() * scale;
     }
@@ -23,7 +29,21 @@ public static class Utils {
         return (random.NextSingle() - random.NextSingle()) * ratio;
     }
 
-    public static bool IsSurfaceTooSteep(Vector3 normal, CharacterBody3D body) {
+    public static bool IsSurfaceTooSteep(Vector3 normal, Actor body) {
         return normal.AngleTo(Vector3.Up) > body.FloorMaxAngle;
     }
+
+    public static void CreateEmitter(Vector3 pos, AudioStream sound, MiscAnimation animation, bool flipX) {
+        Emitter e = emitter.Instantiate() as Emitter;
+		Game.EntitiesNode.AddChild(e);
+
+        //await e.ChildrenSet();
+        //e.Reparent(Game.EntitiesNode);
+        e.GlobalPosition = pos;
+        e.FlipX = flipX;
+        e.Audio.Stream = sound;
+        e.SetAnimation(animation);
+        e.SetDuration();
+        e.PlaySound();
+	}
 }

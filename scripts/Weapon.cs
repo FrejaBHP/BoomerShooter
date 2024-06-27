@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using Godot;
@@ -34,14 +35,12 @@ public abstract class Weapon {
 
     public virtual void PrimaryFire() {
         if (WeaponState == WeaponState.ReadyState) {
-            //Player.TestClearHelper();
             EnterAtkState();
         }
     }
 
     public virtual void AltFire() {
         if (WeaponState == WeaponState.ReadyState) {
-            //Player.TestClearHelper();
             EnterAltState();
         }
     }
@@ -71,36 +70,40 @@ public abstract class Weapon {
     }
 
     public static void A_Raise(bsPlayer player, Weapon weapon) {
-        if (player.ActiveWeaponControl.Position.Y <= WeaponOffsetTop) {
-            player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetTop });
+        if (player.WeaponYOffset <= WeaponOffsetTop) {
+            player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = WeaponOffsetTop });
+            player.WeaponYOffset = WeaponOffsetTop;
             weapon.EnterReadyState();
         }
         else {
-            float newY = player.ActiveWeaponControl.Position.Y - 16f;
-            player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = newY });
+            player.WeaponYOffset -= 16f;
+            player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = player.WeaponYOffset });
         }
     }
     
     public static void A_Lower(bsPlayer player, Weapon weapon) {
-        if (player.ActiveWeaponControl.Position.Y >= WeaponOffsetBottom) {
-            player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetBottom });
+        if (player.WeaponYOffset >= WeaponOffsetBottom) {
+            player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = WeaponOffsetBottom });
+            player.WeaponYOffset = WeaponOffsetBottom;
             
             player.ActiveWeapon = player.WeaponInventory[player.WeaponToSwitchTo];
             player.ActiveWeaponNum = player.WeaponToSwitchTo;
             player.BringUpNewWeapon((WeaponType)player.WeaponToSwitchTo);
         }
         else {
-            float newY = player.ActiveWeaponControl.Position.Y + 16f;
-            player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = newY });
+            player.WeaponYOffset += 16f;
+            player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = player.WeaponYOffset });
         }
     }
 
     public static void A_SnapToTop(bsPlayer player) {
-        player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetTop });
+        player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = WeaponOffsetTop });
+        player.WeaponYOffset = WeaponOffsetTop;
     }
 
     public static void A_SnapToBottom(bsPlayer player) {
-        player.ActiveWeaponControl.SetPosition(player.ActiveWeaponControl.Position with { Y = WeaponOffsetBottom });
+        player.ActiveWeaponView.SetPosition(player.ActiveWeaponView.Position with { Y = WeaponOffsetBottom });
+        player.WeaponYOffset = WeaponOffsetBottom;
     }
 
     public static void W_UseAmmo(bsPlayer player, Ammotype ammo, int amount) {
@@ -109,66 +112,6 @@ public abstract class Weapon {
 
             // Dirty, probably should fix this. Replace with signal? Is that even possible?
             player.PlayerHUD.HUDUpdatePlayerAmmo(player.PlayerAmmo[(int)ammo].Ammo);
-        }
-    }
-
-    public static void A_Stab(bsPlayer player) {
-        float offsetX = -0.09f;
-        for (int i = 0; i < 4; i++) {
-            player.FireHitscanAttack(Attacks.PitchforkStab, offsetX, 0);
-            offsetX += 0.06f;
-        }
-    }
-
-    public static void A_FireShotgun(bsPlayer player, int barrels, ref int shells) {
-        float offsetX;
-        float offsetY;
-
-        for (int pellet = 0; pellet < (16 * barrels); pellet++) {
-            offsetX = Utils.RandomOffset(0.13f); // 0.13f = approx. 7,4deg
-            offsetY = Utils.RandomOffset(0.03f);
-            player.FireHitscanAttack(Attacks.BulletRegular, offsetX, offsetY);
-        }
-
-        if (barrels == 1) {
-            if (shells == 2) {
-                player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashLeft);
-            }
-            else if (shells == 1) {
-                player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashRight);
-            }
-            shells--;
-            player.PriFireAudio.Play();
-        }
-        else {
-            player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashBoth);
-            shells = 0;
-            player.AltFireAudio.Play();
-        }
-        
-        W_UseAmmo(player, Ammotype.Shells, barrels);
-    }
-
-    public static void A_ShotgunReloadCheck(bsPlayer player, W_Shotgun shotgun) {
-        if (shotgun.Shells == 0) {
-            if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo > 1) {
-                shotgun.EnterReloadState();
-            }
-            else {
-                shotgun.EnterReadyState();
-            }
-        }
-        else {
-            shotgun.EnterReadyState();
-        }
-    }
-
-    public static void A_ReloadShotgun(bsPlayer player, ref int shells) {
-        if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo > 1) {
-            shells = 2;
-        }
-        else if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo == 1) {
-            shells = 1;
         }
     }
 }
@@ -215,6 +158,14 @@ public sealed partial class W_Pitchfork : Weapon {
     public override void AltFire() {
         if (WeaponState == WeaponState.ReadyState) {
             EnterAtkState();
+        }
+    }
+
+    public static void A_Stab(bsPlayer player) {
+        float offsetX = -0.09f;
+        for (int i = 0; i < 4; i++) {
+            player.FireHitscanAttack(player.PlayerCamera, Attacks.PitchforkStab, offsetX, 0, true);
+            offsetX += 0.06f;
         }
     }
 }
@@ -270,8 +221,11 @@ public sealed partial class W_Shotgun : Weapon {
     public override void PrimaryFire() {
         if (WeaponState == WeaponState.ReadyState) {
             if (Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqPri) {
-                Player.TestClearHelper();
                 EnterAtkState();
+            }
+            else {
+                EnterReadyState();
+                Player.SwitchToWeaponWithAmmo();
             }
         }
     }
@@ -279,15 +233,74 @@ public sealed partial class W_Shotgun : Weapon {
     public override void AltFire() {
         if (WeaponState == WeaponState.ReadyState) {
             if ((Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqSec) && Shells == 2) {
-                Player.TestClearHelper();
                 EnterAltState();
             }
-            else if (Shells != 2) {
-                Player.TestClearHelper();
+            else if (Shells == 1) {
                 EnterAtkState();
             }
+            else {
+                EnterReadyState();
+                Player.SwitchToWeaponWithAmmo();
+            }
         }
-    } 
+    }
+
+    public static void A_FireShotgun(bsPlayer player, int barrels, ref int shells) {
+        float offsetX;
+        float offsetY;
+
+        if (barrels == 1) {
+            if (shells == 2) {
+                player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashLeft);
+            }
+            else if (shells == 1) {
+                player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashRight);
+            }
+            shells--;
+            player.PriFireAudio.Play();
+        }
+        else {
+            player.FetchAndPlaySecondaryAnimation(WAnimations.Anim_Wep_SG_FlashBoth);
+            shells = 0;
+            player.AltFireAudio.Play();
+        }
+        
+        W_UseAmmo(player, Ammotype.Shells, barrels);
+
+        for (int pellet = 0; pellet < (16 * barrels); pellet++) {
+            bool makeSound = false;
+            if (pellet % 4 == 0) {
+                makeSound = true;
+            }
+            offsetX = Utils.RandomOffset(0.13f); // 0.13f = approx. 7,4deg max
+            offsetY = Utils.RandomOffset(0.03f);
+            player.FireHitscanAttack(player.PlayerCamera, Attacks.BulletRegular, offsetX, offsetY, makeSound);
+        }
+    }
+
+    public static void A_ShotgunReloadCheck(bsPlayer player, W_Shotgun shotgun) {
+        if (shotgun.Shells == 0) {
+            if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo > 1) {
+                shotgun.EnterReloadState();
+            }
+            else {
+                shotgun.EnterReadyState();
+                player.SwitchToWeaponWithAmmo();
+            }
+        }
+        else {
+            shotgun.EnterReadyState();
+        }
+    }
+
+    public static void A_ReloadShotgun(bsPlayer player, ref int shells) {
+        if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo > 1) {
+            shells = 2;
+        }
+        else if (player.PlayerAmmo[(int)Ammotype.Shells].Ammo == 1) {
+            shells = 1;
+        }
+    }
 }
 
 public sealed partial class W_DynamiteReg : Weapon {
@@ -376,18 +389,17 @@ public sealed partial class W_DynamiteReg : Weapon {
     }
 
     private void Throw() {
-        float force;
-        if (cookTime <= 120f) {
-            force = cookTime / 8f;
-        }
-        else {
-            force = 15f;
-        }
+        cookTime = Math.Clamp(cookTime, 0, 120);
+        float force = (cookTime * 0.1f) + 2;
         
         Player.ThrowObject(ThrowableType.TNTBundle, force);
         cookTime = 0;
         Player.PlayerHUD.ChargeBarProgress = cookTime;
         W_UseAmmo(Player, AmmoType, 1);
+
+        if (Player.PlayerAmmo[(int)Ammotype.DynamiteReg].Ammo == 0) {
+            Player.SwitchToWeaponWithAmmo();
+        }
     }
 
     private void RaiseLighter() {

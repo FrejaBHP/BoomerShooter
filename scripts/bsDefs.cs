@@ -18,7 +18,16 @@ public enum WeaponType {
 
 public enum DamageType {
     Melee,
-    Bullet
+    Bullet,
+    Explosive
+}
+
+public enum SurfaceType {
+    None,
+    Metal,
+    Stone,
+    Wood,
+    Flesh
 }
 
 public enum ThrowableType {
@@ -28,6 +37,15 @@ public enum ThrowableType {
 public enum EnemyType {
     AxeZombie,
     NoOfEnemies
+}
+
+public enum MoveState {
+    None,
+    Stand,
+    Turn,
+    Walk,
+    Fly,
+    Knockback
 }
 
 public enum KeyType {
@@ -51,6 +69,11 @@ public enum EnemyState {
     Stun,
     Death,
     Corpse
+}
+
+public enum EnemyAction {
+    None,
+    AZ_Swing
 }
 
 public class Ammunition {

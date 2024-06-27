@@ -6,7 +6,6 @@ public partial class Game : Node3D {
 	public static Node3D EnemiesNode { get; private set; }
 	public static Node3D PlayersNode { get; private set; }
 	public static Node3D EntitiesNode { get; private set; }
-	public static Node3D RayTraceHelper { get; private set; }
 
 	public static bsPlayer Player { get; set; }
 
@@ -14,11 +13,11 @@ public partial class Game : Node3D {
 		EnemiesNode = GetNode<Node3D>("Enemies");
 		PlayersNode = GetNode<Node3D>("Players");
 		EntitiesNode = GetNode<Node3D>("Entities");
-		RayTraceHelper = GetNode<Node3D>("RaytraceHelper");
 
 		Sprites.IndexSpriteArrays();
 		WAnimations.IndexWeaponAnimations();
 		EAnimations.IndexEnemyAnimations();
+		MiscAnimations.IndexMiscAnimations();
 
 		LoadMap(); // For later
 	}
@@ -54,9 +53,5 @@ public partial class Game : Node3D {
 
 	private void ConnectTriggers() {
 
-	}
-
-	public override void _Process(double delta) {
-	
 	}
 }

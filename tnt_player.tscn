@@ -10,6 +10,7 @@ radius = 0.15
 radius = 0.25
 
 [node name="TNT_Player" type="RigidBody3D"]
+process_mode = 1
 collision_layer = 0
 collision_mask = 25
 script = ExtResource("1_rihjd")

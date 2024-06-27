@@ -7,6 +7,7 @@
 radius = 1.0
 
 [node name="Explosion" type="Node3D"]
+process_mode = 1
 script = ExtResource("1_fke3w")
 
 [node name="ExplosionSprite" type="Sprite3D" parent="."]
