@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bda2wl8ulu3sm"
-path.s3tc="res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.s3tc.ctex"
+path.bptc="res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.bptc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,12 +12,12 @@ metadata={
 [deps]
 
 source_file="res://textures/pickups/ammo_dynamite_reg.png"
-dest_files=["res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.s3tc.ctex"]
+dest_files=["res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.bptc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

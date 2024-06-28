@@ -105,6 +105,7 @@ wkey4={
 3d_physics/layer_4="Player"
 3d_physics/layer_5="Enemy"
 3d_physics/layer_6="Corpse"
+3d_physics/layer_7="DecoFlat"
 
 [rendering]
 

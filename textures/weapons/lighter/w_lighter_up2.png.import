@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://dj1kmdayjxguh"
-path="res://.godot/imported/w_lighter_up2.png-6208f498bbd9319edac9a88f089bbb1b.ctex"
+path.bptc="res://.godot/imported/w_lighter_up2.png-6208f498bbd9319edac9a88f089bbb1b.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/weapons/lighter/w_lighter_up2.png"
-dest_files=["res://.godot/imported/w_lighter_up2.png-6208f498bbd9319edac9a88f089bbb1b.ctex"]
+dest_files=["res://.godot/imported/w_lighter_up2.png-6208f498bbd9319edac9a88f089bbb1b.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

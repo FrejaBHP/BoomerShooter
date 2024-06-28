@@ -16,7 +16,7 @@ dest_files=["res://.godot/imported/exflame6.png-d9a8cbd3fb27cc3484d8897e17395c67
 [params]
 
 compress/mode=0
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

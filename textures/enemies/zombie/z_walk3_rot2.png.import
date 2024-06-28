@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cd5iig8p23f4i"
-path="res://.godot/imported/z_walk3_rot2.png-a346b3c8d1c8bc996ae6144589dda51c.ctex"
+path.bptc="res://.godot/imported/z_walk3_rot2.png-a346b3c8d1c8bc996ae6144589dda51c.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/enemies/zombie/z_walk3_rot2.png"
-dest_files=["res://.godot/imported/z_walk3_rot2.png-a346b3c8d1c8bc996ae6144589dda51c.ctex"]
+dest_files=["res://.godot/imported/z_walk3_rot2.png-a346b3c8d1c8bc996ae6144589dda51c.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

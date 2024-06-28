@@ -93,6 +93,7 @@ public partial class Actor : CharacterBody3D {
 		newVector.SetCollisionMaskValue(2, true);
         newVector.SetCollisionMaskValue(4, true);
 		newVector.SetCollisionMaskValue(5, true);
+		newVector.SetCollisionMaskValue(7, true);
 		parent.AddChild(newVector);
 		
 		Vector3 target = new(offsetX, offsetY, -1f);
@@ -108,6 +109,9 @@ public partial class Actor : CharacterBody3D {
 			}
 			else if (collider.IsInGroup("Geometry")) {
                 BuildEmitter(newVector.GetCollisionPoint(), atk.DamageType, (SurfaceType)(collider as SurfaceBrush).func_godot_properties["surface_material"].AsInt32(), makesSound);
+			}
+			else if (collider.IsInGroup("DecoFlat")) {
+				BuildEmitter(newVector.GetCollisionPoint(), atk.DamageType, (SurfaceType)(collider as DecorationBrush).func_godot_properties["surface_material"].AsInt32(), makesSound);
 			}
 		}
         

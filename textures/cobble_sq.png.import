@@ -3,7 +3,7 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://o1v3jx2448ii"
-path.s3tc="res://.godot/imported/cobble_sq.png-2b740c061424b6bc16d2647e236720dc.s3tc.ctex"
+path.bptc="res://.godot/imported/cobble_sq.png-2b740c061424b6bc16d2647e236720dc.bptc.ctex"
 metadata={
 "imported_formats": ["s3tc_bptc"],
 "vram_texture": true
@@ -12,12 +12,12 @@ metadata={
 [deps]
 
 source_file="res://textures/cobble_sq.png"
-dest_files=["res://.godot/imported/cobble_sq.png-2b740c061424b6bc16d2647e236720dc.s3tc.ctex"]
+dest_files=["res://.godot/imported/cobble_sq.png-2b740c061424b6bc16d2647e236720dc.bptc.ctex"]
 
 [params]
 
 compress/mode=2
-compress/high_quality=false
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

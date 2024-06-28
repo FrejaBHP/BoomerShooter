@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cv5c6v65bxn7y"
-path="res://.godot/imported/z_atk3_rot1.png-22506a240345a6e5f4a0a7704cb5beb6.ctex"
+path.bptc="res://.godot/imported/z_atk3_rot1.png-22506a240345a6e5f4a0a7704cb5beb6.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/enemies/zombie/z_atk3_rot1.png"
-dest_files=["res://.godot/imported/z_atk3_rot1.png-22506a240345a6e5f4a0a7704cb5beb6.ctex"]
+dest_files=["res://.godot/imported/z_atk3_rot1.png-22506a240345a6e5f4a0a7704cb5beb6.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

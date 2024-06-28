@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://b3hthyokj7dte"
-path="res://.godot/imported/w_dyn_reg_fuse_lit0.png-6677d89ecd50e19954dd92da32c21254.ctex"
+path.bptc="res://.godot/imported/w_dyn_reg_fuse_lit0.png-6677d89ecd50e19954dd92da32c21254.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/weapons/dynamite/w_dyn_reg_fuse_lit0.png"
-dest_files=["res://.godot/imported/w_dyn_reg_fuse_lit0.png-6677d89ecd50e19954dd92da32c21254.ctex"]
+dest_files=["res://.godot/imported/w_dyn_reg_fuse_lit0.png-6677d89ecd50e19954dd92da32c21254.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

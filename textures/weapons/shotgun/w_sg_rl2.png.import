@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ca8letlipmgc3"
-path="res://.godot/imported/w_sg_rl2.png-8d0d6fb1b0b10736e558dd71b09982ed.ctex"
+path.bptc="res://.godot/imported/w_sg_rl2.png-8d0d6fb1b0b10736e558dd71b09982ed.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/weapons/shotgun/w_sg_rl2.png"
-dest_files=["res://.godot/imported/w_sg_rl2.png-8d0d6fb1b0b10736e558dd71b09982ed.ctex"]
+dest_files=["res://.godot/imported/w_sg_rl2.png-8d0d6fb1b0b10736e558dd71b09982ed.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

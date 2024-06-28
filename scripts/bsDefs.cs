@@ -76,6 +76,13 @@ public enum EnemyAction {
     AZ_Swing
 }
 
+public enum WeaponAction {
+    None,
+    PF_Stab,
+    SG_Reload,
+    Dyn_Throw
+}
+
 public class Ammunition {
     public int Max { get; }
     private int ammo = 0;

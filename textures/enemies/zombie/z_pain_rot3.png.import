@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://gjgmmmms30o0"
-path="res://.godot/imported/z_pain_rot3.png-5c07ec1d8e5933d19de89919022703df.ctex"
+path.bptc="res://.godot/imported/z_pain_rot3.png-5c07ec1d8e5933d19de89919022703df.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/enemies/zombie/z_pain_rot3.png"
-dest_files=["res://.godot/imported/z_pain_rot3.png-5c07ec1d8e5933d19de89919022703df.ctex"]
+dest_files=["res://.godot/imported/z_pain_rot3.png-5c07ec1d8e5933d19de89919022703df.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0

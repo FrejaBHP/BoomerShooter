@@ -1,0 +1,9 @@
+[gd_resource type="StandardMaterial3D" load_steps=2 format=3 uid="uid://dwjehvsd4e1b4"]
+
+[ext_resource type="Texture2D" uid="uid://bb5u1ramq0mew" path="res://textures/decoration/flat/stone_memory.png" id="1_gi8g2"]
+
+[resource]
+shading_mode = 0
+specular_mode = 2
+albedo_texture = ExtResource("1_gi8g2")
+texture_filter = 0

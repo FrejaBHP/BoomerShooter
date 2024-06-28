@@ -301,9 +301,14 @@ public partial class bsPlayer : Actor {
 		if (PriWepAnim != null) {
 			if (priWepAnimTick == 0) {
 				SetViewSpriteFrame(PriWepAnim.AnimFrames[priWepAnimFrame]);
+
 				if (PriWepAnim.AnimFrames[priWepAnimFrame].Sound != null) {
 					WeaponMiscAudio.Stream = PriWepAnim.AnimFrames[priWepAnimFrame].Sound;
 					WeaponMiscAudio.Play();
+				}
+				
+				if (PriWepAnim.AnimFrames[priWepAnimFrame].Action != WeaponAction.None) {
+					ActiveWeapon.ExecuteAction(PriWepAnim.AnimFrames[priWepAnimFrame].Action);
 				}
 			}
 
@@ -333,9 +338,14 @@ public partial class bsPlayer : Actor {
 		if (SecWepAnim != null) {
 			if (secWepAnimTick == 0) {
 				SetViewSpriteFrame(SecWepAnim.AnimFrames[secWepAnimFrame]);
+
 				if (SecWepAnim.AnimFrames[secWepAnimFrame].Sound != null) {
 					WeaponMiscAudio.Stream = SecWepAnim.AnimFrames[secWepAnimFrame].Sound;
 					WeaponMiscAudio.Play();
+				}
+
+				if (SecWepAnim.AnimFrames[secWepAnimFrame].Action != WeaponAction.None) {
+					ActiveWeapon.ExecuteAction(SecWepAnim.AnimFrames[secWepAnimFrame].Action);
 				}
 			}
 

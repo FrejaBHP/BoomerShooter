@@ -1,0 +1,33 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDSolidClass" load_steps=4 format=3 uid="uid://iuvdms6ob1lu"]
+
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_solid_class.gd" id="1_bi0d7"]
+[ext_resource type="Resource" uid="uid://c03ylypo5o4b5" path="res://entities/b_surface_brush.tres" id="1_xhx3u"]
+[ext_resource type="Script" path="res://scripts/DecorationBrush.cs" id="2_tkpkb"]
+
+[resource]
+script = ExtResource("1_bi0d7")
+spawn_type = 2
+origin_type = 0
+build_visuals = true
+use_in_baked_light = true
+shadow_casting_setting = 1
+build_occlusion = false
+render_layers = 1
+collision_shape_type = 1
+collision_layer = 64
+collision_mask = 0
+collision_priority = 1.0
+collision_shape_margin = 0.04
+script_class = ExtResource("2_tkpkb")
+classname = "deco_brush"
+description = "Decoration brush for non-interactible overlaying"
+func_godot_internal = false
+base_classes = Array[Resource]([ExtResource("1_xhx3u")])
+class_properties = {}
+class_property_descriptions = {}
+meta_properties = {
+"color": Color(0.8, 0.8, 0.8, 1),
+"size": AABB(-8, -8, -8, 8, 8, 8)
+}
+node_class = "StaticBody3D"
+name_property = ""

@@ -38,9 +38,6 @@ public static class AI {
     public static bool CanMove(EnemyBase enemy, float angle, float dist) {
         Vector3 targetPos = new(0, 0, -dist);
         targetPos = targetPos.Rotated(Vector3.Up, angle);
-        //Vector3 targetPos = new(0, 0, -distToTarget);
-        //targetPos = targetPos.Rotated(Vector3.Up, angleToTarget);
-        //enemy.PathCast.TargetPosition = enemy.PathCast.TargetPosition with { X = targetPos.X, Y = 0f, Z = targetPos.Y };
         enemy.PathCast.TargetPosition = targetPos;
         enemy.PathCast.ForceRaycastUpdate();
 
@@ -92,38 +89,19 @@ public static class AI {
     public static void MoveForward(EnemyBase enemy) {
         enemy.Speed += enemy.Acceleration;
         Vector3 vel = new(0, 0, -1);
-        //vel = vel.Normalized();
         vel = vel.Rotated(Vector3.Up, enemy.Rotation.Y);
         enemy.Velocity = vel * enemy.Speed;
-        //enemy.Velocity = enemy.Velocity.MoveToward(new(0, 0, -enemy.MaxSpeed), -0.15f);
-        //if (enemy.Velocity.Length() < enemy.MaxSpeed) {
-            //Vector3 vel = new(0, 0, 0.15f);
-            //vel = vel.Rotated(Vector3.Up, enemy.Rotation.Y);
-            
-            //enemy.Velocity += vel;
-        //}
     }
 
     public static void Turn(EnemyBase enemy) {
         if (enemy.GoalAngle > enemy.TurnRate * 0.5f) {
-            //enemy.RelativeRotation += enemy.TurnRate;
-            //enemy.RotateObjectLocal(Vector3.Up, enemy.RelativeRotation);
             enemy.RotateObjectLocal(Vector3.Up, enemy.TurnRate);
             enemy.Velocity = enemy.Velocity.Rotated(Vector3.Up, enemy.TurnRate);
-            //enemy.RotateY(enemy.TurnRate);
         }
         else if (enemy.GoalAngle < -enemy.TurnRate * 0.5f) {
-            //enemy.RelativeRotation -= enemy.TurnRate;
-            //enemy.RotateObjectLocal(Vector3.Up, enemy.RelativeRotation);
             enemy.RotateObjectLocal(Vector3.Up, -enemy.TurnRate);
             enemy.Velocity = enemy.Velocity.Rotated(Vector3.Up, -enemy.TurnRate);
-            //enemy.RotateY(-enemy.TurnRate);
         }
-        //Transform3D etransform = enemy.Transform;
-		//etransform.Basis = Basis.Identity;
-		//enemy.Transform = etransform;
-
-        //enemy.RotateObjectLocal(Vector3.Up, enemy.RelativeRotation);
     }
 
     public static bool CanSee(EnemyBase enemy, CharacterBody3D target) {
@@ -149,49 +127,5 @@ public static class AI {
         else {
             return false;
         }
-    }
-
-
-
-
-
-
-    public static void FindPathOld(EnemyBase enemy, float dotX, float dotZ) {
-        // Try moving straight ahead
-        /*
-        if (CanMove(enemy, dotX, dotZ, movedPerStep)) {
-            if (dotX > 0) {
-                enemy.GoalAngle = 1f - dotZ;
-            }
-            else {
-                enemy.GoalAngle = -(1f - dotZ);
-            }
-        }
-        
-        // Try turning ~60 degrees more in the same direction
-        else if (CanMove(enemy, dotX, dotZ + turn, movedPerStep)) {
-            enemy.GoalAngle = 1f - dotZ - turn;
-            if (dotX > 0) {
-                enemy.GoalAngle = 1f - dotZ - turn;
-            }
-            else {
-                enemy.GoalAngle = -(1f - dotZ - turn);
-            }
-        }
-        // Try turning ~60 degrees in the other direction
-        else if (CanMove(enemy, dotX, -dotZ + -turn, movedPerStep)) {
-            enemy.GoalAngle = -(1f - dotZ - turn);
-            if (dotX > 0) {
-                enemy.GoalAngle = -(1f - dotZ - turn);
-            }
-            else {
-                enemy.GoalAngle = 1f - dotZ - turn;
-            }
-        }
-        // Turn around
-        else {
-            enemy.GoalAngle = -2f;
-        }
-        */
     }
 }

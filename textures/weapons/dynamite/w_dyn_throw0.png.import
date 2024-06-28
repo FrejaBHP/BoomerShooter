@@ -3,20 +3,21 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bgjwmgiq8yner"
-path="res://.godot/imported/w_dyn_throw0.png-0b7aabe3c3e5e7638bb06e0d3c32e2d9.ctex"
+path.bptc="res://.godot/imported/w_dyn_throw0.png-0b7aabe3c3e5e7638bb06e0d3c32e2d9.bptc.ctex"
 metadata={
-"vram_texture": false
+"imported_formats": ["s3tc_bptc"],
+"vram_texture": true
 }
 
 [deps]
 
 source_file="res://textures/weapons/dynamite/w_dyn_throw0.png"
-dest_files=["res://.godot/imported/w_dyn_throw0.png-0b7aabe3c3e5e7638bb06e0d3c32e2d9.ctex"]
+dest_files=["res://.godot/imported/w_dyn_throw0.png-0b7aabe3c3e5e7638bb06e0d3c32e2d9.bptc.ctex"]
 
 [params]
 
-compress/mode=0
-compress/high_quality=false
+compress/mode=2
+compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1
 compress/normal_map=0
