@@ -13,7 +13,6 @@ data_*/
 .editorconfig
 
 # Addon ignores
-examples/
-autosave/
+/examples
 /autosave
 /.VSCodeCounter
