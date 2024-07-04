@@ -27,7 +27,11 @@ public partial class bsPlayer : Actor {
 	private RayCast3D useRay;
 
 	public Ammunition[] PlayerAmmo = {
-		new(0), new(100), new(50)//, new(500)
+		// Max ammo
+		new(0), // PF
+		new(100), // Shotgun
+		new(500), // Tommy
+		new(50) // Dynamite
 	};
 
 	public Weapon[] WeaponInventory { get; private set; } = new Weapon[(int)WeaponType.NoOfWeapons];
@@ -137,9 +141,15 @@ public partial class bsPlayer : Actor {
 				}
 			}
 			else if (Input.IsActionJustPressed("wkey3")) {
-				if (CanSwitchToWeapon(WeaponType.W_DynamiteReg)) {
+				if (CanSwitchToWeapon(WeaponType.W_TommyGun)) {
 					SwitchingWeapon = true;
 					WeaponToSwitchTo = 2;
+				}
+			}
+			else if (Input.IsActionJustPressed("wkey4")) {
+				if (CanSwitchToWeapon(WeaponType.W_DynamiteReg)) {
+					SwitchingWeapon = true;
+					WeaponToSwitchTo = 3;
 				}
 			}
 		}
@@ -399,10 +409,17 @@ public partial class bsPlayer : Actor {
 				}
 				break;
 			
-			case WeaponType.W_DynamiteReg:
+			case WeaponType.W_TommyGun:
 				if (!HasWeapon[2]) {
-					WeaponInventory[2] = new W_DynamiteReg(this);
+					WeaponInventory[2] = new W_TommyGun(this);
 					HasWeapon[2] = true;
+				}
+				break;
+			
+			case WeaponType.W_DynamiteReg:
+				if (!HasWeapon[3]) {
+					WeaponInventory[3] = new W_DynamiteReg(this);
+					HasWeapon[3] = true;
 				}
 				break;
 			
@@ -422,14 +439,17 @@ public partial class bsPlayer : Actor {
 	public void SwitchToWeaponWithAmmo() {
 		SwitchingWeapon = true;
 		if (CanSwitchToWeapon(WeaponType.W_Shotgun)) {
-			WeaponToSwitchTo = 1;
+			WeaponToSwitchTo = (int)WeaponType.W_Shotgun;
+		}
+		else if (CanSwitchToWeapon(WeaponType.W_TommyGun)) {
+			WeaponToSwitchTo = (int)WeaponType.W_TommyGun;
 		}
 		else if (CanSwitchToWeapon(WeaponType.W_DynamiteReg)) {
-			WeaponToSwitchTo = 2;
+			WeaponToSwitchTo = (int)WeaponType.W_DynamiteReg;
 		}
 		// If all else fails, trusty fork to the rescue!
 		else {
-			WeaponToSwitchTo = 0;
+			WeaponToSwitchTo = (int)WeaponType.W_Pitchfork;
 		}
 	}
 
@@ -519,9 +539,17 @@ public partial class bsPlayer : Actor {
 				else {
 					return false;
 				}
+
+			case WeaponType.W_TommyGun:
+				if (HasWeapon[2] && ActiveWeaponNum != 2 && PlayerAmmo[(int)Ammotype.Bullets].Ammo != 0) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			
 			case WeaponType.W_DynamiteReg:
-				if (HasWeapon[2] && ActiveWeaponNum != 2 && PlayerAmmo[(int)Ammotype.DynamiteReg].Ammo != 0) {
+				if (HasWeapon[3] && ActiveWeaponNum != 3 && PlayerAmmo[(int)Ammotype.DynamiteReg].Ammo != 0) {
 					return true;
 				}
 				else {

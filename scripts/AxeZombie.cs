@@ -1,13 +1,10 @@
 using Godot;
 using System;
 
-public partial class AxeZombie : EnemyBase, IEnemy {
-    public IEnemy InterE { get; }
+public partial class AxeZombie : EnemyBase {
     private float anglething;
-    private bool hasAttacked = false;
 
     public AxeZombie() {
-        InterE = this;
         MaxSpeed = 2.0f;
         Speed = 0f;
         TurnRate = 0.05f;
@@ -75,11 +72,13 @@ public partial class AxeZombie : EnemyBase, IEnemy {
             }
         }
 
+        /*
         UpdateDebugLabel();
         AddExtraLabelInfo("AngleThing", anglething);
         if (Target != null) {
             AddExtraLabelInfo("DotZ Goal", GlobalTransform.Basis.Z.Dot(GoalVector));
         }
+        */
     }
 
     private void Think() {
@@ -88,6 +87,12 @@ public partial class AxeZombie : EnemyBase, IEnemy {
                 break;
             
             case EnemyState.Chase:
+                if (Target.Health <= 0) {
+                    AI.GoIdle(this);
+                    MoveState = MoveState.Stand;
+                    break;
+                }
+                
                 Vector3 facing = -GlobalTransform.Basis.Z;
                 Vector3 targetFlat = new(Target.GlobalPosition.X, GlobalPosition.Y, Target.GlobalPosition.Z);
                 Vector3 targetFlatDist = targetFlat - GlobalPosition;
@@ -188,10 +193,6 @@ public partial class AxeZombie : EnemyBase, IEnemy {
 
     public override void Attack() {
         FireHitscanAttack(this, Attacks.AxeZombieSwing, 0f, 0f, true);
-    }
-
-    private void RemoveAttackFlag() {
-        hasAttacked = false;
     }
 
     public void SetSprite() {

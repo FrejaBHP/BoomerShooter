@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="FuncGodotFGDPointClass" load_steps=3 format=3 uid="uid://cyc2vq27kbdjb"]
+
+[ext_resource type="PackedScene" uid="uid://bc3p3uqjjne1d" path="res://pickups/weapon_pickup_tommygun.tscn" id="1_n425a"]
+[ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_point_class.gd" id="2_u38d4"]
+
+[resource]
+script = ExtResource("2_u38d4")
+scene_file = ExtResource("1_n425a")
+apply_rotation_on_map_build = true
+classname = "weapon_tommygun"
+description = "Become a gangster with this classic"
+func_godot_internal = false
+base_classes = Array[Resource]([])
+class_properties = {}
+class_property_descriptions = {}
+meta_properties = {
+"color": Color(0.8, 0.8, 0.8, 1),
+"size": AABB(-4, -4, -4, 4, 4, 4)
+}
+node_class = ""
+name_property = ""

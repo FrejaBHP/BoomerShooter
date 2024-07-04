@@ -37,11 +37,10 @@ public static class Utils {
         Emitter e = emitter.Instantiate() as Emitter;
 		Game.EntitiesNode.AddChild(e);
 
-        //await e.ChildrenSet();
-        //e.Reparent(Game.EntitiesNode);
         e.GlobalPosition = pos;
         e.FlipX = flipX;
         e.Audio.Stream = sound;
+        
         e.SetAnimation(animation);
         e.SetDuration();
         e.PlaySound();

@@ -23,11 +23,11 @@ public readonly struct WeaponAnimationLayer {
         DoFlipH = false;
     }
 
-    public WeaponAnimationLayer(int layer, SpriteOffset offset, int rotation, Texture2D? texture, bool flipH) {
+    public WeaponAnimationLayer(int layer, SpriteOffset offset, Texture2D? texture, int rotation, bool flipH) {
         Layer = layer;
         Offset = offset;
-        RotationDeg = rotation;
         Texture = texture;
+        RotationDeg = rotation;
         DoFlipH = flipH;
     }
 }
@@ -79,6 +79,14 @@ public static class WAnimations {
     public static readonly WeaponAnimation Anim_Wep_SG_FlashRight = new();
     public static readonly WeaponAnimation Anim_Wep_SG_FlashBoth = new();
 
+    public static readonly WeaponAnimationFrame Frame_Wep_Tommy_Idle = new WeaponAnimationFrame(
+        new WeaponAnimationLayer[2] {
+            new(0, Sprites.Spr_NoOffset, null),
+            new(3, Sprites.Spr_Wep_Tommy_Idle)
+        });
+    public static readonly WeaponAnimation Anim_Wep_Tommy_Fire = new();
+    public static readonly WeaponAnimation Anim_Wep_Tommy_Alt = new();
+
     public static readonly WeaponAnimation Anim_Wep_Light_Up = new();
     public static readonly WeaponAnimation Anim_Wep_Light_Down = new();
     public static readonly WeaponAnimation Anim_Wep_Light_Idle = new();
@@ -98,13 +106,16 @@ public static class WAnimations {
     public static readonly WeaponAnimation Anim_Wep_DynaReg_Recover = new();
 
     public static void IndexWeaponAnimations() {
+        // CUSTOM UP AND DOWN ANIMS SHOULD LAST 18 FRAMES
+
+
         // ----- Pitchfork -----
         // PF Atk
         Anim_Wep_PF_Atk.AnimFrames = new WeaponAnimationFrame[3];
         Anim_Wep_PF_Atk.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
             new(3, Sprites.Spr_Wep_PF[1])
         }, 
-        3, null, WeaponAction.None);
+        2, null, WeaponAction.None);
         Anim_Wep_PF_Atk.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
             new(3, Sprites.Spr_Wep_PF[2])
         }, 
@@ -112,7 +123,7 @@ public static class WAnimations {
         Anim_Wep_PF_Atk.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
             new(3, Sprites.Spr_Wep_PF[1])
         }, 
-        3, null, WeaponAction.None);
+        2, null, WeaponAction.None);
         Anim_Wep_PF_Atk.UpdateAnimationLength();
 
         // ----- Shotgun -----
@@ -186,7 +197,7 @@ public static class WAnimations {
         4, null, WeaponAction.None);
         Anim_Wep_SG_Reload.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
             new(3, Sprites.Spr_Wep_SG[2]),
-            new(5, new(0, 140, 0, 25), 20, Sprites.XSpr_Wep_SG[0], false)
+            new(5, new(0, 140, 0, 25), Sprites.XSpr_Wep_SG[0], 20, false)
         }, 
         8, null, WeaponAction.None);
         Anim_Wep_SG_Reload.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
@@ -268,7 +279,111 @@ public static class WAnimations {
         0, null, WeaponAction.None);
         Anim_Wep_SG_FlashBoth.UpdateAnimationLength();
 
-        // CUSTOM UP AND DOWN ANIMS SHOULD LAST 18 FRAMES
+        // TommyGun (0, -32, 0, -70)
+        Anim_Wep_Tommy_Fire.AnimFrames = new WeaponAnimationFrame[4];
+        Anim_Wep_Tommy_Fire.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -30, 0, -65), Sprites.Spr_Wep_Tommy_Flare[0]),
+            new(3, new(0, 2, 0, 5), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Fire);
+        Anim_Wep_Tommy_Fire.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -24, 0, -61), Sprites.Spr_Wep_Tommy_Flare[1]),
+            new(3, new(0, 8, 0, 9), Sprites.Spr_Wep_Tommy_Fire[1])
+        }, 
+        4, null, WeaponAction.Tommy_Fire);
+        Anim_Wep_Tommy_Fire.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -30, 0, -66), Sprites.Spr_Wep_Tommy_Flare[2]),
+            new(3, new(0, 2, 0, 4), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Fire);
+        Anim_Wep_Tommy_Fire.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -20, 0, -63), Sprites.Spr_Wep_Tommy_Flare[3]),
+            new(3, new(0, 12, 0, 7), Sprites.Spr_Wep_Tommy_Fire[1])
+        }, 
+        4, null, WeaponAction.Tommy_Fire);
+        Anim_Wep_Tommy_Fire.UpdateAnimationLength();
+
+        //Norm: -32
+        //Alt: -52
+        //Centre: -12
+        //Centre-R: +8
+        //Alt-R: +48
+        //Norm-R: +33
+
+        Anim_Wep_Tommy_Alt.AnimFrames = new WeaponAnimationFrame[14];
+        Anim_Wep_Tommy_Alt.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -32, 0, -70), Sprites.Spr_Wep_Tommy_Flare[0]),
+            new(3, new(0, 0, 0, 0), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[1] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -36, 0, -72), Sprites.Spr_Wep_Tommy_Flare[1]),
+            new(3, new(0, -4, 0, -2), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[2] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -40, 0, -76), Sprites.Spr_Wep_Tommy_Flare[2]),
+            new(3, new(0, -8, 0, -4), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[3] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -64, 0, -76), Sprites.Spr_Wep_Tommy_Flare[3]),
+            new(3, new(0, -12, 0, -6), Sprites.Spr_Wep_Tommy_Alt[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -67, 0, -77), Sprites.Spr_Wep_Tommy_Flare[0]),
+            new(3, new(0, -15, 0, -7), Sprites.Spr_Wep_Tommy_Alt[1])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[5] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -64, 0, -76), Sprites.Spr_Wep_Tommy_Flare[1]),
+            new(3, new(0, -12, 0, -6), Sprites.Spr_Wep_Tommy_Alt[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[6] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -40, 0, -74), Sprites.Spr_Wep_Tommy_Flare[2]),
+            new(3, new(0, -8, 0, -4), Sprites.Spr_Wep_Tommy_Fire[0])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[7] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, -16, 0, -74), Sprites.Spr_Wep_Tommy_Flare[3]),
+            new(3, new(0, -4, 0, -4), Sprites.Spr_Wep_Tommy_Alt[2])
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[8] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 8, 0, -74), Sprites.Spr_Wep_Tommy_Flare[0]),
+            new(3, new(0, 0, 0, -4), Sprites.Spr_Wep_Tommy_Alt[2], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[9] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 39, 0, -74), Sprites.Spr_Wep_Tommy_Flare[1]),
+            new(3, new(0, 6, 0, -4), Sprites.Spr_Wep_Tommy_Fire[0], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[10] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 42, 0, -74), Sprites.Spr_Wep_Tommy_Flare[2]),
+            new(3, new(0, 9, 0, -4), Sprites.Spr_Wep_Tommy_Fire[1], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[11] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 60, 0, -74), Sprites.Spr_Wep_Tommy_Flare[3]),
+            new(3, new(0, 12, 0, -4), Sprites.Spr_Wep_Tommy_Alt[0], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[12] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 42, 0, -74), Sprites.Spr_Wep_Tommy_Flare[0]),
+            new(3, new(0, 9, 0, -4), Sprites.Spr_Wep_Tommy_Fire[1], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.AnimFrames[13] = new WeaponAnimationFrame(new WeaponAnimationLayer[2] {
+            new(0, new(0, 13, 0, -72), Sprites.Spr_Wep_Tommy_Flare[1]),
+            new(3, new(0, 5, 0, -2), Sprites.Spr_Wep_Tommy_Alt[2], 0, true)
+        }, 
+        4, null, WeaponAction.Tommy_Alt);
+        Anim_Wep_Tommy_Alt.UpdateAnimationLength();
+
+
         // Lighter
         Anim_Wep_Light_Up.AnimFrames = new WeaponAnimationFrame[5];
         Anim_Wep_Light_Up.AnimFrames[0] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
@@ -358,7 +473,7 @@ public static class WAnimations {
             new(1, new(-245, 0, 0, -58), Sprites.Spr_Wep_Light_Flame[4]),
             new(2, new(-155, -155, 0, 35), Sprites.Spr_Wep_Light_Idle)
         }, 
-        0, null, WeaponAction.None);
+        1, null, WeaponAction.None);
         Anim_Wep_Light_Cook.UpdateAnimationLength();
 
         Anim_Wep_Light_Cook_Idle.AnimFrames = new WeaponAnimationFrame[3];
@@ -467,7 +582,7 @@ public static class WAnimations {
         Anim_Wep_DynaReg_Throw.AnimFrames[4] = new WeaponAnimationFrame(new WeaponAnimationLayer[1] {
             new(3, new(35, 0, 0, -15), Sprites.Spr_Wep_DynaReg_Throw[1])
         }, 
-        0, null, WeaponAction.Dyn_Throw);
+        1, null, WeaponAction.Dyn_Throw);
         Anim_Wep_DynaReg_Throw.UpdateAnimationLength();
     }
 }

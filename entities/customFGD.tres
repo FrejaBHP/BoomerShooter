@@ -1,4 +1,4 @@
-[gd_resource type="Resource" script_class="FuncGodotFGDFile" load_steps=17 format=3 uid="uid://7jndj1m62gll"]
+[gd_resource type="Resource" script_class="FuncGodotFGDFile" load_steps=21 format=3 uid="uid://7jndj1m62gll"]
 
 [ext_resource type="Script" path="res://addons/func_godot/src/fgd/func_godot_fgd_file.gd" id="1_f4y5j"]
 [ext_resource type="Resource" uid="uid://crgpdahjaj" path="res://addons/func_godot/fgd/func_godot_fgd.tres" id="1_kqyi3"]
@@ -16,6 +16,10 @@
 [ext_resource type="Resource" uid="uid://cl22ao0gtynp7" path="res://entities/e_weapon_tnt_large.tres" id="13_02lle"]
 [ext_resource type="Resource" uid="uid://c03ylypo5o4b5" path="res://entities/b_surface_brush.tres" id="14_xpnqg"]
 [ext_resource type="Resource" uid="uid://iuvdms6ob1lu" path="res://entities/b_decoration.tres" id="15_35k3d"]
+[ext_resource type="Resource" uid="uid://hqc8dgtkpa6m" path="res://entities/b_surface_brush_no_occl.tres" id="16_5xl7f"]
+[ext_resource type="Resource" uid="uid://cyc2vq27kbdjb" path="res://entities/e_weapon_tommygun.tres" id="17_fqeqw"]
+[ext_resource type="Resource" uid="uid://dde6rin85aixe" path="res://entities/e_ammo_bullets_small.tres" id="18_r8xfi"]
+[ext_resource type="Resource" uid="uid://by4p7wvudxc64" path="res://entities/e_ammo_bullets_large.tres" id="19_4l2uw"]
 
 [resource]
 script = ExtResource("1_f4y5j")
@@ -23,4 +27,4 @@ export_file = false
 model_key_word_supported = true
 fgd_name = "FuncGodot"
 base_fgd_files = Array[Resource]([ExtResource("1_kqyi3")])
-entity_definitions = Array[Resource]([ExtResource("2_qyr81"), ExtResource("3_ijg11"), ExtResource("4_t3gcj"), ExtResource("5_d0p77"), ExtResource("6_7oxds"), ExtResource("7_j12qw"), ExtResource("8_vmpaq"), ExtResource("9_rdjqb"), ExtResource("10_408v1"), ExtResource("11_6hslj"), ExtResource("12_cwu7i"), ExtResource("13_02lle"), ExtResource("14_xpnqg"), ExtResource("15_35k3d")])
+entity_definitions = Array[Resource]([ExtResource("2_qyr81"), ExtResource("3_ijg11"), ExtResource("4_t3gcj"), ExtResource("5_d0p77"), ExtResource("6_7oxds"), ExtResource("7_j12qw"), ExtResource("8_vmpaq"), ExtResource("9_rdjqb"), ExtResource("10_408v1"), ExtResource("11_6hslj"), ExtResource("12_cwu7i"), ExtResource("13_02lle"), ExtResource("14_xpnqg"), ExtResource("15_35k3d"), ExtResource("16_5xl7f"), ExtResource("17_fqeqw"), ExtResource("18_r8xfi"), ExtResource("19_4l2uw")])

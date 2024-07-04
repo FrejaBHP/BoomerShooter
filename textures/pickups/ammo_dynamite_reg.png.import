@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://bda2wl8ulu3sm"
-path.bptc="res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.bptc.ctex"
+path="res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://textures/pickups/ammo_dynamite_reg.png"
-dest_files=["res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.bptc.ctex"]
+dest_files=["res://.godot/imported/ammo_dynamite_reg.png-2fdd1974fbc81e91e58f5501403b024a.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1

@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bc3p3uqjjne1d"]
+
+[ext_resource type="PackedScene" uid="uid://ddqloieli4ufs" path="res://pickups/weapon_pickup_base.tscn" id="1_0o0wq"]
+[ext_resource type="AudioStream" uid="uid://bmdq0qfk2ujqp" path="res://sounds/misc/weaponpickup.wav" id="2_lt4n4"]
+[ext_resource type="Texture2D" uid="uid://bvh1c4ww6sxpu" path="res://textures/pickups/weapon_tommygun.png" id="3_1f1ja"]
+
+[node name="WeaponPickupTommygun" instance=ExtResource("1_0o0wq")]
+TextAppend = "tommy gun"
+Type = 2
+Amount = 50
+PickupSound = ExtResource("2_lt4n4")
+
+[node name="Sprite3D" parent="." index="1"]
+offset = Vector2(0, -6)
+texture = ExtResource("3_1f1ja")

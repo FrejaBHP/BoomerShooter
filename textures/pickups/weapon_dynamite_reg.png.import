@@ -3,20 +3,19 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://cmnmv7kwb3xv1"
-path.bptc="res://.godot/imported/weapon_dynamite_reg.png-5b206e128e1a0bf82fae601dd9f9d8c4.bptc.ctex"
+path="res://.godot/imported/weapon_dynamite_reg.png-5b206e128e1a0bf82fae601dd9f9d8c4.ctex"
 metadata={
-"imported_formats": ["s3tc_bptc"],
-"vram_texture": true
+"vram_texture": false
 }
 
 [deps]
 
 source_file="res://textures/pickups/weapon_dynamite_reg.png"
-dest_files=["res://.godot/imported/weapon_dynamite_reg.png-5b206e128e1a0bf82fae601dd9f9d8c4.bptc.ctex"]
+dest_files=["res://.godot/imported/weapon_dynamite_reg.png-5b206e128e1a0bf82fae601dd9f9d8c4.ctex"]
 
 [params]
 
-compress/mode=2
+compress/mode=0
 compress/high_quality=true
 compress/lossy_quality=0.7
 compress/hdr_compression=1

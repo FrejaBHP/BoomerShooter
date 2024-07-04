@@ -135,12 +135,7 @@ public partial class EnemyBase : Actor {
 
 	public virtual void ProcessAnimation() {
 		if (CurAnim != null) {
-			if (CurAnimFrame == 0) {
-				
-			}
-			
 			if (CurAnimTick == 0) {
-				//GD.Print($"F: {CurAnimFrame}, T: {CurAnimTick}, L: {CurAnim.AnimFrames[CurAnimFrame].FrameLength} S: {CurAnim.AnimFrames[CurAnimFrame].Sound}, A: {CurAnim.AnimFrames[CurAnimFrame].Action}");
 				SpriteAnimFrame = CurAnim.AnimFrames[CurAnimFrame].TextureFrame;
 
 				if (CurAnim.AnimFrames[CurAnimFrame].Sound != null) {

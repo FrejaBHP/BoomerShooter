@@ -16,7 +16,6 @@ input_ray_pickable = false
 shape = SubResource("CapsuleShape3D_6d68b")
 
 [node name="VisSprite" type="Sprite3D" parent="."]
-ignore_occlusion_culling = true
 pixel_size = 0.008
 billboard = 2
 double_sided = false

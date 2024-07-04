@@ -5,6 +5,8 @@ public class SFX {
     public static readonly AudioStreamWav ShotgunAltFire = GD.Load<AudioStreamWav>("sounds/weapons/shotfir2.wav");
     public static readonly AudioStreamWav ShotgunCock = GD.Load<AudioStreamWav>("sounds/weapons/shotcock.wav");
 
+    public static readonly AudioStreamWav TommyFire = GD.Load<AudioStreamWav>("sounds/weapons/tomfire.wav");
+
     public static readonly AudioStreamWav HitMetal = GD.Load<AudioStreamWav>("sounds/misc/hitmetal.wav");
     public static readonly AudioStreamWav HitStone = GD.Load<AudioStreamWav>("sounds/misc/hitstone.wav");
     public static readonly AudioStreamWav HitWood = GD.Load<AudioStreamWav>("sounds/misc/hitwood.wav");

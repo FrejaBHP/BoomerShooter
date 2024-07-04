@@ -6,7 +6,7 @@
 
 [node name="WeaponPickupDynamiteReg" instance=ExtResource("1_otiyb")]
 TextAppend = "bundle of tnt"
-Type = 2
+Type = 3
 Amount = 1
 PickupSound = ExtResource("2_c3f6m")
 

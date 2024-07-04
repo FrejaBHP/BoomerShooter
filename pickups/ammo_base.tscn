@@ -15,7 +15,6 @@ script = ExtResource("1_g62ub")
 shape = SubResource("BoxShape3D_rxu1j")
 
 [node name="Sprite3D" type="Sprite3D" parent="."]
-ignore_occlusion_culling = true
 billboard = 2
 double_sided = false
 alpha_cut = 1

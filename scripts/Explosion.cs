@@ -78,8 +78,6 @@ public partial class Explosion : Node3D {
 
                     Vector3 appliedForce = force * knockback;
                     collider.Velocity += appliedForce;
-                    
-                    //GD.Print($"Force: {force:F3}, KB: {knockback:F2}\nAppl.: {appliedForce:F3}");
                 }
             }
         }

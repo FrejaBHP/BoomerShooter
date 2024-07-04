@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using Godot;
 
 public abstract class Weapon {
@@ -318,6 +316,141 @@ public sealed partial class W_Shotgun : Weapon {
     }
 }
 
+public sealed partial class W_TommyGun : Weapon {
+    public override WStateMachine WStateMachine { get; } = new();
+    public override Ammotype AmmoType { get; } = Ammotype.Bullets;
+    public override int AmmoReqPri { get; } = 1;
+    public override int AmmoReqSec { get; } = 14;
+
+    public override AudioStreamWav PrimaryFireAudio { get; protected set; } = SFX.TommyFire;
+    public override AudioStreamWav AltFireAudio { get; protected set; } = null;
+
+    public override WeaponState WeaponState { get; protected set; }
+    public override bsPlayer Player { get; protected set; }
+
+    protected override WUpState UpState { get; } = new();
+    protected override WDownState DownState { get; } = new();
+    protected override WReadyState ReadyState { get; } = new();
+    protected override WAtkState AtkState { get; } = new();
+    protected override WAltState AltState { get; } = new();
+
+    private int altCount = 0;
+
+    private static readonly float[] altXOffsets = {
+        // left half
+        -0.03f,
+        -0.07f,
+        -0.11f,
+        -0.15f,
+        -0.10f,
+        -0.05f,
+        -0.02f,
+        //right half
+        0.03f, 
+        0.07f,
+        0.11f,
+        0.15f,
+        0.10f,
+        0.05f,
+        0.02f
+    };
+
+    // ROF: 15/s | 1 per 4 frames
+    public W_TommyGun(bsPlayer player) {
+        Player = player;
+
+        // ConfigureState: Length (frames), Weapon (this), entry Animation, Action on first frame, enum WeaponState, State NextState
+        // Negative length doesn't count frames, negative WeaponState keeps current, null Action does nothing, null NextState does not change state by itself
+        UpState.ConfigureState(1, this, WAnimations.Frame_Wep_Tommy_Idle, () => A_Raise(Player, this), (int)WeaponState.UpState, UpState);
+        DownState.ConfigureState(1, this, WAnimations.Frame_Wep_Tommy_Idle, () => A_Lower(Player, this), (int)WeaponState.DownState, DownState);
+        ReadyState.ConfigureState(-1, this, WAnimations.Frame_Wep_Tommy_Idle, null, (int)WeaponState.ReadyState, null);
+        AtkState.ConfigureState(this, WAnimations.Anim_Wep_Tommy_Fire, null, (int)WeaponState.AtkState, AtkState);
+        AltState.ConfigureState(this, WAnimations.Anim_Wep_Tommy_Alt, () => A_ResetAltCount(), (int)WeaponState.AltState, ReadyState);
+    }
+
+    public override void ExecuteAction(WeaponAction action) {
+        switch (action) {
+            case WeaponAction.Tommy_Fire:
+                A_FireTommy();
+                break;
+
+            case WeaponAction.Tommy_Alt:
+                A_AltTommy();
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    public override void PrimaryFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            if (Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqPri) {
+                EnterAtkState();
+            }
+            else {
+                EnterReadyState();
+                Player.SwitchToWeaponWithAmmo();
+            }
+        }
+    }
+
+    public override void AltFire() {
+        if (WeaponState == WeaponState.ReadyState) {
+            if (Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqSec) {
+                EnterAltState();
+            }
+            else if (Player.PlayerAmmo[(int)AmmoType].Ammo == 0) {
+                EnterReadyState();
+                Player.SwitchToWeaponWithAmmo();
+            }
+        }
+    }
+
+    public override void PrimaryFireReleased() {
+        if (WeaponState == WeaponState.AtkState) {
+            Player.FetchAndPlayAnimation(null);
+            WStateMachine.SetState(ReadyState);
+        }
+    }
+
+    public void A_FireTommy() {
+        if (Player.PlayerAmmo[(int)AmmoType].Ammo >= AmmoReqPri) {
+            float offsetX;
+            float offsetY;
+
+            Player.PriFireAudio.Play();
+            W_UseAmmo(Player, Ammotype.Bullets, AmmoReqPri);
+
+            offsetX = Utils.RandomOffset(0.09f); // 0.09f = approx. 5deg max
+            offsetY = Utils.RandomOffset(0.02f); // 0.02f = approx. 1deg max
+            Player.FireHitscanAttack(Player.PlayerCamera, Attacks.BulletRegular, offsetX, offsetY, true);
+        }
+        else {
+            EnterReadyState();
+            Player.SwitchToWeaponWithAmmo();
+        }
+    }
+
+    public void A_ResetAltCount() {
+        altCount = 0;
+    }
+
+    public void A_AltTommy() {
+        float offsetX;
+        float offsetY;
+
+        Player.PriFireAudio.Play();
+        W_UseAmmo(Player, Ammotype.Bullets, AmmoReqPri);
+
+        offsetX = altXOffsets[altCount] + Utils.RandomOffset(0.01f); // 0.01f = approx. <1deg max
+        offsetY = Utils.RandomOffset(0.02f); // 0.02f = approx. 1deg max
+        Player.FireHitscanAttack(Player.PlayerCamera, Attacks.BulletRegular, offsetX, offsetY, true);
+
+        altCount++;
+    }
+}
+
 public sealed partial class W_DynamiteReg : Weapon {
     public override WStateMachine WStateMachine { get; } = new();
     public override Ammotype AmmoType { get; } = Ammotype.DynamiteReg;
@@ -360,7 +493,6 @@ public sealed partial class W_DynamiteReg : Weapon {
         ReadyState.ConfigureState(WAnimations.Anim_Wep_Light_Idle.TotalLength, this, WAnimations.Frame_Wep_DynaReg_Idle, () => LighterIdle(), (int)WeaponState.ReadyState, ReadyState);
         SwapState.ConfigureState(0, this, null, () => SwapFromDynamite(), -1, null);
         CookState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Cook, null, (int)WeaponState.CustomState, null);
-        //ThrowState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Throw, null, -1, ThrowActionState);
         ThrowState.ConfigureState(this, WAnimations.Anim_Wep_DynaReg_Throw, null, -1, RecoveryState);
         ThrowActionState.ConfigureState(1, this, null, () => Throw(), -1, RecoveryState);
         RecoveryState.ConfigureState(5, this, null, null, -1, ReadyState);

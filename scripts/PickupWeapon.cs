@@ -15,10 +15,6 @@ public partial class PickupWeapon : Area3D {
 	[Export]
 	public AudioStreamWav PickupSound { get; private set; }
 
-	public override void _Ready() {
-	
-	}
-
 	public void OnPlayerEntered(Node3D node) {
 		if (node.IsInGroup("Player")) {
 			bsPlayer player = node as bsPlayer;

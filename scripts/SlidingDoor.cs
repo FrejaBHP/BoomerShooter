@@ -20,7 +20,6 @@ public partial class SlidingDoor : SurfaceBrush {
 
 			if (GlobalPosition == endPos) {
 				isOpening = false;
-				//GD.Print("Door finished opening!");
 			}
 		}
     }

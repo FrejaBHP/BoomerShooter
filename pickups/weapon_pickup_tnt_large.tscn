@@ -6,7 +6,7 @@
 
 [node name="WeaponPickupDynamiteLarge" instance=ExtResource("1_t21sn")]
 TextAppend = "case of tnt"
-Type = 2
+Type = 3
 Amount = 5
 PickupSound = ExtResource("2_6j38q")
 

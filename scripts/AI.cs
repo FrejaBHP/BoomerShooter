@@ -35,6 +35,15 @@ public static class AI {
         }
     }
 
+    public static void SeekNewTarget(EnemyBase enemy, Actor source) {
+
+	}
+
+	public static void GoIdle(EnemyBase enemy) {
+		enemy.Target = null;
+        enemy.EnterIdleState();
+	}
+
     public static bool CanMove(EnemyBase enemy, float angle, float dist) {
         Vector3 targetPos = new(0, 0, -dist);
         targetPos = targetPos.Rotated(Vector3.Up, angle);

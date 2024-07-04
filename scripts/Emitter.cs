@@ -51,20 +51,17 @@ public partial class Emitter : Node3D {
         else {
             duration = animlength;
         }
-        
     }
 
     public override void _PhysicsProcess(double delta) {
         if (Animation != null) {
             ProcessAnimation();
         }
+        if (framesLived >= duration) {
+            QueueFree();
+        }
         else {
-            if (framesLived >= duration) {
-                QueueFree();
-            }
-            else {
-                framesLived++;
-            }
+            framesLived++;
         }
     }
 

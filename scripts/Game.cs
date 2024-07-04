@@ -27,7 +27,7 @@ public partial class Game : Node3D {
 	}
 
 	private void IterateEntities() {
-		var map = GetNode("Map01");
+		var map = GetNode("MapInstance/Map");
 		foreach (Node child in map.GetChildren()) {
 			if (child.IsInGroup("Spawner")) {
 				(child as Spawner).SpawnEnemy();

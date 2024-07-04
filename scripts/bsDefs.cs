@@ -3,7 +3,7 @@ using Godot;
 public enum Ammotype {
     None,
     Shells,
-    //Bullets,
+    Bullets,
     DynamiteReg,
     NoOfTypes
 }
@@ -11,7 +11,7 @@ public enum Ammotype {
 public enum WeaponType {
     W_Pitchfork,
     W_Shotgun,
-    //W_Tommygun,
+    W_TommyGun,
     W_DynamiteReg,
     NoOfWeapons
 }
@@ -80,6 +80,8 @@ public enum WeaponAction {
     None,
     PF_Stab,
     SG_Reload,
+    Tommy_Fire,
+    Tommy_Alt,
     Dyn_Throw
 }
 

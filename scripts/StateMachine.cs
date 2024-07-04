@@ -145,10 +145,10 @@ public abstract class WState : IState {
 
     public virtual void Execute() {
         if (Length > 0) {
-            FrameCounter++;
             if (FrameCounter >= Length && NextState != null) {
                 Weapon.WStateMachine?.SetState(NextState);
             }
+            FrameCounter++;
         }
     }
 

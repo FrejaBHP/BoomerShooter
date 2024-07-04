@@ -1,8 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://qxl2w2cthfnd"]
+[gd_scene load_steps=7 format=3 uid="uid://qxl2w2cthfnd"]
 
 [ext_resource type="Script" path="res://scripts/Game.cs" id="1_47wr0"]
 [ext_resource type="Texture2D" uid="uid://25cop5v0qalb" path="res://textures/sky1.png" id="2_anxj2"]
-[ext_resource type="LightmapGIData" uid="uid://cj0hu5u0fg8x0" path="res://levelLightMap0.lmbake" id="2_dyk8n"]
 [ext_resource type="PackedScene" uid="uid://y452jojynx0q" path="res://map_01.tscn" id="4_6sgny"]
 
 [sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_tvf7p"]
@@ -23,16 +22,10 @@ script = ExtResource("1_47wr0")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_6h28a")
 
-[node name="LightmapGI" type="LightmapGI" parent="."]
-bounces = 1
-bounce_indirect_energy = 1.6
-interior = true
-light_data = ExtResource("2_dyk8n")
-
 [node name="Enemies" type="Node3D" parent="."]
 
 [node name="Players" type="Node3D" parent="."]
 
 [node name="Entities" type="Node3D" parent="."]
 
-[node name="Map01" parent="." instance=ExtResource("4_6sgny")]
+[node name="MapInstance" parent="." instance=ExtResource("4_6sgny")]

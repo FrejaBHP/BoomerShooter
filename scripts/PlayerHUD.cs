@@ -2,7 +2,7 @@ using Godot;
 using System;
 
 public partial class PlayerHUD : Control {
-	PackedScene systemLine = GD.Load<PackedScene>("res://HUD/system_line.tscn");
+	private readonly PackedScene systemLine = GD.Load<PackedScene>("res://hud/system_line.tscn");
 
 	private Label labelHealth;
 	private Label labelAmmo;

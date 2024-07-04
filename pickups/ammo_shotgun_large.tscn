@@ -7,7 +7,7 @@
 [node name="AmmoShotgunSmall" instance=ExtResource("1_2ekju")]
 TextAppend = "box of shotgun shells"
 Type = 1
-Amount = 20
+Amount = 15
 PickupSound = ExtResource("2_ks6bc")
 
 [node name="Sprite3D" parent="." index="1"]

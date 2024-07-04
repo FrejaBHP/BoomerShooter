@@ -1,0 +1,15 @@
+[gd_scene load_steps=4 format=3 uid="uid://bsgu7r2j1rki3"]
+
+[ext_resource type="PackedScene" uid="uid://bi3fbpbi07ttr" path="res://pickups/ammo_base.tscn" id="1_s8r0w"]
+[ext_resource type="AudioStream" uid="uid://kkw6mxlauq0q" path="res://sounds/misc/ammopickup.wav" id="2_5o1nw"]
+[ext_resource type="Texture2D" uid="uid://cpaygdw2qt6r4" path="res://textures/pickups/ammo_bullets_large.png" id="3_qin6i"]
+
+[node name="AmmoBulletsLarge" instance=ExtResource("1_s8r0w")]
+TextAppend = "full drum of bullets"
+Type = 2
+Amount = 100
+PickupSound = ExtResource("2_5o1nw")
+
+[node name="Sprite3D" parent="." index="1"]
+offset = Vector2(0, -1)
+texture = ExtResource("3_qin6i")

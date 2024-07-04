@@ -40,6 +40,28 @@ public static class Sprites {
     };
 
 
+
+    // TOMMYGUN
+    public static readonly Texture2D Spr_Wep_Tommy_Idle = GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_idle.png");
+    public static readonly Texture2D[] Spr_Wep_Tommy_Fire = new Texture2D[2] {
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_fire0.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_fire1.png")
+    };
+
+    public static readonly Texture2D[] Spr_Wep_Tommy_Alt = new Texture2D[3] {
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_alt_tilt0.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_alt_tilt1.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_alt_centre.png")
+    };
+
+    public static readonly Texture2D[] Spr_Wep_Tommy_Flare = new Texture2D[4] {
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_flare0.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_flare1.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_flare2.png"),
+        GD.Load<Texture2D>("res://textures/weapons/tommygun/w_tommy_flare3.png")
+    };
+
+
     // LIGHTER
     public static readonly Texture2D Spr_Wep_Light_Idle = GD.Load<Texture2D>("res://textures/weapons/lighter/w_lighter_idle.png");
     public static readonly Texture2D Spr_Wep_Light_Strike = GD.Load<Texture2D>("res://textures/weapons/lighter/w_lighter_strike.png");
@@ -130,9 +152,10 @@ public static class Sprites {
     // Left, Right, Top, Bottom
     public static readonly SpriteOffset Spr_NoOffset = new(0, 0, 0, 0);
 
-    public readonly static SpriteOffset[] Spr_Wep_Offset = new SpriteOffset[3] {//[(int)WeaponType.NoOfWeapons - 1] {
+    public readonly static SpriteOffset[] Spr_Wep_Offset = new SpriteOffset[4] {//[(int)WeaponType.NoOfWeapons - 1] {
         new(-37, 37, 0, 35),
         new(0, 60, 0, 30),
+        new(0, 75, 0, 35),
         new(0, 130, 0, 40)//new(0, 65, 0, 35)
     };
 
